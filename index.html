@@ -3231,9 +3231,9 @@ async function submitInquiry(){
   if(btn){ btn.textContent = '전송 중...'; btn.disabled = true; }
 
   try {
-    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev/contact', {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
         access_key: '749a5bcf-98a4-4028-ba38-c15552ed13ae',
         subject: `[AniBridge 문의] ${type}`,
@@ -3242,14 +3242,16 @@ async function submitInquiry(){
         message: `문의 유형: ${type}\n\n문의 내용:\n${content}\n\n답변 이메일: ${email||'미입력'}`
       })
     });
-    const data = await res.json();
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch(e) { data = { success: res.ok }; }
     if(data.success){
       closeM(null,'cs');
       document.getElementById('cs-content').value = '';
       document.getElementById('cs-email').value = '';
       toast('문의가 접수되었습니다 ✓ 빠르게 답변드리겠습니다');
     } else {
-      toast('전송 실패. 다시 시도해주세요');
+      toast('전송 실패: ' + (data.message||'다시 시도해주세요'));
     }
   } catch(e) {
     toast('오류가 발생했습니다. 다시 시도해주세요');
