@@ -1253,14 +1253,14 @@ select option { background: #131929; }
           <span style="font-size:11px;opacity:.7">※ 진단·처방이 아닌 일반 정보를 제공합니다</span>
         </div>
         <!-- 빠른 질문 버튼 -->
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
-          <button class="quick-q-btn" onclick="quickQ('강아지가 구토를 해요')">🤮 구토해요</button>
-          <button class="quick-q-btn" onclick="quickQ('밥을 안 먹어요')">🍽️ 안 먹어요</button>
-          <button class="quick-q-btn" onclick="quickQ('설사를 해요')">💩 설사해요</button>
-          <button class="quick-q-btn" onclick="quickQ('기침을 자주 해요')">😮‍💨 기침해요</button>
-          <button class="quick-q-btn" onclick="quickQ('피부가 가려운 것 같아요')">🦠 가려워해요</button>
-          <button class="quick-q-btn" onclick="quickQ('눈이 이상해요')">👁️ 눈이상해요</button>
-        </div>
+          <div id="quickQBtns" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'가 구토를 해요')">🤮 구토해요</button>
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'이 밥을 안 먹어요')">🍽️ 안 먹어요</button>
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'가 설사를 해요')">💩 설사해요</button>
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'가 기침을 자주 해요')">😮‍💨 기침해요</button>
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'가 피부가 가려운 것 같아요')">🦠 가려워해요</button>
+            <button class="quick-q-btn" onclick="quickQ(getPetName()+'의 눈이 이상해요')">👁️ 눈이상해요</button>
+          </div>
       </div>
     </div>
   </div>
@@ -2304,7 +2304,7 @@ async function doAnalyze(){
 {"petType":"동물종류","petBreed":"추정품종","urgencyLevel":"urgent/caution/safe","urgencyTitle":"긴급도요약","urgencyDesc":"이유한문장","s1":"양호/주의/위험","l1":"good/caution/warning","s2":"활발/보통/저하","l2":"good/caution/warning","s3":"행복/편안/불안","l3":"good/caution/warning","s4":"정상/과체중/저체중","l4":"good/caution/warning","detailText":"상세분석3~5문장한국어","careText":"케어추천3~4가지한국어","hospitalKeyword":"동물병원"}
 반려동물없으면:{"error":"반려동물을 찾을 수 없습니다."}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
     const data=await res.json();
     const txt=data.content?.[0]?.text||'';
     const result=JSON.parse(txt.replace(/```json|```/g,'').trim());
@@ -2584,6 +2584,13 @@ function getChatSystem(){
 let chatHistory = [];
 let chatLoading = false;
 
+// ── 반려동물 이름 가져오기 ──
+function getPetName(){
+  if(!PETS.length) return '반려동물';
+  const p = PETS[curPetIdx];
+  return p.name || p.type || '반려동물';
+}
+
 function quickQ(text){
   document.getElementById('chatInput').value = text;
   sendChat();
@@ -2619,7 +2626,7 @@ async function sendChat(){
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
