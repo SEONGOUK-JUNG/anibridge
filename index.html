@@ -1861,12 +1861,12 @@ select option { background: #131929; }
 
 <script>
 // ── 버전 체크 — 버전 다르면 자동 초기화 ──
-const APP_VERSION = '2.1';
+const APP_VERSION = '2.2';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
-  // pets 데이터만 초기화 (케어수첩은 유지)
   localStorage.removeItem('anibridge_pets');
   localStorage.removeItem('anibridge_profile');
+  localStorage.removeItem('anibridge_db');
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
