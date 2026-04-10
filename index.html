@@ -964,9 +964,9 @@ select option { background: #131929; }
   <div class="home-hero">
     <div class="hero-orb hero-orb1"></div>
     <div class="hero-orb hero-orb2"></div>
-    <div class="hero-label">TODAY'S REPORT</div>
-    <div class="hero-title" id="heroTitle">코코의 오늘,<br><span>AI가 함께합니다</span></div>
-    <div class="hero-sub">사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요</div>
+    <div class="hero-label" id="heroLabel">TODAY'S REPORT</div>
+    <div class="hero-title" id="heroTitle">코코의 오늘,<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">AI가 함께합니다</span></div>
+    <div class="hero-sub" id="heroSub">사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요</div>
     <div style="margin-top:14px;display:inline-block;position:relative">
       <span style="font-family:'Outfit',sans-serif;font-size:12px;font-style:italic;font-weight:600;color:transparent;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;letter-spacing:.02em;opacity:.85">
         Every Animal Deserves a Happy Life
@@ -3011,7 +3011,7 @@ function migrateSingleProfile(){
     }
   }catch(e){}
   if(PETS.length === 0){
-    PETS = [{ id:Date.now(), name:'코코', breed:'말티즈', sex:'암컷', birth:'2023-02-01', weight:'5.2', neuter:'완료', emoji:'🐶', photoSrc:'', blood:'DEA 1.1+' }];
+    PETS = [{ id:Date.now(), name:'', breed:'', sex:'', birth:'', weight:'', neuter:'', emoji:'🐶', photoSrc:'', blood:'' }];
     savePets();
   }
 }
@@ -3052,9 +3052,23 @@ function renderCurPet(){
   if(!PETS.length) return;
   const p = PETS[curPetIdx];
 
-  // 홈 히어로 타이틀
+  // 홈 히어로 타이틀 — 등록 여부에 따라 분기
   const heroTitle = document.getElementById('heroTitle');
-  if(heroTitle && p.name) heroTitle.innerHTML = `${p.name}의 오늘,<br><span>AI가 함께합니다</span>`;
+  const heroLabel = document.getElementById('heroLabel');
+  const heroSub   = document.getElementById('heroSub');
+  const isRegistered = p.name && p.name !== '이름 없음' && p.name !== '새 반려동물' && p.breed;
+
+  if(isRegistered){
+    // 등록 완료 — 반려동물 이름으로 표시
+    if(heroLabel) heroLabel.textContent = "TODAY'S REPORT";
+    if(heroTitle) heroTitle.innerHTML = `${p.name}의 오늘,<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">AI가 함께합니다</span>`;
+    if(heroSub) heroSub.innerHTML = `사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요`;
+  } else {
+    // 미등록 — 환영 메시지
+    if(heroLabel) heroLabel.textContent = 'WELCOME';
+    if(heroTitle) heroTitle.innerHTML = `첫 방문을 환영해요 🐾<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">소중한 아이를 AI가 케어해요</span>`;
+    if(heroSub) heroSub.innerHTML = `MY 페이지에서 반려동물을 등록하면<br><b style="color:var(--g1)">코코의 오늘, AI가 함께합니다</b>`;
+  }
 
   // 헤더 아바타
   const hAv = document.getElementById('hdrAv');
