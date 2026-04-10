@@ -1341,7 +1341,6 @@ select option { background: #131929; }
       <div class="mi" onclick="openM('alarm')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🔔</div><div class="mi-text">알림 설정</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('subscribe')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">💳</div><div class="mi-text">구독 관리</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
-      <div class="mi" onclick="openApiKeyModal()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">🔑</div><div class="mi-text">AI 분석 API 키 설정</div><div class="mi-sub" style="font-size:10px;color:var(--text3);margin-left:auto;margin-right:8px" id="apiKeyStatus">미설정</div><div class="mi-arr">›</div></div>
     </div>
     <div class="ver-txt">AniBridge v2.0<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
   </div>
@@ -1702,7 +1701,7 @@ select option { background: #131929; }
     <div class="fg"><label class="fl">문의 유형</label><select id="cs-type"><option>서비스 이용 문의</option><option>결제/구독 문의</option><option>버그 신고</option><option>기능 제안</option><option>기타</option></select></div>
     <div class="fg"><label class="fl">문의 내용</label><textarea id="cs-content" placeholder="문의 내용을 입력해주세요" style="height:100px"></textarea></div>
     <div class="fg"><label class="fl">이메일</label><input type="text" id="cs-email" placeholder="답변 받을 이메일 주소"></div>
-    <button class="save-btn" onclick="document.getElementById('cs-content').value?closeM(null,'cs')||toast('문의가 접수되었습니다 ✓'):alert('문의 내용을 입력해주세요')">문의 접수하기</button>
+    <button class="save-btn" onclick="submitInquiry()">문의 접수하기</button>
   </div>
 </div></div>
 
@@ -2304,7 +2303,7 @@ async function doAnalyze(){
 {"petType":"동물종류","petBreed":"추정품종","urgencyLevel":"urgent/caution/safe","urgencyTitle":"긴급도요약","urgencyDesc":"이유한문장","s1":"양호/주의/위험","l1":"good/caution/warning","s2":"활발/보통/저하","l2":"good/caution/warning","s3":"행복/편안/불안","l3":"good/caution/warning","s4":"정상/과체중/저체중","l4":"good/caution/warning","detailText":"상세분석3~5문장한국어","careText":"케어추천3~4가지한국어","hospitalKeyword":"동물병원"}
 반려동물없으면:{"error":"반려동물을 찾을 수 없습니다."}`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':getApiKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
+    const res=await fetch('https://anibridge-api.koreagwangju.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
     const data=await res.json();
     const txt=data.content?.[0]?.text||'';
     const result=JSON.parse(txt.replace(/```json|```/g,'').trim());
@@ -2624,9 +2623,9 @@ async function sendChat(){
       return;
     }
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
@@ -3220,7 +3219,44 @@ function updateAvatars(photoSrc,emoji){
   }
 }
 
-// ── 알림 토글 ──
+// ── 고객센터 문의 접수 ──
+async function submitInquiry(){
+  const type = document.getElementById('cs-type').value;
+  const content = document.getElementById('cs-content').value.trim();
+  const email = document.getElementById('cs-email').value.trim();
+
+  if(!content){ alert('문의 내용을 입력해주세요'); return; }
+
+  const btn = document.querySelector('#m-cs .save-btn');
+  if(btn){ btn.textContent = '전송 중...'; btn.disabled = true; }
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: '749a5bcf-98a4-4028-ba38-c15552ed13ae',
+        subject: `[AniBridge 문의] ${type}`,
+        from_name: 'AniBridge 앱',
+        email: email || 'noreply@anibridge.com',
+        message: `문의 유형: ${type}\n\n문의 내용:\n${content}\n\n답변 이메일: ${email||'미입력'}`
+      })
+    });
+    const data = await res.json();
+    if(data.success){
+      closeM(null,'cs');
+      document.getElementById('cs-content').value = '';
+      document.getElementById('cs-email').value = '';
+      toast('문의가 접수되었습니다 ✓ 빠르게 답변드리겠습니다');
+    } else {
+      toast('전송 실패. 다시 시도해주세요');
+    }
+  } catch(e) {
+    toast('오류가 발생했습니다. 다시 시도해주세요');
+  } finally {
+    if(btn){ btn.textContent = '문의 접수하기'; btn.disabled = false; }
+  }
+}
 function toggleAlarm(id){const track=document.getElementById('at-'+id);const thumb=document.getElementById('ath-'+id);const isOn=track.classList.contains('on');if(isOn){track.classList.remove('on');thumb.classList.remove('on');}else{track.classList.add('on');thumb.classList.add('on');}}
 
 // ── 플레이스 필터 ──
