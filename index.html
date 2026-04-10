@@ -965,7 +965,7 @@ select option { background: #131929; }
     <div class="hero-orb hero-orb1"></div>
     <div class="hero-orb hero-orb2"></div>
     <div class="hero-label">TODAY'S REPORT</div>
-    <div class="hero-title">코코의 오늘,<br><span>AI가 함께합니다</span></div>
+    <div class="hero-title" id="heroTitle">코코의 오늘,<br><span>AI가 함께합니다</span></div>
     <div class="hero-sub">사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요</div>
     <div style="margin-top:14px;display:inline-block;position:relative">
       <span style="font-family:'Outfit',sans-serif;font-size:12px;font-style:italic;font-weight:600;color:transparent;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;letter-spacing:.02em;opacity:.85">
@@ -3051,6 +3051,11 @@ function renderPetTabs(){
 function renderCurPet(){
   if(!PETS.length) return;
   const p = PETS[curPetIdx];
+
+  // 홈 히어로 타이틀
+  const heroTitle = document.getElementById('heroTitle');
+  if(heroTitle && p.name) heroTitle.innerHTML = `${p.name}의 오늘,<br><span>AI가 함께합니다</span>`;
+
   // 헤더 아바타
   const hAv = document.getElementById('hdrAv');
   const hNm = document.getElementById('hdrName');
