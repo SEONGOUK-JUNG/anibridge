@@ -1861,7 +1861,7 @@ select option { background: #131929; }
 
 <script>
 // ── 버전 체크 — 버전 다르면 자동 초기화 ──
-const APP_VERSION = '2.2';
+const APP_VERSION = '2.3';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
   localStorage.removeItem('anibridge_pets');
@@ -3208,14 +3208,7 @@ function toggleFaq(el){const a=el.querySelector('.faq-a');const s=el.querySelect
 // ── 토스트 ──
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
 
-// ── 샘플 데이터 (첫 실행 시에만) ──
-if(!localStorage.getItem(DB_KEY)){
-  DB.symptom.push({id:1,date:'2026-04-07',symptoms:['🤮 구토'],detail:'아침 식후 노란 액체 1회 구토. 이후 식욕 정상.',since:'오늘 아침',freq:'1회',testDone:'아니요',testDetail:'',medDone:'아니요',medDetail:'',medChange:'',level:'관찰중'});
-  DB.hospital.push({id:2,date:'2026-03-15',name:'강남 동물병원',vet:'김○○ 원장',reason:'피부 가려움',diag:'알레르기성 피부염',test:'피부 스크래치 검사',med:'항히스타민제 2주',side:'',cost:'55000',memo:'2주 후 재내원',nextDate:'2026-03-29'});
-  DB.vaccine.push({id:3,name:'종합백신 (DHPPL)',round:'5차',date:'2025-10-20',nextDate:'2026-04-20',hospital:'강남 동물병원',cost:'25000',memo:'이상 없음'});
-  DB.memo.push({id:4,date:'2026-04-05',title:'사료 교체 진행 중',cat:'사료',cont:'로얄캐닌 → 오리젠으로 변경 중.'});
-  saveDB();
-}
+// ── 샘플 데이터 없음 (실제 사용자 데이터만 표시) ──
 ['symptom','hospital','vaccine','memo'].forEach(renderList);
 // ── D-day 뱃지 전체 업데이트 ──
 function updDdayBadge(){
