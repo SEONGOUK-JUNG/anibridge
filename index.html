@@ -1861,14 +1861,28 @@ select option { background: #131929; }
 
 <script>
 // ── 버전 체크 — 버전 다르면 자동 초기화 ──
-const APP_VERSION = '2.3';
+const APP_VERSION = '2.4';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
   localStorage.removeItem('anibridge_pets');
   localStorage.removeItem('anibridge_profile');
   localStorage.removeItem('anibridge_db');
+  localStorage.removeItem('anibridge_onboarded');
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
+
+// ── 혹시 남아있는 D-10 샘플 접종 데이터 강제 제거 ──
+try {
+  const raw = localStorage.getItem('anibridge_db');
+  if(raw){
+    const d = JSON.parse(raw);
+    // 샘플 데이터 ID(3) 또는 2026-04-20 접종일 제거
+    if(d.vaccine){
+      d.vaccine = d.vaccine.filter(v => v.nextDate !== '2026-04-20' && v.id !== 3);
+      localStorage.setItem('anibridge_db', JSON.stringify(d));
+    }
+  }
+} catch(e){}
 
 // ── 데이터 — localStorage 영구 저장 ──
 const DB_KEY = 'anibridge_db';
