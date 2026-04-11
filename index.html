@@ -877,6 +877,8 @@ select option { background: #131929; }
 @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(12px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
 @keyframes toastOut { to{opacity:0;transform:translateX(-50%) translateY(12px)} }
 </style>
+<!-- 카카오 SDK -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -1107,6 +1109,12 @@ select option { background: #131929; }
         <div style="font-size:12px;font-weight:700;color:#0A0E1A;margin-top:6px" id="transRecordTxt">눌러서 녹음</div>
       </div>
       <div id="transTimer" style="font-size:13px;color:var(--text2);margin-top:14px;height:20px"></div>
+    </div>
+
+    <!-- 프로젝트 안내 -->
+    <div style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🔬 AI 음성 분석 고도화 프로젝트 진행 중</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">DogSpeak Dataset(77,202개 샘플) 적용 예정<br>현재는 AI 기반 행동 패턴 분석으로 번역합니다</div>
     </div>
 
     <!-- 파형 애니메이션 -->
@@ -1414,6 +1422,30 @@ select option { background: #131929; }
 <!-- ══ MY ══ -->
 <div id="pg-my" class="page">
   <div class="my-wrap">
+
+    <!-- 카카오 로그인 -->
+    <div id="kakaoLoginSection" style="margin-bottom:16px">
+      <div id="kakaoLoggedOut" style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:3px">카카오 로그인</div>
+          <div style="font-size:11px;color:var(--text2)">로그인하면 데이터가 안전하게 보관됩니다</div>
+        </div>
+        <button onclick="kakaoLogin()" style="background:#FEE500;color:#3C1E1E;border:none;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px">
+          <svg width="16" height="16" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>
+          카카오 로그인
+        </button>
+      </div>
+      <div id="kakaoLoggedIn" style="display:none;background:rgba(254,229,0,0.08);border:1px solid rgba(254,229,0,0.2);border-radius:var(--r);padding:14px 20px;display:none;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <img id="kakaoProfileImg" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
+          <div>
+            <div style="font-size:13px;font-weight:700" id="kakaoNickname">—</div>
+            <div style="font-size:11px;color:var(--text2)">카카오 로그인 완료 ✅</div>
+          </div>
+        </div>
+        <button onclick="kakaoLogout()" style="background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border2);border-radius:999px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">로그아웃</button>
+      </div>
+    </div>
 
     <!-- 반려동물 슬라이더 -->
     <div style="margin-bottom:14px">
@@ -3638,6 +3670,67 @@ function shareTransResult(){
   else { navigator.clipboard.writeText(text).then(()=>toast('📋 번역 결과가 복사되었습니다!')); }
 }
 
+// ── 카카오 로그인 ──
+const KAKAO_JS_KEY = 'cf34261c0f4257cfdf23448ba952bef9';
+
+function initKakao(){
+  try {
+    if(window.Kakao && !Kakao.isInitialized()){
+      Kakao.init(KAKAO_JS_KEY);
+    }
+    // 기존 로그인 상태 확인
+    const saved = localStorage.getItem('kakao_user');
+    if(saved){
+      const user = JSON.parse(saved);
+      showKakaoUser(user);
+    }
+  } catch(e){}
+}
+
+function kakaoLogin(){
+  try {
+    Kakao.Auth.login({
+      success: function(auth){
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function(res){
+            const user = {
+              id: res.id,
+              nickname: res.kakao_account?.profile?.nickname || '카카오 사용자',
+              profileImg: res.kakao_account?.profile?.profile_image_url || ''
+            };
+            localStorage.setItem('kakao_user', JSON.stringify(user));
+            showKakaoUser(user);
+            toast('카카오 로그인 성공! 환영합니다 😊');
+          },
+          fail: function(){ toast('사용자 정보를 가져오지 못했습니다'); }
+        });
+      },
+      fail: function(err){ toast('로그인에 실패했습니다. 다시 시도해 주세요'); }
+    });
+  } catch(e){ toast('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요'); }
+}
+
+function showKakaoUser(user){
+  document.getElementById('kakaoLoggedOut').style.display = 'none';
+  const loggedIn = document.getElementById('kakaoLoggedIn');
+  loggedIn.style.display = 'flex';
+  document.getElementById('kakaoNickname').textContent = user.nickname;
+  if(user.profileImg) document.getElementById('kakaoProfileImg').src = user.profileImg;
+}
+
+function kakaoLogout(){
+  try {
+    if(Kakao.Auth.getAccessToken()){
+      Kakao.Auth.logout(()=>{});
+    }
+  } catch(e){}
+  localStorage.removeItem('kakao_user');
+  document.getElementById('kakaoLoggedOut').style.display = 'flex';
+  document.getElementById('kakaoLoggedIn').style.display = 'none';
+  toast('로그아웃되었습니다');
+}
+
 // ── 토스트 ──
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
 
@@ -3717,6 +3810,8 @@ DB.memo = dbData.memo;
 updDdayBadge();
 // ── 계절 팁 초기화 ──
 updSeasonTip();
+// ── 카카오 SDK 초기화 ──
+window.addEventListener('load', initKakao);
 
 // ── API 키 상태 업데이트 ──
 updateApiKeyStatus();
