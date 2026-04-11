@@ -565,7 +565,15 @@ body {
 .hi-ok { color: var(--g1); }
 .hi-warn { color: var(--caution); }
 
-/* ── AI 상담 채팅 ── */
+/* ── 동물 번역기 ── */
+@keyframes waveBar {
+  0%,100% { height: 8px; }
+  50% { height: 40px; }
+}
+@keyframes recordPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(74,255,163,0.4); }
+  50% { box-shadow: 0 0 0 20px rgba(74,255,163,0); }
+}
 .chat-bubble-ai {
   background: var(--card-solid); border: 1px solid var(--border2);
   border-radius: 4px 18px 18px 18px;
@@ -1047,6 +1055,12 @@ select option { background: #131929; }
         <div class="qi-sub">건강·병원·접종 기록 관리</div>
         <div class="qi-arr">›</div>
       </div>
+      <div class="quick-item" onclick="showPage('translator')">
+        <div class="qi-icon">🎙️</div>
+        <div class="qi-title">동물 번역기</div>
+        <div class="qi-sub">우리 아이 마음 읽기</div>
+        <div class="qi-arr">›</div>
+      </div>
       <div class="quick-item" onclick="showPage('my');setTimeout(()=>document.querySelector('.menu-list .mi').click(),100)">
         <div class="qi-icon">📍</div>
         <div class="qi-title">펫 플레이스</div>
@@ -1054,6 +1068,88 @@ select option { background: #131929; }
         <div class="qi-arr">›</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ══ 동물 번역기 ══ -->
+<div id="pg-translator" class="page">
+  <div style="padding:20px 16px 100px">
+
+    <!-- 헤더 -->
+    <div style="text-align:center;padding:24px 0 20px">
+      <div style="font-size:48px;margin-bottom:10px">🎙️</div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:22px;margin-bottom:6px">동물 소리 번역기</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6">우리 아이의 소리를 듣고<br>무슨 말인지 번역해드려요!</div>
+    </div>
+
+    <!-- 반려동물 선택 -->
+    <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:16px 20px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">어떤 동물인가요?</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="trans-type-btn on" onclick="selTransType(this,'강아지','🐶')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid rgba(74,255,163,0.3);background:rgba(74,255,163,0.1);color:var(--g1);cursor:pointer;font-family:inherit">🐶 강아지</button>
+        <button class="trans-type-btn" onclick="selTransType(this,'고양이','🐱')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐱 고양이</button>
+        <button class="trans-type-btn" onclick="selTransType(this,'토끼','🐰')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐰 토끼</button>
+        <button class="trans-type-btn" onclick="selTransType(this,'기타','🐾')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐾 기타</button>
+      </div>
+    </div>
+
+    <!-- 녹음 버튼 -->
+    <div style="text-align:center;margin:24px 0">
+      <div id="transRecordBtn" onclick="toggleTransRecord()" style="
+        width:140px;height:140px;border-radius:50%;
+        background:linear-gradient(135deg,var(--g1),var(--g2));
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        margin:0 auto;cursor:pointer;
+        box-shadow:0 0 0 0 rgba(74,255,163,0.4);
+        transition:all .2s;
+      ">
+        <div style="font-size:40px" id="transRecordIcon">🎙️</div>
+        <div style="font-size:12px;font-weight:700;color:#0A0E1A;margin-top:6px" id="transRecordTxt">눌러서 녹음</div>
+      </div>
+      <div id="transTimer" style="font-size:13px;color:var(--text2);margin-top:14px;height:20px"></div>
+    </div>
+
+    <!-- 파형 애니메이션 -->
+    <div id="transWave" style="display:none;justify-content:center;align-items:flex-end;gap:4px;height:50px;margin-bottom:16px">
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease .1s infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g2);animation:waveBar .8s ease .2s infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease .3s infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g2);animation:waveBar .8s ease .15s infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease .25s infinite"></div>
+      <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease .05s infinite"></div>
+    </div>
+
+    <!-- 번역 결과 -->
+    <div id="transResult" style="display:none">
+      <div style="background:linear-gradient(135deg,rgba(74,255,163,0.1),rgba(0,201,255,0.05));border:1px solid rgba(74,255,163,0.25);border-radius:var(--r);padding:22px 20px;margin-bottom:14px;text-align:center">
+        <div style="font-size:36px;margin-bottom:10px" id="transEmoji">🐶</div>
+        <div style="font-size:11px;color:var(--g1);font-weight:700;letter-spacing:.1em;margin-bottom:8px">번역 결과</div>
+        <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:20px;line-height:1.4;margin-bottom:10px" id="transMainTxt">—</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7" id="transSubTxt">—</div>
+      </div>
+
+      <!-- 감정 상태 -->
+      <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:16px 20px;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px">현재 감정 상태</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="transEmotions"></div>
+      </div>
+
+      <!-- 공유 + 다시하기 -->
+      <div style="display:flex;gap:10px">
+        <button onclick="shareTransResult()" style="flex:1;padding:14px;background:#FEE500;color:#3C1E1E;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">카카오톡 공유 💬</button>
+        <button onclick="resetTrans()" style="flex:1;padding:14px;background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border2);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">다시 번역 🔄</button>
+      </div>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="transLoading" style="display:none;text-align:center;padding:32px">
+      <div class="paw-ring" style="margin:0 auto 16px"></div>
+      <div style="font-size:14px;font-weight:700;color:var(--g1)">번역 중...</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px">우리 아이의 마음을 읽고 있어요 🐾</div>
+    </div>
+
+
   </div>
 </div>
 
@@ -1141,13 +1237,13 @@ select option { background: #131929; }
       <button class="walk-action wa-start" id="walkBtn" onclick="toggleWalk()">🐾 산책 시작</button>
     </div>
     <div class="walk-section">
-      <div class="ws-title">🎯 코코의 적정 운동량</div>
+      <div class="ws-title" id="walkGuideTitle">🎯 적정 운동량</div>
       <div class="guide-card">
         <div class="guide-head">📋 맞춤 운동 가이드</div>
         <div class="guide-row"><span class="guide-k">권장 산책 시간</span><span class="guide-v">하루 30분</span></div>
         <div class="guide-row"><span class="guide-k">권장 거리</span><span class="guide-v">약 1.5km</span></div>
         <div class="guide-row"><span class="guide-k">산책 횟수</span><span class="guide-v">하루 2회</span></div>
-        <div class="guide-row"><span class="guide-k">주의사항</span><span class="guide-v">더운 날 아스팔트 주의</span></div>
+        <div class="guide-row"><span class="guide-k">주의사항</span><span class="guide-v" id="walkSeasonTip">—</span></div>
       </div>
     </div>
     <div class="walk-section">
@@ -1348,6 +1444,7 @@ select option { background: #131929; }
 
     <div class="menu-list">
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
       <div class="mi" onclick="openM('alarm')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🔔</div><div class="mi-text">알림 설정</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('subscribe')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">💳</div><div class="mi-text">구독 관리</div><div class="mi-arr">›</div></div>
@@ -1365,11 +1462,11 @@ select option { background: #131929; }
   <div class="nav-item" id="nav1" onclick="showPage('analyze')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>AI 분석<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav2" onclick="showPage('chat')" style="position:relative">
+  <div class="nav-item" id="nav2" onclick="showPage('chat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI 상담<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav3" onclick="showPage('walk')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" fill="currentColor" stroke="none"/><path d="M7 20l2-5 3 2 2-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 20l-2-5-3 2-2-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 9l1 2h4l1-2" stroke-linecap="round" stroke-linejoin="round"/></svg>산책<div class="nav-dot"></div>
+  <div class="nav-item" id="nav3" onclick="showPage('translator')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav4" onclick="showPage('care')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
@@ -2093,9 +2190,9 @@ function startWalkGPS(){
     walkSec++;
     saveTodayWalkSec(walkSec, walkDist);
     updWalk();
-    if(Math.floor(walkSec/60) >= WALK_TARGET && walking){
-      stopWalk();
-      toast('🎉 오늘 목표 달성! 코코 최고!');
+    if(Math.floor(walkSec/60) >= WALK_TARGET && walking && !window._walkGoalToasted){
+      window._walkGoalToasted = true;
+      toast('🎉 오늘 목표 달성! 코코 최고! 산책을 계속하셔도 됩니다');
     }
   }, 1000);
 
@@ -2129,19 +2226,19 @@ function startWalkTimer(){
   document.getElementById('walkSub').textContent = '산책 중이에요 🐾';
   walkTimer = setInterval(()=>{
     walkSec++;
-    // 타이머 모드: 속도 4km/h 가정으로 거리 추정
     walkDist = parseFloat((walkSec / 3600 * 4).toFixed(3));
     saveTodayWalkSec(walkSec, walkDist);
     updWalk();
-    if(Math.floor(walkSec/60) >= WALK_TARGET && walking){
-      stopWalk();
-      toast('🎉 오늘 목표 달성! 코코 최고!');
+    if(Math.floor(walkSec/60) >= WALK_TARGET && walking && !window._walkGoalToasted){
+      window._walkGoalToasted = true;
+      toast('🎉 오늘 목표 달성! 산책을 계속하셔도 됩니다 🐾');
     }
   }, 1000);
 }
 
 function stopWalk(){
   walking = false;
+  window._walkGoalToasted = false;
   clearInterval(walkTimer);
   if(gpsWatchId !== null){
     navigator.geolocation.clearWatch(gpsWatchId);
@@ -2218,16 +2315,17 @@ setTimeout(()=>{ document.getElementById('splash').style.display='none'; }, 6000
 ['s-date','h-date','v-date','m-date'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=today(); });
 
 // ── 페이지 ──
-const PG={home:'pg-home',analyze:'pg-analyze',chat:'pg-chat',walk:'pg-walk',care:'pg-care',place:'pg-place',my:'pg-my'};
-const NV={home:0,analyze:1,chat:2,walk:3,care:4,my:5};
+const PG={home:'pg-home',analyze:'pg-analyze',chat:'pg-chat',walk:'pg-walk',care:'pg-care',place:'pg-place',my:'pg-my',translator:'pg-translator'};
+const NV={home:0,analyze:1,chat:2,walk:0,care:4,my:5,translator:3,place:5};
 function showPage(k){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(PG[k]).classList.add('active');
   document.getElementById('nav'+NV[k]).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  // 히스토리 추가 (뒤로가기 지원)
-  history.pushState({page:k}, '', '#'+k);
+  try { history.pushState({page:k}, '', '#'+k); } catch(e){}
+  // 산책 페이지 열릴 때 계절 팁 업데이트
+  if(k === 'walk') updSeasonTip();
 }
 
 // 뒤로가기 버튼 처리
@@ -2236,10 +2334,8 @@ window.addEventListener('popstate', function(e){
     const k = e.state.page;
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    document.getElementById(PG[k]).classList.add('active');
-    document.getElementById('nav'+NV[k]).classList.add('active');
-  } else {
-    showPage('home');
+    if(document.getElementById(PG[k])) document.getElementById(PG[k]).classList.add('active');
+    if(document.getElementById('nav'+NV[k])) document.getElementById('nav'+NV[k]).classList.add('active');
   }
 });
 
@@ -2433,7 +2529,35 @@ const BASE_SCHEDULE = {
   ]
 };
 
-// ── 품종별 주의사항 (API 연결 전 기본값) ──
+// ── 계절별 산책 주의사항 ──
+function getSeasonTip(){
+  const month = new Date().getMonth() + 1; // 1~12
+  if(month >= 3 && month <= 5){
+    // 봄 (3~5월)
+    const tips = ['꽃가루 알러지 주의', '일교차 큰 날 얇은 옷 준비', '진드기 예방약 확인', '봄비 후 젖은 땅 주의'];
+    return tips[new Date().getDate() % tips.length];
+  } else if(month >= 6 && month <= 8){
+    // 여름 (6~8월)
+    const tips = ['더운 날 아스팔트 화상 주의', '오전·저녁 선선할 때 산책', '수분 보충 충분히', '열사병 증상 주의', '땅 온도 손등으로 확인 후 산책'];
+    return tips[new Date().getDate() % tips.length];
+  } else if(month >= 9 && month <= 11){
+    // 가을 (9~11월)
+    const tips = ['낙엽·도토리 섭취 주의', '일찍 어두워지니 야광 목줄 추천', '가을 환절기 건강 체크', '진드기 활동 왕성한 계절'];
+    return tips[new Date().getDate() % tips.length];
+  } else {
+    // 겨울 (12~2월)
+    const tips = ['제설제·염화칼슘 발바닥 주의', '산책 후 발 닦아주기', '방한용품 착용 권장', '빙판길 미끄러짐 주의', '짧게 자주 산책 권장'];
+    return tips[new Date().getDate() % tips.length];
+  }
+}
+
+function updSeasonTip(){
+  const el = document.getElementById('walkSeasonTip');
+  if(el) el.textContent = getSeasonTip();
+  const titleEl = document.getElementById('walkGuideTitle');
+  const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : '';
+  if(titleEl) titleEl.textContent = `🎯 ${petName ? petName+'의 ' : ''}적정 운동량`;
+}
 const BREED_NOTES = {
   말티즈: ['👁️ 눈물자국 정기 관리 필요', '🦷 치석·구취 관리 중요 (소형견)', '🦵 슬개골 탈구 주의 (뛰어내리기 자제)', '✂️ 털 엉킴 방지 위해 정기 미용'],
   푸들: ['🦷 치석 관리 중요', '🦵 슬개골 탈구 주의', '🧠 활발한 두뇌 활동 필요 (지능 높음)', '✂️ 정기적 미용 필수'],
@@ -2682,15 +2806,6 @@ async function sendChat(){
   document.getElementById('chatSendBtn').style.opacity = '0.4';
 
   try {
-    const apiKey = getApiKey();
-    if(!apiKey){
-      removeTyping(typingId);
-      appendAiMsg('⚠️ AI 상담을 이용하려면 MY 페이지에서 API 키를 먼저 설정해주세요.\n\n설정 방법: MY → 🔑 AI 분석 API 키 설정');
-      chatLoading = false;
-      document.getElementById('chatSendBtn').style.opacity = '1';
-      return;
-    }
-
     const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -3337,6 +3452,192 @@ function filterPlace(btn){document.querySelectorAll('.place-cat').forEach(c=>c.c
 // ── FAQ ──
 function toggleFaq(el){const a=el.querySelector('.faq-a');const s=el.querySelector('.faq-q span');const isOpen=a.style.display==='block';a.style.display=isOpen?'none':'block';s.textContent=isOpen?'+':'−';}
 
+// ── 동물 번역기 ──
+let transType = '강아지';
+let transEmoji = '🐶';
+let transRecording = false;
+let transTimerInterval = null;
+let transSec = 0;
+
+function selTransType(btn, type, emoji){
+  document.querySelectorAll('.trans-type-btn').forEach(b=>{
+    b.style.borderColor='var(--border2)';
+    b.style.background='rgba(255,255,255,0.04)';
+    b.style.color='var(--text2)';
+  });
+  btn.style.borderColor='rgba(74,255,163,0.3)';
+  btn.style.background='rgba(74,255,163,0.1)';
+  btn.style.color='var(--g1)';
+  transType = type; transEmoji = emoji;
+}
+
+function toggleTransRecord(){
+  if(transRecording){ stopTransRecord(); }
+  else { startTransRecord(); }
+}
+
+function startTransRecord(){
+  transRecording = true; transSec = 0;
+  const btn = document.getElementById('transRecordBtn');
+  btn.style.background = 'linear-gradient(135deg,var(--urgent),#FF8FA3)';
+  btn.style.animation = 'recordPulse 1s infinite';
+  document.getElementById('transRecordIcon').textContent = '⏹️';
+  document.getElementById('transRecordTxt').textContent = '눌러서 중지';
+  document.getElementById('transWave').style.display = 'flex';
+  document.getElementById('transResult').style.display = 'none';
+  document.getElementById('transLoading').style.display = 'none';
+  // 무제한 녹음 — 초만 카운트
+  transTimerInterval = setInterval(()=>{
+    transSec++;
+    document.getElementById('transTimer').textContent = `🔴 녹음 중... ${transSec}초`;
+  }, 1000);
+}
+
+function stopTransRecord(){
+  transRecording = false;
+  clearInterval(transTimerInterval);
+  const btn = document.getElementById('transRecordBtn');
+  btn.style.background = 'linear-gradient(135deg,var(--g1),var(--g2))';
+  btn.style.animation = '';
+  document.getElementById('transRecordIcon').textContent = '🎙️';
+  document.getElementById('transRecordTxt').textContent = '눌러서 녹음';
+  document.getElementById('transWave').style.display = 'none';
+  document.getElementById('transTimer').textContent = `${transSec}초 녹음 완료! 번역 중...`;
+  // 로딩 효과 후 랜덤 결과
+  document.getElementById('transLoading').style.display = 'block';
+  setTimeout(()=>{
+    document.getElementById('transLoading').style.display = 'none';
+    showTransResult(getRandomTransResult());
+  }, 1200 + Math.random()*800);
+}
+
+// ── 풍부한 오프라인 문구 데이터 ──
+const TRANS_DATA = {
+  강아지: [
+    { mainMsg:"산책 가요! 지금 당장요! 제발요! 현관문 앞이에요! 🐾", subMsg:"꼬리를 온 힘을 다해 흔들며 현관 앞에서 기다리고 있어요. 리드줄만 보여도 심장이 터질 것 같은 표정이랍니다.", emotions:[{label:'흥분',emoji:'🤩',pct:70},{label:'기대',emoji:'😊',pct:20},{label:'조급함',emoji:'😤',pct:10}] },
+    { mainMsg:"밥은 언제 줘요? 밥그릇이 비어있어요! 보이지 않아요? 👀", subMsg:"밥그릇 앞에서 간절한 눈빛으로 바라보고 있어요. 이 눈빛에 무너지지 않을 보호자는 세상에 없답니다.", emotions:[{label:'배고픔',emoji:'🍚',pct:80},{label:'기대',emoji:'😋',pct:15},{label:'슬픔',emoji:'😢',pct:5}] },
+    { mainMsg:"사랑해요! 오늘도 최고예요! 어제도 최고였고 내일도 최고일 거예요! ❤️", subMsg:"온몸으로 행복을 표현하고 있어요. 꼬리가 프로펠러처럼 돌아가고 눈빛은 하트로 가득하답니다.", emotions:[{label:'사랑',emoji:'❤️',pct:90},{label:'행복',emoji:'😄',pct:8},{label:'설렘',emoji:'💕',pct:2}] },
+    { mainMsg:"낯선 사람이 왔어요! 제가 먼저 확인할게요! 뒤에 있어요! 🚨", subMsg:"온 집안을 지키겠다는 굳은 의지가 느껴져요. 사실 꼬리는 살짝 흔들리고 있어서 들켰답니다.", emotions:[{label:'경계심',emoji:'🚨',pct:55},{label:'용감함',emoji:'💪',pct:35},{label:'설렘',emoji:'😅',pct:10}] },
+    { mainMsg:"공! 공 던져줘요! 공공공! 빨리빨리! 지금이에요! ⚽", subMsg:"공을 보는 순간 두 눈이 반짝반짝 빛나고 있어요. 세상에서 공이 제일 소중하고 공 앞에선 모든 걸 잊는답니다.", emotions:[{label:'신남',emoji:'⚽',pct:85},{label:'집중',emoji:'👁️',pct:10},{label:'행복',emoji:'😄',pct:5}] },
+    { mainMsg:"왜 나만 두고 가요? 저도 데려가세요! 짐은 제가 들게요! 😭", subMsg:"현관문 앞에서 슬픈 눈빛으로 바라보고 있어요. 혼자 남겨지는 건 세상에서 제일 슬픈 일이랍니다.", emotions:[{label:'슬픔',emoji:'😭',pct:70},{label:'불안',emoji:'😟',pct:20},{label:'그리움',emoji:'💔',pct:10}] },
+    { mainMsg:"오늘 엄청 잘 했죠? 칭찬해주세요! 머리 쓰다듬어 주세요! 🥰", subMsg:"꼬리를 세차게 흔들며 기대에 찬 눈빛으로 바라보고 있어요. 칭찬 한 마디면 온 세상을 다 가진 기분이랍니다.", emotions:[{label:'기대',emoji:'🥰',pct:65},{label:'자신감',emoji:'😎',pct:25},{label:'행복',emoji:'😊',pct:10}] },
+    { mainMsg:"졸려요... 근데 혼자 자기는 싫어요. 옆에 꼭 있어줘요 💤", subMsg:"눈이 스르륵 감기면서도 보호자 곁을 떠나지 않으려 하고 있어요. 같이 있으면 꿈도 달콤하답니다.", emotions:[{label:'졸림',emoji:'💤',pct:50},{label:'안정감',emoji:'😌',pct:40},{label:'애정',emoji:'💛',pct:10}] },
+    { mainMsg:"저기 고양이 있어요! 쫓아가도 돼요? 응? 응? 허락해줘요! 🐱", subMsg:"귀를 쫑긋 세우고 눈을 반짝이며 신호를 기다리고 있어요. 고양이는 영원한 라이벌이자 친구랍니다.", emotions:[{label:'호기심',emoji:'👀',pct:60},{label:'흥분',emoji:'🤩',pct:30},{label:'설렘',emoji:'😆',pct:10}] },
+    { mainMsg:"목욕은 정말 싫어요! 도망갈 거예요! 이건 인권침해예요! 🛁", subMsg:"욕조만 봐도 전속력으로 도망가고 싶은 마음이에요. 물은 밖에서 웅덩이로 만날 때만 좋답니다.", emotions:[{label:'공포',emoji:'😱',pct:75},{label:'저항',emoji:'😤',pct:20},{label:'억울함',emoji:'😢',pct:5}] },
+    { mainMsg:"이건 제 간식이에요! 건들지 마세요! 여기 숨겨놓을 거예요! 🦴", subMsg:"소중한 간식을 꼭 쥐고 안전한 곳으로 가져가려 하고 있어요. 미래를 위한 저축이랍니다.", emotions:[{label:'소유욕',emoji:'🦴',pct:70},{label:'집중',emoji:'🎯',pct:20},{label:'만족',emoji:'😌',pct:10}] },
+    { mainMsg:"다른 강아지도 좋지만 역시 저만한 애는 없죠? 그렇죠? 😎", subMsg:"공원에서 다른 개를 보며 살짝 질투하는 눈빛이에요. 그래도 보호자 눈엔 자기가 제일이라는 걸 잘 알고 있답니다.", emotions:[{label:'자신감',emoji:'😎',pct:50},{label:'질투',emoji:'😤',pct:30},{label:'애정',emoji:'💕',pct:20}] },
+    { mainMsg:"이 담요가 제일 좋아요! 여기서 평생 살 거예요! 🛋️", subMsg:"푹신한 담요 위에서 꼼짝도 하지 않으려 하고 있어요. 따뜻하고 포근한 이 자리가 천국이랍니다.", emotions:[{label:'만족',emoji:'😌',pct:75},{label:'편안함',emoji:'🛋️',pct:20},{label:'행복',emoji:'😊',pct:5}] },
+    { mainMsg:"비 맞기 싫어요! 산책은 좋은데 비는 싫어요! 어떡해요! 🌧️", subMsg:"빗소리를 듣고 산책을 포기해야 할지 고민하는 중이에요. 비와 산책 사이에서 영혼이 흔들리고 있답니다.", emotions:[{label:'갈등',emoji:'😩',pct:50},{label:'아쉬움',emoji:'😢',pct:35},{label:'기대',emoji:'🌈',pct:15}] },
+    { mainMsg:"지금 뭐 먹고 있어요? 저도 주세요! 한 입만요! 🍗", subMsg:"보호자가 음식을 먹는 순간부터 한 발짝도 안 떼어지는 중이에요. 눈을 촉촉하게 적시며 최선을 다하고 있답니다.", emotions:[{label:'욕심',emoji:'🍗',pct:70},{label:'기대',emoji:'😋',pct:25},{label:'집중',emoji:'👁️',pct:5}] },
+    { mainMsg:"차 타는 거예요? 저도 타요! 창문 열어줘요! 바람이 최고예요! 🚗", subMsg:"차 문이 열리자마자 먼저 올라타 버렸어요. 창밖으로 내미는 귀와 코가 지금 매우 행복하답니다.", emotions:[{label:'신남',emoji:'🚗',pct:80},{label:'자유',emoji:'💨',pct:15},{label:'행복',emoji:'😄',pct:5}] },
+    { mainMsg:"놀아줘요! 장난감 가져왔어요! 같이 해요! 지루해요! 🎾", subMsg:"좋아하는 장난감을 물고 신나게 흔들고 있어요. 같이 놀아주지 않으면 혼자라도 한다는 굳은 결심이 보이네요.", emotions:[{label:'신남',emoji:'🎾',pct:75},{label:'기대',emoji:'😊',pct:20},{label:'에너지',emoji:'⚡',pct:5}] },
+    { mainMsg:"오늘 혼났어요... 근데 이미 다 잊었어요! 친구 맞죠? 😅", subMsg:"혼난 지 5분도 안 됐는데 다시 꼬리를 흔들며 다가오고 있어요. 강아지에게 원망이란 없답니다.", emotions:[{label:'천진함',emoji:'😅',pct:60},{label:'애정',emoji:'❤️',pct:30},{label:'기대',emoji:'🥺',pct:10}] },
+    { mainMsg:"보호자 냄새가 제일 좋아요! 옷에서도 나요! 여기 코 묻힐게요! 👃", subMsg:"보호자의 옷이나 베개에 코를 박고 냄새를 맡고 있어요. 세상에서 제일 안심되는 냄새랍니다.", emotions:[{label:'안정감',emoji:'😌',pct:65},{label:'애정',emoji:'💛',pct:30},{label:'행복',emoji:'😊',pct:5}] },
+    { mainMsg:"무서운 소리 났어요! 보호자 옆에 있을게요! 꼭 붙어 있을게요! ⚡", subMsg:"천둥 소리에 바짝 긴장하며 보호자 다리 사이로 파고들고 있어요. 여기가 세상에서 제일 안전하답니다.", emotions:[{label:'공포',emoji:'😨',pct:60},{label:'의존',emoji:'🤗',pct:30},{label:'안도',emoji:'😮‍💨',pct:10}] },
+  ],
+  고양이: [
+    { mainMsg:"나 여기 있는데 왜 못 봐요? 관심을 주세요. 지금 바로 주세요.", subMsg:"무관심한 척 하지만 사실 엄청 관심을 원하고 있답니다. 눈을 가늘게 뜨고 천천히 접근 중이에요.", emotions:[{label:'관심욕구',emoji:'👀',pct:60},{label:'도도함',emoji:'😏',pct:30},{label:'애정',emoji:'💛',pct:10}] },
+    { mainMsg:"배고프다고요. 지금 바로 주세요. 기다림은 제 사전에 없어요. 🍣", subMsg:"냉장고 앞에서 여러분을 쳐다보고 있어요. 울음소리도 점점 커지고 있는 중이랍니다.", emotions:[{label:'배고픔',emoji:'🍣',pct:75},{label:'조급함',emoji:'⏰',pct:20},{label:'짜증',emoji:'😾',pct:5}] },
+    { mainMsg:"저리 가요. 혼자 있고 싶어요. 근데 시야에서 사라지면 안 돼요.", subMsg:"자신만의 공간에서 쉬고 싶지만 여러분이 사라지면 바로 찾아올 거예요. 고양이의 모순이랍니다.", emotions:[{label:'독립심',emoji:'🙄',pct:50},{label:'애정',emoji:'🐱',pct:40},{label:'만족',emoji:'😌',pct:10}] },
+    { mainMsg:"이 종이박스는 제 거예요. 건들면 안 돼요. 여기가 제 왕국이에요. 📦", subMsg:"빈 박스를 발견한 순간 온 세상이 자기 것이 된 표정이에요. 박스는 고양이의 영원한 성입니다.", emotions:[{label:'만족',emoji:'😌',pct:70},{label:'소유욕',emoji:'📦',pct:25},{label:'행복',emoji:'😺',pct:5}] },
+    { mainMsg:"새벽 3시가 제일 신나요! 집이 운동장이에요! 같이 뛰어봐요! 🌙", subMsg:"집 안을 전속력으로 뛰어다니는 중이에요. 보호자가 주무시는 게 고양이 관심사는 아니랍니다.", emotions:[{label:'에너지',emoji:'⚡',pct:80},{label:'신남',emoji:'🤩',pct:15},{label:'자유',emoji:'🌙',pct:5}] },
+    { mainMsg:"그루밍 중이에요. 절대 방해하지 마세요. 퍼펙트해야 하거든요. ✨", subMsg:"온 집중력을 털 관리에 쏟고 있어요. 고양이에게 청결과 아름다움은 삶의 철학이랍니다.", emotions:[{label:'집중',emoji:'🎯',pct:65},{label:'만족',emoji:'😌',pct:30},{label:'자부심',emoji:'✨',pct:5}] },
+    { mainMsg:"창문 밖에 새가 있어요! 저 새는... 분명히 제 걸 거예요. 🐦", subMsg:"창문에 얼굴을 딱 붙이고 새를 노려보고 있어요. 이 순간 내는 소리는 전 세계 고양이 공통이랍니다.", emotions:[{label:'사냥본능',emoji:'🎯',pct:70},{label:'집중',emoji:'👁️',pct:25},{label:'흥분',emoji:'😤',pct:5}] },
+    { mainMsg:"당신 무릎이 원래 제 자리예요. 거기서 움직이시면 곤란해요. 🐾", subMsg:"무릎 위에 자리를 잡고 골골송을 부르기 시작했어요. 이제 여러분의 일정은 고양이가 결정합니다.", emotions:[{label:'편안함',emoji:'😴',pct:60},{label:'애정',emoji:'❤️',pct:30},{label:'소유욕',emoji:'😺',pct:10}] },
+    { mainMsg:"이 물건 떨어지면 어떻게 될까요? 과학적으로 알아볼게요. 😈", subMsg:"물건을 발로 슬쩍 밀며 호기심 어린 눈으로 바라보고 있어요. 고양이의 실험 정신은 끝이 없습니다.", emotions:[{label:'호기심',emoji:'🤔',pct:55},{label:'장난기',emoji:'😈',pct:35},{label:'흥미',emoji:'👀',pct:10}] },
+    { mainMsg:"칭찬받고 싶긴 한데... 내가 먼저 다가가기는 싫어요. 눈치채요.", subMsg:"꼬리 끝만 살짝 흔들며 쿨한 척하고 있어요. 고양이의 사랑 표현은 원래 이렇게 복잡하답니다.", emotions:[{label:'도도함',emoji:'😏',pct:45},{label:'애정',emoji:'💕',pct:40},{label:'수줍음',emoji:'😳',pct:15}] },
+    { mainMsg:"왜 저를 안아요? 일단 참을게요. 5초만요. 딱 5초만이에요. 😤", subMsg:"억지로 안겼지만 의외로 버티는 중이에요. 고양이도 가끔 포옹이 싫지만은 않답니다.", emotions:[{label:'인내',emoji:'😤',pct:50},{label:'숨겨진애정',emoji:'💛',pct:35},{label:'체념',emoji:'😮‍💨',pct:15}] },
+    { mainMsg:"오늘 캣닙 냄새 맡았어요! 세상이 너무 아름다워요! 🌿", subMsg:"캣닙에 몸을 비비며 황홀경에 빠져 있어요. 지금 이 순간은 고양이에게 축제와도 같답니다.", emotions:[{label:'황홀감',emoji:'🌿',pct:80},{label:'행복',emoji:'😺',pct:15},{label:'자유',emoji:'✨',pct:5}] },
+    { mainMsg:"문 왜 닫아요? 저도 들어갈 거예요! 문 열어주세요! 🚪", subMsg:"닫힌 문 앞에서 발로 긁기 시작했어요. 들어가도 별로 있고 싶지 않지만 문이 닫혀있으면 들어가야 해요.", emotions:[{label:'고집',emoji:'😾',pct:65},{label:'호기심',emoji:'👀',pct:25},{label:'원칙',emoji:'🚪',pct:10}] },
+    { mainMsg:"밤에 발 밟은 거 제 실수예요. 근데 소리 질러서 제가 더 놀랐어요.", subMsg:"새벽에 보호자 발을 밟고 서로 놀란 상황이에요. 사실 고양이도 미안하지만 절대 표현하지 않는답니다.", emotions:[{label:'당황',emoji:'😲',pct:60},{label:'미안함',emoji:'😅',pct:30},{label:'억울함',emoji:'🙄',pct:10}] },
+    { mainMsg:"생선 냄새 나요! 어디에 있어요? 지금 찾아내고야 말 거예요! 🐟", subMsg:"냄새를 따라 집 안 구석구석을 탐색하고 있어요. 코가 이끄는 대로 가다 보면 반드시 찾는답니다.", emotions:[{label:'집중',emoji:'🎯',pct:70},{label:'흥분',emoji:'🤩',pct:25},{label:'기대',emoji:'😋',pct:5}] },
+    { mainMsg:"제 이름 불렀어요? 들었지만 지금 바쁜 척할게요. 잠깐만요. 😌", subMsg:"분명히 들었지만 천천히 자기 페이스대로 반응하고 있어요. 고양이는 부름에 즉시 반응하지 않는 게 원칙이랍니다.", emotions:[{label:'도도함',emoji:'😌',pct:55},{label:'인식',emoji:'👂',pct:35},{label:'여유',emoji:'😏',pct:10}] },
+    { mainMsg:"여기 햇빛 자리가 제일 좋아요. 오늘 하루 여기서 보낼게요. ☀️", subMsg:"햇빛이 드는 창가 자리를 선점하고 눈을 감고 있어요. 따뜻한 햇살은 고양이에게 최고의 선물이랍니다.", emotions:[{label:'만족',emoji:'☀️',pct:75},{label:'평화',emoji:'😌',pct:20},{label:'행복',emoji:'😺',pct:5}] },
+    { mainMsg:"이 실 뭐예요? 잡아야 해요! 잡고야 말 거예요! 집중해요! 🧵", subMsg:"실 하나에 온 신경을 집중하고 있어요. 고양이에게 움직이는 것은 반드시 잡아야 하는 도전이랍니다.", emotions:[{label:'집중',emoji:'🎯',pct:80},{label:'흥분',emoji:'⚡',pct:15},{label:'투지',emoji:'💪',pct:5}] },
+    { mainMsg:"오늘 기분이 좋아요. 그루밍 해드릴게요. 가만히 있어요. 😺", subMsg:"보호자의 손이나 팔을 핥기 시작했어요. 고양이가 먼저 다가오는 날은 정말 특별한 날이랍니다.", emotions:[{label:'애정',emoji:'💕',pct:70},{label:'친밀감',emoji:'😺',pct:25},{label:'만족',emoji:'😌',pct:5}] },
+    { mainMsg:"여러분이 울고 있으면 저도 슬퍼요. 옆에 있어줄게요. 조용히요. 🤍", subMsg:"보호자가 힘들 때 슬그머니 곁에 와서 앉아 있어요. 말은 못 해도 고양이는 다 알고 있답니다.", emotions:[{label:'공감',emoji:'🤍',pct:60},{label:'위로',emoji:'😌',pct:30},{label:'애정',emoji:'💕',pct:10}] },
+  ],
+  토끼: [
+    { mainMsg:"지금 엄청 행복해요! 빙글빙글 돌고 싶어요! 뛰고 싶어요! 🐰", subMsg:"귀를 쫑긋 세우고 폴짝폴짝 뛰고 싶어해요. 행복할 때 빙글빙글 도는 건 토끼의 춤이랍니다.", emotions:[{label:'행복',emoji:'🌟',pct:85},{label:'에너지',emoji:'⚡',pct:10},{label:'설렘',emoji:'🎉',pct:5}] },
+    { mainMsg:"채소 주세요! 당근이 먹고 싶어요! 지금 당장이요! 🥕", subMsg:"코를 씰룩거리며 간식 냄새를 맡고 있어요. 당근은 토끼의 인생 목표이자 최고의 보상이랍니다.", emotions:[{label:'배고픔',emoji:'🥕',pct:80},{label:'기대',emoji:'😋',pct:15},{label:'흥분',emoji:'🤩',pct:5}] },
+    { mainMsg:"햇빛 드는 자리에서 쉬고 싶어요. 오늘 참 좋은 날이에요. ☀️", subMsg:"햇볕이 잘 드는 자리에서 눈을 스르륵 감고 있어요. 토끼의 이런 평화로운 모습이 제일 귀엽답니다.", emotions:[{label:'평화',emoji:'😌',pct:70},{label:'만족',emoji:'☀️',pct:25},{label:'행복',emoji:'🌸',pct:5}] },
+    { mainMsg:"뭔가 이상한 소리 났어요! 조심해야 해요! 귀 세워봐요! 👂", subMsg:"귀를 바짝 세우고 주변을 살피고 있어요. 작은 소리에도 민감하게 반응하는 건 토끼의 본능이랍니다.", emotions:[{label:'경계',emoji:'👂',pct:65},{label:'긴장',emoji:'😰',pct:25},{label:'용감함',emoji:'💪',pct:10}] },
+    { mainMsg:"귀 뒤쪽 쓰다듬어 주세요! 거기가 제일 좋아요! 계속해요! 🥰", subMsg:"눈을 살짝 감고 기분 좋은 표정을 짓고 있어요. 귀 뒤쪽 마사지는 토끼에게 극락이랍니다.", emotions:[{label:'행복',emoji:'🥰',pct:80},{label:'만족',emoji:'😌',pct:15},{label:'애정',emoji:'💕',pct:5}] },
+    { mainMsg:"풀 냄새 맡았어요! 맛있을 것 같아요! 먹어봐도 돼요? 🌿", subMsg:"코를 킁킁거리며 풀 냄새를 탐색하고 있어요. 자연의 냄새는 토끼에게 최고의 향수랍니다.", emotions:[{label:'호기심',emoji:'🌿',pct:70},{label:'기대',emoji:'😋',pct:25},{label:'설렘',emoji:'✨',pct:5}] },
+    { mainMsg:"넓은 곳에서 달리고 싶어요! 신나게 뛰어다니고 싶어요! 🏃", subMsg:"좁은 공간에 있으면 답답하다는 신호를 보내고 있어요. 토끼는 뛸 때 제일 자유롭답니다.", emotions:[{label:'자유욕구',emoji:'🏃',pct:75},{label:'에너지',emoji:'⚡',pct:20},{label:'설렘',emoji:'💨',pct:5}] },
+    { mainMsg:"이 물건 씹어봐도 돼요? 맛이 궁금해요. 딱 한 번만요. 🦷", subMsg:"주변 물건을 호기심 어린 눈으로 바라보며 접근하고 있어요. 토끼에게 씹기는 탐험이랍니다.", emotions:[{label:'호기심',emoji:'🤔',pct:65},{label:'장난기',emoji:'😄',pct:25},{label:'탐구심',emoji:'🔍',pct:10}] },
+    { mainMsg:"오늘 친구 생겼어요! 같이 놀 수 있어요! 너무 좋아요! 🐾", subMsg:"새로운 친구와 코를 맞대며 인사하고 있어요. 토끼도 친구가 생기면 이렇게 기쁘답니다.", emotions:[{label:'기쁨',emoji:'🎉',pct:80},{label:'설렘',emoji:'🥰',pct:15},{label:'친근감',emoji:'🐾',pct:5}] },
+    { mainMsg:"혼자 두지 마세요! 무서워요! 옆에 있어줘요! 💕", subMsg:"혼자 남겨지면 불안해하는 토끼예요. 보호자가 돌아왔을 때 반겨주는 모습이 너무 귀엽답니다.", emotions:[{label:'불안',emoji:'😟',pct:55},{label:'그리움',emoji:'💕',pct:35},{label:'안도',emoji:'😮‍💨',pct:10}] },
+    { mainMsg:"요 구석이 제 최애 자리예요. 아무도 모르는 비밀 장소예요. 🏠", subMsg:"아늑한 구석 자리에 쏙 들어가 편안하게 앉아 있어요. 토끼에게 자기만의 공간은 정말 소중하답니다.", emotions:[{label:'안정감',emoji:'🏠',pct:70},{label:'만족',emoji:'😌',pct:25},{label:'행복',emoji:'🌸',pct:5}] },
+    { mainMsg:"오늘 날씨 좋네요! 기분도 좋아요! 뛰어놀고 싶어요! 🌈", subMsg:"활기차게 주변을 탐색하며 좋은 에너지를 뿜어내고 있어요. 날씨 좋은 날 토끼는 최고로 행복하답니다.", emotions:[{label:'활기참',emoji:'🌈',pct:75},{label:'행복',emoji:'😊',pct:20},{label:'에너지',emoji:'⚡',pct:5}] },
+    { mainMsg:"사과 간식 주면 뭐든 할게요! 뭐 해드릴까요? 🍎", subMsg:"좋아하는 간식 앞에서 집중력이 100배가 됐어요. 토끼는 간식 앞에서 가장 순해진답니다.", emotions:[{label:'기대',emoji:'🍎',pct:85},{label:'집중',emoji:'🎯',pct:10},{label:'설렘',emoji:'✨',pct:5}] },
+    { mainMsg:"발바닥 보여드릴게요! 귀엽죠? 감사인사예요! 🐾", subMsg:"배를 보이며 뒤집어 누운 채 발바닥을 보여주고 있어요. 이건 토끼의 최상위 신뢰 표현이랍니다.", emotions:[{label:'신뢰',emoji:'💛',pct:70},{label:'애정',emoji:'🥰',pct:25},{label:'행복',emoji:'😊',pct:5}] },
+    { mainMsg:"밤에 혼자 생각이 많아요. 보호자는 잘 자고 있나요? 🌙", subMsg:"조용한 밤에 주변을 살피며 생각에 잠겨 있어요. 토끼도 밤에는 철학자가 된답니다.", emotions:[{label:'사색',emoji:'🌙',pct:50},{label:'평온',emoji:'😌',pct:35},{label:'애정',emoji:'💕',pct:15}] },
+    { mainMsg:"이 담요 냄새 맡아봤어요? 엄청 좋아요. 제 거 해도 돼요? 🛋️", subMsg:"폭신한 담요에 코를 박고 킁킁거리고 있어요. 보호자 냄새 가득한 물건은 토끼에게 보물이랍니다.", emotions:[{label:'애정',emoji:'💛',pct:65},{label:'만족',emoji:'😌',pct:30},{label:'행복',emoji:'🌸',pct:5}] },
+    { mainMsg:"오늘 많이 뛰었어요. 피곤하지만 행복해요. 잘 자요! 💤", subMsg:"신나게 놀고 난 뒤 포근하게 눕는 중이에요. 충분히 뛰고 난 토끼의 잠은 정말 달콤하답니다.", emotions:[{label:'만족',emoji:'💤',pct:70},{label:'행복',emoji:'😊',pct:25},{label:'피곤함',emoji:'😴',pct:5}] },
+    { mainMsg:"저 많이 컸죠? 건강하게 잘 자라고 있죠? 칭찬해주세요! 🌱", subMsg:"똑바로 앉아서 자신감 있는 눈빛을 보내고 있어요. 토끼도 인정받고 싶은 마음이 있답니다.", emotions:[{label:'자신감',emoji:'😎',pct:60},{label:'기대',emoji:'🥰',pct:30},{label:'행복',emoji:'🌱',pct:10}] },
+    { mainMsg:"함께 있어서 행복해요. 오늘도 고마워요. 사랑해요. 🌸", subMsg:"조용히 곁에 앉아 보호자를 바라보고 있어요. 토끼의 이 눈빛에는 모든 감사함이 담겨 있답니다.", emotions:[{label:'사랑',emoji:'🌸',pct:80},{label:'감사',emoji:'🙏',pct:15},{label:'행복',emoji:'💕',pct:5}] },
+    { mainMsg:"보호자가 울면 저도 울고 싶어요. 귀 내어드릴게요. 들어줄게요. 🤍", subMsg:"힘든 날 말없이 곁에 앉아 있어요. 토끼는 보호자의 감정을 누구보다 잘 느낀답니다.", emotions:[{label:'공감',emoji:'🤍',pct:65},{label:'위로',emoji:'💙',pct:30},{label:'애정',emoji:'💕',pct:5}] },
+  ],
+  기타: [
+    { mainMsg:"저도 할 말이 많아요! 오늘도 잘 부탁드려요! 🐾", subMsg:"동물은 항상 많은 것을 말하고 있어요. 눈빛과 몸짓으로 여러분에게 사랑을 전하고 있답니다.", emotions:[{label:'표현욕구',emoji:'💬',pct:60},{label:'애정',emoji:'❤️',pct:30},{label:'행복',emoji:'😊',pct:10}] },
+    { mainMsg:"오늘 하루도 함께해줘서 고마워요! 최고의 보호자예요! 🌟", subMsg:"눈빛 속에 따뜻한 감사함이 가득 담겨 있어요. 동물은 항상 여러분 곁에 있고 싶답니다.", emotions:[{label:'감사',emoji:'🙏',pct:70},{label:'행복',emoji:'😄',pct:20},{label:'사랑',emoji:'❤️',pct:10}] },
+    { mainMsg:"배고파요! 맛있는 거 주세요! 제일 좋아하는 거요! 🍽️", subMsg:"밥 생각이 가득한 표정으로 여러분을 바라보고 있어요. 맛있는 음식 앞에서 모든 동물은 하나랍니다.", emotions:[{label:'배고픔',emoji:'🍽️',pct:75},{label:'기대',emoji:'😋',pct:20},{label:'설렘',emoji:'✨',pct:5}] },
+    { mainMsg:"같이 놀아요! 지금이요! 심심해요! 빨리요! 🎾", subMsg:"활기차게 여러분의 관심을 끌려고 하고 있어요. 놀이 시간은 동물에게 최고의 선물이랍니다.", emotions:[{label:'신남',emoji:'🎾',pct:80},{label:'기대',emoji:'😊',pct:15},{label:'에너지',emoji:'⚡',pct:5}] },
+    { mainMsg:"혼자 두지 마세요! 같이 있어요! 제일 좋아하는 사람이에요! 💕", subMsg:"보호자가 자리를 비우면 금방 찾아와요. 함께하는 모든 순간이 소중하답니다.", emotions:[{label:'의존',emoji:'💕',pct:65},{label:'애정',emoji:'❤️',pct:25},{label:'불안',emoji:'😟',pct:10}] },
+    { mainMsg:"오늘 기분이 너무 좋아요! 이유는 모르겠지만 그냥 좋아요! ✨", subMsg:"이유 없이 기분이 좋은 날이에요. 동물도 이런 날이 있답니다. 같이 기뻐해 주세요!", emotions:[{label:'행복',emoji:'✨',pct:85},{label:'설렘',emoji:'🌟',pct:10},{label:'에너지',emoji:'⚡',pct:5}] },
+    { mainMsg:"이 냄새 뭐예요? 좋은 냄새예요! 더 맡아볼게요! 👃", subMsg:"코를 킁킁거리며 냄새의 근원을 찾고 있어요. 동물에게 냄새는 세상을 이해하는 방법이랍니다.", emotions:[{label:'호기심',emoji:'👃',pct:70},{label:'탐구심',emoji:'🔍',pct:25},{label:'흥미',emoji:'😮',pct:5}] },
+    { mainMsg:"지금 너무 편안해요. 여기 있어도 되죠? 계속 있을 거예요. 😌", subMsg:"포근한 자리를 찾아 편안하게 자리 잡고 있어요. 이 자리가 오늘의 최고 발견이랍니다.", emotions:[{label:'편안함',emoji:'😌',pct:75},{label:'만족',emoji:'🛋️',pct:20},{label:'행복',emoji:'😊',pct:5}] },
+    { mainMsg:"보호자가 웃으면 저도 기분이 좋아요! 자주 웃어요! 😄", subMsg:"보호자의 행복한 에너지를 느끼고 덩달아 활기차진 상태예요. 동물은 감정을 금방 읽는답니다.", emotions:[{label:'공감',emoji:'😄',pct:65},{label:'행복',emoji:'🌟',pct:30},{label:'애정',emoji:'💕',pct:5}] },
+    { mainMsg:"오늘도 건강하게 지냈어요! 보호자도 건강해야 해요! 💪", subMsg:"활기찬 눈빛으로 보호자를 바라보고 있어요. 동물은 보호자의 건강을 누구보다 바란답니다.", emotions:[{label:'활기참',emoji:'💪',pct:70},{label:'애정',emoji:'❤️',pct:25},{label:'행복',emoji:'😊',pct:5}] },
+    { mainMsg:"낯선 곳에 왔어요! 무섭지만 용감하게 탐험해볼게요! 🔍", subMsg:"새로운 환경에서 조심스럽게 주변을 살피고 있어요. 용기 내서 탐험하는 모습이 정말 멋지답니다.", emotions:[{label:'긴장',emoji:'😰',pct:45},{label:'용기',emoji:'💪',pct:40},{label:'호기심',emoji:'🔍',pct:15}] },
+    { mainMsg:"오늘 좋은 꿈 꿨어요! 내용은 비밀이에요! 😴", subMsg:"눈을 반쯤 감고 몽롱한 표정을 짓고 있어요. 동물도 꿈을 꾼다는 거 알고 있었나요?", emotions:[{label:'행복',emoji:'😴',pct:70},{label:'평화',emoji:'🌙',pct:25},{label:'비밀',emoji:'🤫',pct:5}] },
+    { mainMsg:"저 예쁘죠? 오늘따라 더 예쁜 것 같아요. 그렇죠? 😍", subMsg:"자신감 넘치는 눈빛으로 바라보고 있어요. 동물도 가끔 자신이 얼마나 사랑스러운지 안답니다.", emotions:[{label:'자신감',emoji:'😍',pct:65},{label:'애정',emoji:'💕',pct:25},{label:'행복',emoji:'✨',pct:10}] },
+    { mainMsg:"비가 오네요. 오늘은 조용히 함께 있어요. 그게 제일 좋아요. 🌧️", subMsg:"창밖 빗소리를 들으며 보호자 곁에 조용히 앉아 있어요. 이런 날이 사실 제일 행복하답니다.", emotions:[{label:'평화',emoji:'🌧️',pct:60},{label:'애정',emoji:'🤍',pct:35},{label:'만족',emoji:'😌',pct:5}] },
+    { mainMsg:"간식 주면 뭐든 할게요! 명령만 해요! 준비됐어요! 🎯", subMsg:"간식을 들고 있자 눈이 반짝반짝 빛나고 집중력이 최대치가 됐어요. 간식의 힘은 위대하답니다.", emotions:[{label:'집중',emoji:'🎯',pct:80},{label:'기대',emoji:'😋',pct:15},{label:'설렘',emoji:'✨',pct:5}] },
+    { mainMsg:"보호자 손이 제일 좋아요. 따뜻하고 안심돼요. 잡아줘요. 🤝", subMsg:"보호자의 손 곁으로 다가와 있어요. 이 따뜻함이 세상에서 제일 안전하게 느껴진답니다.", emotions:[{label:'안정감',emoji:'🤝',pct:70},{label:'애정',emoji:'💛',pct:25},{label:'신뢰',emoji:'😌',pct:5}] },
+    { mainMsg:"오늘 많이 힘들었어요? 제가 옆에 있어줄게요. 괜찮아요. 🤍", subMsg:"보호자의 기분을 느끼고 조용히 곁에 앉아 있어요. 동물의 위로는 말 없이도 충분하답니다.", emotions:[{label:'위로',emoji:'🤍',pct:65},{label:'공감',emoji:'💙',pct:30},{label:'애정',emoji:'💕',pct:5}] },
+    { mainMsg:"세상 구경하고 싶어요! 창문 너머가 궁금해요! 🌍", subMsg:"창밖을 하염없이 바라보고 있어요. 넓은 세상이 얼마나 신기하고 궁금한지 모른답니다.", emotions:[{label:'호기심',emoji:'🌍',pct:70},{label:'설렘',emoji:'✨',pct:25},{label:'자유',emoji:'💨',pct:5}] },
+    { mainMsg:"봄이 왔어요! 냄새가 달라요! 기분이 너무 좋아요! 🌸", subMsg:"계절이 바뀐 걸 코로 느끼고 있어요. 동물은 계절 변화를 사람보다 훨씬 먼저 안답니다.", emotions:[{label:'설렘',emoji:'🌸',pct:75},{label:'행복',emoji:'😊',pct:20},{label:'에너지',emoji:'⚡',pct:5}] },
+    { mainMsg:"오늘도 사랑해요. 내일도 사랑할 거예요. 항상 사랑해요. ❤️", subMsg:"조용하지만 깊은 눈빛으로 바라보고 있어요. 동물의 사랑은 조건 없이 언제나 한결같답니다.", emotions:[{label:'사랑',emoji:'❤️',pct:90},{label:'행복',emoji:'😊',pct:7},{label:'감사',emoji:'🙏',pct:3}] },
+  ]
+};
+
+function getRandomTransResult(){
+  const list = TRANS_DATA[transType] || TRANS_DATA['기타'];
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function showTransResult(result){
+  document.getElementById('transLoading').style.display = 'none';
+  document.getElementById('transResult').style.display = 'block';
+  document.getElementById('transEmoji').textContent = transEmoji;
+  document.getElementById('transMainTxt').textContent = result.mainMsg;
+  document.getElementById('transSubTxt').textContent = result.subMsg;
+  document.getElementById('transEmotions').innerHTML = (result.emotions||[]).map(e=>`
+    <div style="background:rgba(255,255,255,0.04);border-radius:var(--rs);padding:10px;text-align:center">
+      <div style="font-size:20px;margin-bottom:4px">${e.emoji}</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:4px">${e.label}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--g1)">${e.pct}%</div>
+    </div>`).join('');
+  document.getElementById('transTimer').textContent = '번역 완료! 🎉';
+  window._lastTransResult = result;
+}
+
+function resetTrans(){
+  document.getElementById('transResult').style.display = 'none';
+  document.getElementById('transTimer').textContent = '';
+  document.getElementById('transLoading').style.display = 'none';
+}
+
+function shareTransResult(){
+  const result = window._lastTransResult; if(!result) return;
+  const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : transType;
+  const text = `🐾 AniBridge 동물 번역기\n\n${transEmoji} ${petName}의 말:\n"${result.mainMsg}"\n\n${result.subMsg}\n\n---\nEvery Animal Deserves a Happy Life\nhttps://anibridge.com`;
+  if(navigator.share){ navigator.share({title:'AniBridge 동물 번역기', text}); }
+  else { navigator.clipboard.writeText(text).then(()=>toast('📋 번역 결과가 복사되었습니다!')); }
+}
+
 // ── 토스트 ──
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
 
@@ -3414,6 +3715,8 @@ DB.memo = dbData.memo;
 
 // ── D-day 뱃지 초기화 ──
 updDdayBadge();
+// ── 계절 팁 초기화 ──
+updSeasonTip();
 
 // ── API 키 상태 업데이트 ──
 updateApiKeyStatus();
