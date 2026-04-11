@@ -1348,7 +1348,7 @@ select option { background: #131929; }
 
     <div class="menu-list">
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
-      <div class="mi" onclick="openM('onboarding')"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
+      <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
       <div class="mi" onclick="openM('alarm')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🔔</div><div class="mi-text">알림 설정</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('subscribe')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">💳</div><div class="mi-text">구독 관리</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
@@ -1877,8 +1877,11 @@ select option { background: #131929; }
 </div> <!-- overlay 끝 -->
 
 <script>
+// ── 데이터 — 반려동물별 localStorage 저장 ──
+const DB_KEY = 'anibridge_db';
+
 // ── 버전 체크 — 버전 다르면 자동 초기화 ──
-const APP_VERSION = '2.4';
+const APP_VERSION = '2.5';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
   localStorage.removeItem('anibridge_pets');
@@ -1888,38 +1891,51 @@ if(savedVersion !== APP_VERSION){
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
-// ── 혹시 남아있는 D-10 샘플 접종 데이터 강제 제거 ──
-try {
-  const raw = localStorage.getItem('anibridge_db');
-  if(raw){
-    const d = JSON.parse(raw);
-    // 샘플 데이터 ID(3) 또는 2026-04-20 접종일 제거
-    if(d.vaccine){
-      d.vaccine = d.vaccine.filter(v => v.nextDate !== '2026-04-20' && v.id !== 3);
-      localStorage.setItem('anibridge_db', JSON.stringify(d));
-    }
-  }
-} catch(e){}
+// getPetDBKey는 PETS 초기화 후 사용 가능 (함수 호이스팅 활용)
+function getPetDBKey(){
+  if(!PETS || !PETS.length) return DB_KEY;
+  return DB_KEY + '_' + (PETS[curPetIdx]?.id || '0');
+}
 
-// ── 데이터 — localStorage 영구 저장 ──
-const DB_KEY = 'anibridge_db';
 function loadDB(){
   try{
-    const raw = localStorage.getItem(DB_KEY);
-    if(!raw) return { symptom:[], hospital:[], vaccine:[], memo:[] };
+    // 현재 반려동물 DB 키로 로드
+    const key = getPetDBKey();
+    const raw = localStorage.getItem(key);
+    if(!raw){
+      // 하위 호환: 기존 공용 DB 확인
+      const legacyRaw = localStorage.getItem(DB_KEY);
+      if(legacyRaw && PETS.length && PETS[0]){
+        // 첫 번째 반려동물에 기존 데이터 마이그레이션
+        const d = JSON.parse(legacyRaw);
+        const petKey = DB_KEY + '_' + PETS[0].id;
+        localStorage.setItem(petKey, legacyRaw);
+        localStorage.removeItem(DB_KEY);
+        if(curPetIdx === 0) return { symptom:d.symptom||[], hospital:d.hospital||[], vaccine:d.vaccine||[], memo:d.memo||[] };
+      }
+      return { symptom:[], hospital:[], vaccine:[], memo:[] };
+    }
     const d = JSON.parse(raw);
-    return {
-      symptom: d.symptom||[],
-      hospital: d.hospital||[],
-      vaccine: d.vaccine||[],
-      memo: d.memo||[]
-    };
+    return { symptom:d.symptom||[], hospital:d.hospital||[], vaccine:d.vaccine||[], memo:d.memo||[] };
   }catch(e){ return { symptom:[], hospital:[], vaccine:[], memo:[] }; }
 }
+
 function saveDB(){
-  try{ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }catch(e){}
+  try{ localStorage.setItem(getPetDBKey(), JSON.stringify(DB)); }catch(e){}
 }
-const DB = loadDB();
+
+function reloadDB(){
+  // 반려동물 전환 시 DB 다시 로드
+  const d = loadDB();
+  DB.symptom = d.symptom;
+  DB.hospital = d.hospital;
+  DB.vaccine = d.vaccine;
+  DB.memo = d.memo;
+  ['symptom','hospital','vaccine','memo'].forEach(renderList);
+  updDdayBadge();
+}
+// DB는 PETS 초기화 후 로드됨 (아래 초기화 코드 참조)
+const DB = { symptom:[], hospital:[], vaccine:[], memo:[] };
 let imgB64 = null, walking = false, walkTimer = null;
 const WALK_TARGET = 30;
 
@@ -2210,7 +2226,22 @@ function showPage(k){
   document.getElementById(PG[k]).classList.add('active');
   document.getElementById('nav'+NV[k]).classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
+  // 히스토리 추가 (뒤로가기 지원)
+  history.pushState({page:k}, '', '#'+k);
 }
+
+// 뒤로가기 버튼 처리
+window.addEventListener('popstate', function(e){
+  if(e.state && e.state.page){
+    const k = e.state.page;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById(PG[k]).classList.add('active');
+    document.getElementById('nav'+NV[k]).classList.add('active');
+  } else {
+    showPage('home');
+  }
+});
 
 
 
@@ -2434,6 +2465,28 @@ function dateFromBirth(birthStr){
 }
 
 // ── 온보딩 단계 이동 ──
+function openOnboarding(){
+  // 현재 반려동물 정보 자동 입력
+  const p = PETS.length ? PETS[curPetIdx] : null;
+  if(p && p.name){
+    const nameEl = document.getElementById('ob-name');
+    const breedEl = document.getElementById('ob-breed');
+    const birthEl = document.getElementById('ob-birth');
+    if(nameEl) nameEl.value = p.name;
+    if(breedEl) breedEl.value = p.breed||'';
+    if(birthEl) birthEl.value = p.birth||'';
+    // 동물 타입 자동 선택
+    if(p.emoji){
+      obData.type = p.breed ? '강아지' : '강아지';
+      obData.emoji = p.emoji;
+    }
+  }
+  // 스텝1부터 시작
+  document.querySelectorAll('.ob-step').forEach(s=>s.style.display='none');
+  document.getElementById('ob-step1').style.display='block';
+  openM('onboarding');
+}
+
 function obNext(step){
   if(step===3){
     const name = document.getElementById('ob-name').value.trim();
@@ -3052,16 +3105,17 @@ function migrateSingleProfile(){
     const raw = localStorage.getItem('anibridge_profile');
     if(raw){
       const p = JSON.parse(raw);
-      if(p.name){
+      if(p.name && p.breed){
+        // 실제 등록된 프로필만 마이그레이션
         PETS = [{ id:Date.now(), name:p.name, breed:p.breed||'', sex:p.sex||'', birth:p.birth||'', weight:p.weight||'', neuter:p.neuter||'', emoji:p.emoji||'🐶', photoSrc:p.photoSrc||'', blood:'' }];
         savePets();
+        return;
       }
     }
   }catch(e){}
-  if(PETS.length === 0){
-    PETS = [{ id:Date.now(), name:'', breed:'', sex:'', birth:'', weight:'', neuter:'', emoji:'🐶', photoSrc:'', blood:'' }];
-    savePets();
-  }
+  // 빈 배열로 시작 — 자동 등록 안 함
+  PETS = [];
+  savePets();
 }
 
 function calcAge(birth){
@@ -3147,6 +3201,7 @@ function switchPet(idx){
   curPetIdx = idx;
   renderPetTabs();
   renderCurPet();
+  reloadDB(); // 반려동물별 케어수첩 전환
 }
 
 function addPet(){
@@ -3349,6 +3404,13 @@ initTheme();
 migrateSingleProfile();
 renderPetTabs();
 renderCurPet();
+
+// ── DB 초기화 (PETS 초기화 후) ──
+const dbData = loadDB();
+DB.symptom = dbData.symptom;
+DB.hospital = dbData.hospital;
+DB.vaccine = dbData.vaccine;
+DB.memo = dbData.memo;
 
 // ── D-day 뱃지 초기화 ──
 updDdayBadge();
