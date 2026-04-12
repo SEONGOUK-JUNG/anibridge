@@ -1488,6 +1488,11 @@ select option { background: #131929; }
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
     </div>
     <div class="ver-txt">AniBridge v2.5<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
+    <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;padding-bottom:8px">
+      <button onclick="openM('privacy')" style="background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline">개인정보처리방침</button>
+      <span style="color:var(--border2);font-size:11px">|</span>
+      <button onclick="openM('terms')" style="background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline">이용약관</button>
+    </div>
   </div>
 </div>
 
@@ -1697,8 +1702,7 @@ select option { background: #131929; }
     <!-- 감성 카피 -->
     <div style="text-align:center;padding:8px 0 22px">
       <div style="font-size:40px;margin-bottom:12px">🐾</div>
-      <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:19px;line-height:1.4;margin-bottom:8px">코코가 더 자주<br>검사받고 싶어해요</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.7">오늘 무료 AI 분석 3회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>
+      <div id="upgradeCopy" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:19px;line-height:1.4;margin-bottom:8px">코코가 더 자주<br>검사받고 싶어해요<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 분석 1회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div></div>
     </div>
 
     <!-- 충전형 - 핵심 -->
@@ -1758,12 +1762,12 @@ select option { background: #131929; }
     <!-- 무료 비교 -->
     <div style="background:rgba(255,255,255,0.02);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
       <div style="font-size:12px;color:var(--text3)">현재 무료 플랜</div>
-      <div style="font-size:12px;color:var(--text2)">AI 분석 2회/일 · 내일 자정 충전</div>
+      <div style="font-size:12px;color:var(--text2)">AI 분석 1회/일 · 내일 자정 충전</div>
     </div>
 
     <!-- 자정까지 남은 시간 -->
     <div style="text-align:center;font-size:12px;color:var(--text3)">
-      <span id="nextResetTime" style="color:var(--text2);font-weight:700"></span> 후 무료 2회 자동 충전
+      <span id="nextResetTime" style="color:var(--text2);font-weight:700"></span> 후 무료 1회 자동 충전
     </div>
     <div style="text-align:center;margin-top:10px">
       <button onclick="closeM(null,'upgrade')" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline">괜찮아요, 내일 이용할게요</button>
@@ -1861,6 +1865,94 @@ select option { background: #131929; }
     <input type="hidden" name="from_name" value="AniBridge 앱">
     <input type="hidden" name="redirect" value="https://anibridge.com">
     <button class="save-btn" onclick="submitInquiry()">문의 접수하기</button>
+  </div>
+</div></div>
+
+<!-- 개인정보처리방침 -->
+<div class="overlay" id="m-privacy" onclick="closeM(event,'privacy')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🔒 개인정보처리방침</span><button class="modal-close" onclick="closeM(null,'privacy')">✕</button></div>
+  <div class="modal-body" style="font-size:12px;color:var(--text2);line-height:1.9">
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제1조 (개인정보의 처리 목적)</div>
+    <p style="margin-bottom:14px">㈜에이브릿지(이하 "회사")는 AniBridge 서비스 제공을 위해 최소한의 개인정보를 수집·처리합니다.</p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제2조 (수집하는 개인정보 항목)</div>
+    <p style="margin-bottom:14px">
+      · 카카오 로그인: 닉네임, 프로필 사진<br>
+      · 결제 서비스: 결제 수단 정보 (페이앱을 통해 처리)<br>
+      · 서비스 이용: 반려동물 정보, 건강 기록 (기기 내 저장)
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (개인정보의 보유 및 이용기간)</div>
+    <p style="margin-bottom:14px">
+      · 회원 탈퇴 시 즉시 파기<br>
+      · 단, 관련 법령에 따라 보존이 필요한 경우 해당 기간 보관
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제4조 (개인정보의 제3자 제공)</div>
+    <p style="margin-bottom:14px">회사는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 단, 결제 처리를 위해 페이앱에 최소한의 정보가 제공됩니다.</p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제5조 (이용자의 권리)</div>
+    <p style="margin-bottom:14px">
+      · 개인정보 열람, 수정, 삭제 요청 가능<br>
+      · 문의: dltpdk@gmail.com
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제6조 (개인정보 보호책임자)</div>
+    <p style="margin-bottom:14px">
+      · 회사명: ㈜에이브릿지<br>
+      · 책임자: 이세아<br>
+      · 이메일: dltpdk@gmail.com
+    </p>
+
+    <div style="font-size:11px;color:var(--text3);margin-top:8px">
+      시행일: 2026년 4월 12일
+    </div>
+  </div>
+</div></div>
+
+<!-- 이용약관 -->
+<div class="overlay" id="m-terms" onclick="closeM(event,'terms')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">📋 이용약관</span><button class="modal-close" onclick="closeM(null,'terms')">✕</button></div>
+  <div class="modal-body" style="font-size:12px;color:var(--text2);line-height:1.9">
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제1조 (목적)</div>
+    <p style="margin-bottom:14px">본 약관은 ㈜에이브릿지가 제공하는 AniBridge 서비스의 이용에 관한 조건 및 절차를 규정합니다.</p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제2조 (서비스 내용)</div>
+    <p style="margin-bottom:14px">
+      · AI 반려동물 건강 분석 서비스<br>
+      · AI 반려동물 건강 상담 서비스<br>
+      · 동물 번역기, 케어수첩, 산책 기록 등
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (서비스 이용요금)</div>
+    <p style="margin-bottom:14px">
+      · 무료: AI 분석 2회/일, AI 상담 3회/일<br>
+      · 충전형 10회: 1,000원 (유효기간 없음)<br>
+      · 충전형 30회: 2,700원 (유효기간 없음)<br>
+      · 월정액: 9,900원/월 (30일 이용, 재결제 안내 후 갱신)
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제4조 (환불 정책)</div>
+    <p style="margin-bottom:14px">
+      · 충전형: 미사용 횟수에 한해 환불 가능<br>
+      · 월정액: 이용 기간 중 해지 시 잔여 기간 환불<br>
+      · 환불 문의: koreagwangju@gmail.com
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제5조 (면책조항)</div>
+    <p style="margin-bottom:14px">
+      · AI 분석 결과는 참고 정보이며 수의사의 의료적 진단을 대체하지 않습니다<br>
+      · 회사는 AI 분석 결과로 인한 손해에 대해 책임지지 않습니다
+    </p>
+
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제6조 (준거법)</div>
+    <p style="margin-bottom:14px">본 약관은 대한민국 법률에 따라 해석됩니다.</p>
+
+    <div style="font-size:11px;color:var(--text3);margin-top:8px">
+      시행일: 2026년 4월 12일
+    </div>
   </div>
 </div></div>
 
@@ -2405,8 +2497,8 @@ function scheduleReset(){
 }
 scheduleReset();
 
-// ── AI 분석 횟수 제한 (하루 2회) ──
-const MAX_ANALYZE = 2;
+// ── AI 분석 횟수 제한 (하루 1회) ──
+const MAX_ANALYZE = 1;
 function getTodayKey(){ return 'analyze_' + today(); }
 function getUsedCount(){ return parseInt(localStorage.getItem(getTodayKey())||'0'); }
 function addUsedCount(){ localStorage.setItem(getTodayKey(), getUsedCount()+1); }
@@ -2442,7 +2534,7 @@ function updateCountUI(){
   const badge=document.getElementById('homeAiBadge');
   if(badge){
     badge.textContent = remain > 0 ? '오늘 '+remain+'회 남음' : '오늘 소진';
-    badge.style.background = remain > 1 ? 'var(--urgent)' : remain === 1 ? 'var(--caution)' : 'rgba(255,255,255,0.15)';
+    badge.style.background = remain >= 1 ? 'var(--urgent)' : 'rgba(255,255,255,0.15)';
   }
   // 분석 버튼 상태
   const btn=document.getElementById('anaBtn');
@@ -2476,7 +2568,7 @@ document.getElementById('fileInput').addEventListener('change',function(e){
     updateCountUI();
     // 횟수 소진 상태면 사진 선택 즉시 모달 표시
     if(getRemainingCount() <= 0){
-      setTimeout(()=>showUpgradeModal(), 400);
+      setTimeout(()=>showUpgradeModal('analyze'), 400);
     }
   };
   r.readAsDataURL(f);
@@ -2486,8 +2578,8 @@ async function doAnalyze(){
   if(!imgB64) return;
   // 횟수 체크
   if(getRemainingCount() <= 0){
-    showErr('오늘 무료 AI 분석 3회를 모두 사용했습니다.');
-    showUpgradeModal();
+    showErr('오늘 무료 AI 분석 1회를 모두 사용했습니다.');
+    showUpgradeModal('analyze');
     return;
   }
   document.getElementById('anaBtn').disabled=true;
@@ -2542,8 +2634,8 @@ updateCountUI();
 updateChatCountUI();
 
 // ── 프리미엄 유도 모달 ──
-function showUpgradeModal(){
-  // 자정까지 남은 시간 계산
+function showUpgradeModal(type){
+  const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : '우리 아이';
   const now = new Date();
   const midnight = new Date();
   midnight.setHours(24,0,0,0);
@@ -2553,6 +2645,18 @@ function showUpgradeModal(){
   const timeStr = h > 0 ? `${h}시간 ${m}분` : `${m}분`;
   const el = document.getElementById('nextResetTime');
   if(el) el.textContent = timeStr;
+
+  // 타입별 문구 변경
+  const titleEl = document.querySelector('#m-upgrade .modal-title');
+  const copyEl = document.getElementById('upgradeCopy');
+
+  if(type === 'chat'){
+    if(titleEl) titleEl.textContent = '🔒 오늘 AI 상담 횟수 소진';
+    if(copyEl) copyEl.innerHTML = `${petName}와 더 많은 대화를<br>나누고 싶으신가요?<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 상담 3회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
+  } else {
+    if(titleEl) titleEl.textContent = '🔒 오늘 무료 분석 소진';
+    if(copyEl) copyEl.innerHTML = `${petName}가 더 자주<br>검사받고 싶어해요<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 분석 1회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
+  }
   openM('upgrade');
 }
 
@@ -2850,8 +2954,13 @@ async function sendChat(){
 
   // ── AI 상담 횟수 체크 ──
   if(getChatRemainingCount() <= 0){
-    showUpgradeModal();
+    showUpgradeModal('chat');
     return;
+  }
+
+  // 마지막 1회 남음 알림
+  if(getChatRemainingCount() === 1){
+    toast('💡 오늘 AI 상담 마지막 1회입니다');
   }
 
   input.value = '';
