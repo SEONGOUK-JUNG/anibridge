@@ -3743,15 +3743,39 @@ function initKakao(){
   } catch(e){ console.warn('Kakao init error:', e); }
 }
 
-// 카카오 로그인 — authorize 방식 (현행 표준)
+// 카카오 로그인 — 팝업 방식
 function kakaoLogin(){
   try {
     if(!window.Kakao || !Kakao.isInitialized()){
       toast('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요');
       return;
     }
-    Kakao.Auth.authorize({
-      redirectUri: KAKAO_REDIRECT_URI
+    Kakao.Auth.login({
+      throughTalk: true,
+      success: function(authObj){
+        // 액세스 토큰 획득 성공 → 사용자 정보 요청
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function(res){
+            const user = {
+              id: String(res.id),
+              nickname: res.kakao_account?.profile?.nickname || res.properties?.nickname || '카카오 사용자',
+              profileImg: res.kakao_account?.profile?.profile_image_url || res.properties?.profile_image || ''
+            };
+            localStorage.setItem('kakao_user', JSON.stringify(user));
+            showKakaoUser(user);
+            toast('카카오 로그인 성공! 환영합니다 😊');
+          },
+          fail: function(err){
+            console.warn('Kakao API fail:', err);
+            toast('사용자 정보를 가져오지 못했습니다');
+          }
+        });
+      },
+      fail: function(err){
+        console.warn('Kakao login fail:', err);
+        toast('로그인에 실패했습니다. 다시 시도해 주세요');
+      }
     });
   } catch(e){
     toast('카카오 로그인 중 오류가 발생했습니다');
@@ -3759,84 +3783,11 @@ function kakaoLogin(){
   }
 }
 
-// 리다이렉트 후 인가코드 처리
+// 리다이렉트 처리 — 팝업 방식에서는 불필요하나 안전하게 유지
 function handleKakaoRedirect(){
   const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
   const error = params.get('error');
-
-  if(error){
-    // 사용자가 로그인 취소한 경우
-    history.replaceState(null,'', KAKAO_REDIRECT_URI);
-    return;
-  }
-
-  if(!code) return;
-
-  // URL에서 인가코드 제거 (뒤로가기 중복 방지)
-  history.replaceState(null,'', KAKAO_REDIRECT_URI);
-
-  // 인가코드로 사용자 정보 요청 (Kakao SDK 토큰 교환)
-  if(!window.Kakao || !Kakao.isInitialized()) return;
-
-  Kakao.Auth.authorize({
-    redirectUri: KAKAO_REDIRECT_URI,
-    code: code
-  });
-
-  // SDK가 내부적으로 토큰을 처리한 뒤 사용자 정보 요청
-  // 토큰 교환 후 사용자 정보 fetch
-  fetchKakaoUserWithCode(code);
-}
-
-// Cloudflare Worker를 통해 카카오 사용자 정보 획득
-async function fetchKakaoUserWithCode(code){
-  try {
-    // Kakao SDK로 액세스 토큰 발급 후 사용자 정보 요청
-    // SDK 토큰이 세팅될 때까지 잠시 대기
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if(window.Kakao && Kakao.Auth.getAccessToken()){
-      // SDK 토큰이 있으면 바로 사용자 정보 요청
-      Kakao.API.request({
-        url: '/v2/user/me',
-        success: function(res){
-          const user = {
-            id: String(res.id),
-            nickname: res.kakao_account?.profile?.nickname || res.properties?.nickname || '카카오 사용자',
-            profileImg: res.kakao_account?.profile?.profile_image_url || res.properties?.profile_image || ''
-          };
-          localStorage.setItem('kakao_user', JSON.stringify(user));
-          showKakaoUser(user);
-          toast('카카오 로그인 성공! 환영합니다 😊');
-        },
-        fail: function(err){
-          console.warn('Kakao API fail:', err);
-          toast('사용자 정보를 가져오지 못했습니다');
-        }
-      });
-    } else {
-      // SDK 토큰이 없는 경우 — Worker로 토큰 교환 요청
-      const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kakao_code: code, redirect_uri: KAKAO_REDIRECT_URI })
-      });
-      const data = await res.json();
-      if(data.error){ toast('로그인 처리 중 오류가 발생했습니다'); return; }
-      const user = {
-        id: String(data.id || ''),
-        nickname: data.nickname || '카카오 사용자',
-        profileImg: data.profile_image || ''
-      };
-      localStorage.setItem('kakao_user', JSON.stringify(user));
-      showKakaoUser(user);
-      toast('카카오 로그인 성공! 환영합니다 😊');
-    }
-  } catch(e){
-    console.warn('fetchKakaoUserWithCode error:', e);
-    toast('로그인 처리 중 오류가 발생했습니다');
-  }
+  if(error){ history.replaceState(null,'', KAKAO_REDIRECT_URI); }
 }
 
 function showKakaoUser(user){
