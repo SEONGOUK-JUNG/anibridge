@@ -2127,7 +2127,10 @@ const DB_KEY = 'anibridge_db';
 const APP_VERSION = '2.5';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
-  // 버전만 갱신 — 사용자 데이터(반려동물, 케어수첩, 체중 등)는 보존
+  // 분석·상담 횟수 카운트만 초기화 (오래된 횟수 표시 방지)
+  Object.keys(localStorage).forEach(k => {
+    if(k.startsWith('analyze_') || k.startsWith('chat_')) localStorage.removeItem(k);
+  });
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
