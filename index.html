@@ -1392,8 +1392,9 @@ select option { background: #131929; }
         ➤
       </button>
     </div>
-    <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px">
-      AI 답변은 참고용이며 수의사 진단을 대체하지 않습니다
+    <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <span>AI 답변은 참고용이며 수의사 진단을 대체하지 않습니다</span>
+      <span id="chatCountText" style="font-weight:700;color:var(--g1)"></span>
     </div>
   </div>
 </div>
@@ -2390,12 +2391,19 @@ function scheduleReset(){
 }
 scheduleReset();
 
-// ── AI 분석 횟수 제한 (하루 3회) ──
-const MAX_ANALYZE = 3;
+// ── AI 분석 횟수 제한 (하루 2회) ──
+const MAX_ANALYZE = 2;
 function getTodayKey(){ return 'analyze_' + today(); }
 function getUsedCount(){ return parseInt(localStorage.getItem(getTodayKey())||'0'); }
 function addUsedCount(){ localStorage.setItem(getTodayKey(), getUsedCount()+1); }
 function getRemainingCount(){ return Math.max(0, MAX_ANALYZE - getUsedCount()); }
+
+// ── AI 상담 횟수 제한 (하루 3회) ──
+const MAX_CHAT = 3;
+function getChatTodayKey(){ return 'chat_' + today(); }
+function getChatUsedCount(){ return parseInt(localStorage.getItem(getChatTodayKey())||'0'); }
+function addChatUsedCount(){ localStorage.setItem(getChatTodayKey(), getChatUsedCount()+1); }
+function getChatRemainingCount(){ return Math.max(0, MAX_CHAT - getChatUsedCount()); }
 
 function updateCountUI(){
   const remain = getRemainingCount();
@@ -2515,8 +2523,9 @@ function findHospitals(){if(!navigator.geolocation)return;navigator.geolocation.
 function showErr(msg){document.getElementById('loadBox').style.display='none';document.getElementById('anaBtn').disabled=false;const b=document.getElementById('errBox');b.innerHTML='⚠️ '+msg;b.style.display='block';}
 function resetAnalyze(){imgB64=null;document.getElementById('prev-img').style.display='none';document.getElementById('upPh').style.display='block';document.getElementById('chgBtn').style.display='none';document.getElementById('uploadZone').classList.remove('has-img');document.getElementById('anaBtn').disabled=true;document.getElementById('resultArea').style.display='none';document.getElementById('errBox').style.display='none';document.getElementById('fileInput').value='';window.scrollTo({top:0});updateCountUI();}
 
-// 초기 횟수 UI 업데이트
+// ── 초기 횟수 UI 업데이트 ──
 updateCountUI();
+updateChatCountUI();
 
 // ── 프리미엄 유도 모달 ──
 function showUpgradeModal(){
@@ -2825,6 +2834,12 @@ async function sendChat(){
   const msg = input.value.trim();
   if(!msg) return;
 
+  // ── AI 상담 횟수 체크 ──
+  if(getChatRemainingCount() <= 0){
+    showUpgradeModal();
+    return;
+  }
+
   input.value = '';
   input.style.height = '44px';
 
@@ -2852,6 +2867,10 @@ async function sendChat(){
     const data = await res.json();
     const reply = data.content?.[0]?.text || '답변을 가져오지 못했습니다.';
     chatHistory.push({ role:'assistant', content: reply });
+
+    // 성공 시 횟수 차감
+    addChatUsedCount();
+    updateChatCountUI();
 
     removeTyping(typingId);
     appendAiMsg(reply);
@@ -2909,6 +2928,22 @@ function appendTyping(){
 function removeTyping(id){
   const el = document.getElementById(id);
   if(el) el.remove();
+}
+
+// ── AI 상담 횟수 UI 업데이트 ──
+function updateChatCountUI(){
+  const remain = getChatRemainingCount();
+  const el = document.getElementById('chatCountText');
+  if(el){
+    el.textContent = remain > 0 ? `오늘 ${remain}회 남음` : '오늘 소진';
+    el.style.color = remain > 0 ? 'var(--g1)' : 'var(--urgent)';
+  }
+  const btn = document.getElementById('chatSendBtn');
+  if(btn && remain <= 0){
+    btn.style.background = 'rgba(255,77,109,0.3)';
+  } else if(btn){
+    btn.style.background = 'linear-gradient(135deg,var(--g1),var(--g2))';
+  }
 }
 const WEIGHT_KEY = 'anibridge_weight';
 let weightPeriod = 7;
