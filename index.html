@@ -3743,39 +3743,16 @@ function initKakao(){
   } catch(e){ console.warn('Kakao init error:', e); }
 }
 
-// 카카오 로그인 — 팝업 방식
+// 카카오 로그인 — SDK 2.7.x 팝업 방식
 function kakaoLogin(){
   try {
     if(!window.Kakao || !Kakao.isInitialized()){
       toast('카카오 SDK 로딩 중입니다. 잠시 후 다시 시도해 주세요');
       return;
     }
-    Kakao.Auth.login({
-      throughTalk: true,
-      success: function(authObj){
-        // 액세스 토큰 획득 성공 → 사용자 정보 요청
-        Kakao.API.request({
-          url: '/v2/user/me',
-          success: function(res){
-            const user = {
-              id: String(res.id),
-              nickname: res.kakao_account?.profile?.nickname || res.properties?.nickname || '카카오 사용자',
-              profileImg: res.kakao_account?.profile?.profile_image_url || res.properties?.profile_image || ''
-            };
-            localStorage.setItem('kakao_user', JSON.stringify(user));
-            showKakaoUser(user);
-            toast('카카오 로그인 성공! 환영합니다 😊');
-          },
-          fail: function(err){
-            console.warn('Kakao API fail:', err);
-            toast('사용자 정보를 가져오지 못했습니다');
-          }
-        });
-      },
-      fail: function(err){
-        console.warn('Kakao login fail:', err);
-        toast('로그인에 실패했습니다. 다시 시도해 주세요');
-      }
+    Kakao.Auth.authorize({
+      redirectUri: KAKAO_REDIRECT_URI,
+      prompt: 'login'
     });
   } catch(e){
     toast('카카오 로그인 중 오류가 발생했습니다');
@@ -3783,11 +3760,84 @@ function kakaoLogin(){
   }
 }
 
-// 리다이렉트 처리 — 팝업 방식에서는 불필요하나 안전하게 유지
+// 리다이렉트 후 인가코드 처리
 function handleKakaoRedirect(){
   const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
   const error = params.get('error');
-  if(error){ history.replaceState(null,'', KAKAO_REDIRECT_URI); }
+
+  if(error){
+    history.replaceState(null, '', window.location.pathname);
+    return;
+  }
+  if(!code) return;
+
+  // URL 정리
+  history.replaceState(null, '', window.location.pathname);
+
+  // 인가코드로 Cloudflare Worker에 토큰 교환 요청
+  fetchKakaoUserWithCode(code);
+}
+
+// Cloudflare Worker로 토큰 교환 + 사용자 정보 획득
+async function fetchKakaoUserWithCode(code){
+  try {
+    toast('로그인 처리 중...');
+    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        kakao_code: code,
+        redirect_uri: KAKAO_REDIRECT_URI
+      })
+    });
+    const data = await res.json();
+
+    // Worker가 카카오 사용자 정보를 반환하는 경우
+    if(data.id){
+      const user = {
+        id: String(data.id),
+        nickname: data.nickname || data.kakao_account?.profile?.nickname || '카카오 사용자',
+        profileImg: data.profile_image || data.kakao_account?.profile?.profile_image_url || ''
+      };
+      localStorage.setItem('kakao_user', JSON.stringify(user));
+      showKakaoUser(user);
+      toast('카카오 로그인 성공! 환영합니다 😊');
+      showPage('my');
+      return;
+    }
+
+    // Worker가 액세스 토큰만 반환하는 경우 — SDK로 사용자 정보 요청
+    if(data.access_token){
+      Kakao.Auth.setAccessToken(data.access_token);
+      Kakao.API.request({
+        url: '/v2/user/me',
+        success: function(res){
+          const user = {
+            id: String(res.id),
+            nickname: res.kakao_account?.profile?.nickname || res.properties?.nickname || '카카오 사용자',
+            profileImg: res.kakao_account?.profile?.profile_image_url || res.properties?.profile_image || ''
+          };
+          localStorage.setItem('kakao_user', JSON.stringify(user));
+          showKakaoUser(user);
+          toast('카카오 로그인 성공! 환영합니다 😊');
+          showPage('my');
+        },
+        fail: function(err){
+          console.warn('Kakao API fail:', err);
+          toast('사용자 정보를 가져오지 못했습니다');
+        }
+      });
+      return;
+    }
+
+    toast('로그인 처리 중 오류가 발생했습니다');
+    console.warn('Worker response:', data);
+
+  } catch(e){
+    console.warn('fetchKakaoUserWithCode error:', e);
+    toast('로그인 처리 중 오류가 발생했습니다');
+  }
 }
 
 function showKakaoUser(user){
