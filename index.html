@@ -3783,7 +3783,7 @@ function handleKakaoRedirect(){
 async function fetchKakaoUserWithCode(code){
   try {
     toast('로그인 처리 중...');
-    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
+    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev/kakao', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
