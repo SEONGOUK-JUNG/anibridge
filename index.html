@@ -900,13 +900,13 @@ select option { background: #131929; }
         @keyframes sbridgeIn{from{opacity:0}to{opacity:1}}
       </style>
     </defs>
-    <!-- 발가락 순서대로 -->
-    <ellipse class="stoe1" cx="40" cy="34" rx="6" ry="5" fill="url(#sg2)" opacity="0.9"/>
-    <ellipse class="stoe2" cx="51" cy="26" rx="6" ry="5" fill="url(#sg2)" opacity="0.9"/>
-    <ellipse class="stoe3" cx="67" cy="26" rx="6" ry="5" fill="url(#sg2)" opacity="0.9"/>
-    <ellipse class="stoe4" cx="78" cy="34" rx="6" ry="5" fill="url(#sg2)" opacity="0.9"/>
-    <!-- 큰 발바닥 -->
-    <ellipse class="spad" cx="60" cy="46" rx="11" ry="9.5" fill="url(#sg1)" filter="url(#sglow)"/>
+    <!-- 발가락 4개 - 채워진 원, 부채꼴 배치 -->
+    <circle class="stoe1" cx="36" cy="28" r="7" fill="url(#sg2)"/>
+    <circle class="stoe2" cx="50" cy="18" r="7" fill="url(#sg2)"/>
+    <circle class="stoe3" cx="68" cy="18" r="7" fill="url(#sg2)"/>
+    <circle class="stoe4" cx="82" cy="28" r="7" fill="url(#sg2)"/>
+    <!-- 큰 발바닥 패드 - 둥근 삼각형 -->
+    <path class="spad" d="M42,40 Q46,34 59,34 Q72,34 76,40 Q78,44 74,52 Q68,60 59,62 Q50,60 44,52 Q40,44 42,40Z" fill="url(#sg1)" filter="url(#sglow)"/>
     <!-- 브릿지 -->
     <g class="sbridge">
       <path d="M 18 85 Q 60 48 102 85" fill="none" stroke="url(#sg1)" stroke-width="5" stroke-linecap="round" filter="url(#sglow)"/>
@@ -949,13 +949,13 @@ select option { background: #131929; }
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <!-- 발가락 4개 - 순서대로 등장 후 무한 반복 -->
-      <ellipse class="toe1" cx="40" cy="34" rx="6" ry="5" fill="url(#hg2)" opacity="0.9"/>
-      <ellipse class="toe2" cx="51" cy="26" rx="6" ry="5" fill="url(#hg2)" opacity="0.9"/>
-      <ellipse class="toe3" cx="67" cy="26" rx="6" ry="5" fill="url(#hg2)" opacity="0.9"/>
-      <ellipse class="toe4" cx="78" cy="34" rx="6" ry="5" fill="url(#hg2)" opacity="0.9"/>
-      <!-- 큰 발바닥 패드 -->
-      <ellipse class="pad" cx="60" cy="46" rx="11" ry="9.5" fill="url(#hg1)" filter="url(#hglow)"/>
+      <!-- 발가락 4개 - 채워진 원, 부채꼴 배치 -->
+      <circle class="toe1" cx="36" cy="28" r="7" fill="url(#hg2)"/>
+      <circle class="toe2" cx="50" cy="18" r="7" fill="url(#hg2)"/>
+      <circle class="toe3" cx="68" cy="18" r="7" fill="url(#hg2)"/>
+      <circle class="toe4" cx="82" cy="28" r="7" fill="url(#hg2)"/>
+      <!-- 큰 발바닥 패드 - 둥근 삼각형 -->
+      <path class="pad" d="M42,40 Q46,34 59,34 Q72,34 76,40 Q78,44 74,52 Q68,60 59,62 Q50,60 44,52 Q40,44 42,40Z" fill="url(#hg1)" filter="url(#hglow)"/>
       <!-- 브릿지 -->
       <g class="bridge-line">
         <path d="M 18 85 Q 60 48 102 85" fill="none" stroke="url(#hg1)" stroke-width="5" stroke-linecap="round" filter="url(#hglow)"/>
@@ -1033,6 +1033,20 @@ select option { background: #131929; }
   </div>
 
   <div class="section">
+    <div class="sec-head"><div class="sec-title">동물 번역기</div></div>
+    <button class="ai-cta" onclick="showPage('translator')" style="background:linear-gradient(135deg,#0A2040,#0F2848);border-color:rgba(0,201,255,0.25)">
+      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(0,201,255,0.3),transparent)"></div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#FFB830)">🎙️</div>
+      <div class="ai-cta-text">
+        <div class="ai-cta-title">우리 아이 마음 번역</div>
+        <div class="ai-cta-sub">소리를 녹음하면<br>무슨 말인지 번역해드려요</div>
+        <div class="ai-cta-badge" style="background:var(--g2)">무료</div>
+      </div>
+      <div class="ai-cta-arr">›</div>
+    </button>
+  </div>
+
+  <div class="section">
     <div class="sec-head">
       <div class="sec-title">오늘의 산책</div>
       <div class="sec-more" onclick="showPage('walk')">더보기</div>
@@ -1055,12 +1069,6 @@ select option { background: #131929; }
         <div class="qi-icon">📋</div>
         <div class="qi-title">케어 수첩</div>
         <div class="qi-sub">건강·병원·접종 기록 관리</div>
-        <div class="qi-arr">›</div>
-      </div>
-      <div class="quick-item" onclick="showPage('translator')">
-        <div class="qi-icon">🎙️</div>
-        <div class="qi-title">동물 번역기</div>
-        <div class="qi-sub">우리 아이 마음 읽기</div>
         <div class="qi-arr">›</div>
       </div>
       <div class="quick-item" onclick="showPage('my');setTimeout(()=>document.querySelector('.menu-list .mi').click(),100)">
@@ -1501,14 +1509,14 @@ select option { background: #131929; }
   <div class="nav-item active" id="nav0" onclick="showPage('home')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>홈<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav1" onclick="showPage('analyze')">
+  <div class="nav-item" id="nav1" onclick="showPage('translator')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" id="nav2" onclick="showPage('analyze')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>AI 분석<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav2" onclick="showPage('chat')">
+  <div class="nav-item" id="nav3" onclick="showPage('chat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI 상담<div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" id="nav3" onclick="showPage('translator')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav4" onclick="showPage('care')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
@@ -2462,7 +2470,7 @@ setTimeout(()=>{ document.getElementById('splash').style.display='none'; }, 6000
 
 // ── 페이지 ──
 const PG={home:'pg-home',analyze:'pg-analyze',chat:'pg-chat',walk:'pg-walk',care:'pg-care',place:'pg-place',my:'pg-my',translator:'pg-translator'};
-const NV={home:0,analyze:1,chat:2,walk:0,care:4,my:5,translator:3,place:5};
+const NV={home:0,translator:1,analyze:2,chat:3,walk:0,care:4,my:5,place:5};
 function showPage(k){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
