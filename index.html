@@ -1706,7 +1706,7 @@ select option { background: #131929; }
     </div>
 
     <!-- 충전형 - 핵심 -->
-    <div style="background:linear-gradient(135deg,rgba(74,255,163,0.12),rgba(0,201,255,0.08));border:1.5px solid rgba(74,255,163,0.35);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;position:relative;cursor:pointer" onclick="selectPlan('charge')">
+    <div style="background:linear-gradient(135deg,rgba(74,255,163,0.12),rgba(0,201,255,0.08));border:1.5px solid rgba(74,255,163,0.35);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;position:relative;cursor:pointer">
       <div style="position:absolute;top:-10px;right:16px;background:var(--urgent);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:999px">인기</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div>
@@ -1730,7 +1730,7 @@ select option { background: #131929; }
     </div>
 
     <!-- 월정액 -->
-    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;cursor:pointer" onclick="selectPlan('monthly')">
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;cursor:pointer">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div>
           <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:17px">월정액</div>
@@ -1928,7 +1928,7 @@ select option { background: #131929; }
 
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (서비스 이용요금)</div>
     <p style="margin-bottom:14px">
-      · 무료: AI 분석 2회/일, AI 상담 3회/일<br>
+      · 무료: AI 분석 1회/일, AI 상담 3회/일<br>
       · 충전형 10회: 1,000원 (유효기간 없음)<br>
       · 충전형 30회: 2,700원 (유효기간 없음)<br>
       · 월정액: 9,900원/월 (30일 이용, 재결제 안내 후 갱신)
@@ -2113,17 +2113,21 @@ select option { background: #131929; }
 </div> <!-- overlay 끝 -->
 
 <script>
+// ── HTML 이스케이프 (XSS 방지) ──
+function escHtml(str){
+  const d=document.createElement('div');
+  d.appendChild(document.createTextNode(str));
+  return d.innerHTML;
+}
+
 // ── 데이터 — 반려동물별 localStorage 저장 ──
 const DB_KEY = 'anibridge_db';
 
-// ── 버전 체크 — 버전 다르면 자동 초기화 ──
+// ── 버전 체크 — 버전 기록만 갱신 (사용자 데이터 보존) ──
 const APP_VERSION = '2.5';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
-  localStorage.removeItem('anibridge_pets');
-  localStorage.removeItem('anibridge_profile');
-  localStorage.removeItem('anibridge_db');
-  localStorage.removeItem('anibridge_onboarded');
+  // 버전만 갱신 — 사용자 데이터(반려동물, 케어수첩, 체중 등)는 보존
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
@@ -3011,7 +3015,7 @@ function appendUserMsg(text){
   const wrap = document.getElementById('chatMessages');
   const div = document.createElement('div');
   div.style.cssText = 'display:flex;justify-content:flex-end';
-  div.innerHTML = `<div class="chat-bubble-user">${text.replace(/\n/g,'<br>')}</div>`;
+  div.innerHTML = `<div class="chat-bubble-user">${escHtml(text).replace(/\n/g,'<br>')}</div>`;
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
 }
@@ -3024,7 +3028,7 @@ function appendAiMsg(text){
     <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🐾</div>
     <div style="max-width:80%">
       <div style="font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:600">AniBridge AI</div>
-      <div class="chat-bubble-ai">${text.replace(/\n/g,'<br>')}</div>
+      <div class="chat-bubble-ai">${escHtml(text).replace(/\n/g,'<br>')}</div>
     </div>`;
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
@@ -3068,14 +3072,31 @@ function updateChatCountUI(){
     btn.style.background = 'linear-gradient(135deg,var(--g1),var(--g2))';
   }
 }
-const WEIGHT_KEY = 'anibridge_weight';
+const WEIGHT_KEY_BASE = 'anibridge_weight';
 let weightPeriod = 7;
 
+function getWeightKey(){
+  if(!PETS || !PETS.length) return WEIGHT_KEY_BASE;
+  return WEIGHT_KEY_BASE + '_' + (PETS[curPetIdx]?.id || '0');
+}
+
 function loadWeightData(){
-  try{ return JSON.parse(localStorage.getItem(WEIGHT_KEY)||'[]'); }catch(e){ return []; }
+  try{
+    const key = getWeightKey();
+    const data = localStorage.getItem(key);
+    if(data) return JSON.parse(data);
+    // 하위 호환: 기존 공용 키에서 마이그레이션
+    const legacy = localStorage.getItem(WEIGHT_KEY_BASE);
+    if(legacy && PETS.length && curPetIdx === 0){
+      localStorage.setItem(key, legacy);
+      localStorage.removeItem(WEIGHT_KEY_BASE);
+      return JSON.parse(legacy);
+    }
+    return [];
+  }catch(e){ return []; }
 }
 function saveWeightData(data){
-  try{ localStorage.setItem(WEIGHT_KEY, JSON.stringify(data)); }catch(e){}
+  try{ localStorage.setItem(getWeightKey(), JSON.stringify(data)); }catch(e){}
 }
 
 function saveWeight(){
@@ -3251,7 +3272,7 @@ function renderWeightList(){
         <div style="font-size:18px;font-weight:900;font-family:'Outfit',sans-serif;color:var(--text)">${d.weight}</div>
         <div style="font-size:10px;color:var(--text3)">kg</div>
       </div>
-      <button onclick="deleteWeight('${d.date}')" style="background:rgba(255,77,109,0.1);color:var(--urgent);border:1px solid rgba(255,77,109,0.2);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">삭제</button>
+      <button onclick="deleteWeight('${escHtml(d.date)}')" style="background:rgba(255,77,109,0.1);color:var(--urgent);border:1px solid rgba(255,77,109,0.2);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">삭제</button>
     </div>`;
   }).join('');
 }
@@ -3972,6 +3993,7 @@ function kakaoLogin(){
 }
 
 // 리다이렉트 후 인가코드 처리
+let _kakaoCodeProcessing = false;
 function handleKakaoRedirect(){
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code');
@@ -3982,6 +4004,8 @@ function handleKakaoRedirect(){
     return;
   }
   if(!code) return;
+  if(_kakaoCodeProcessing) return;
+  _kakaoCodeProcessing = true;
 
   // URL 정리
   history.replaceState(null, '', window.location.pathname);
@@ -4129,17 +4153,17 @@ function updDdayBadge(){
     el.className = 'today-val green';
   }
 
-  // 케어수첩 탭 뱃지 (nav)
-  const nav3 = document.getElementById('nav3');
-  if(nav3){
-    const existing = nav3.querySelector('.vaccine-alert');
+  // 케어수첩 탭 뱃지 (nav4 = 케어수첩)
+  const nav4 = document.getElementById('nav4');
+  if(nav4){
+    const existing = nav4.querySelector('.vaccine-alert');
     if(existing) existing.remove();
     if(next.dd >= 0 && next.dd <= 7){
       const badge = document.createElement('div');
       badge.className = 'vaccine-alert';
       badge.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--urgent);position:absolute;top:6px;right:6px';
-      nav3.style.position = 'relative';
-      nav3.appendChild(badge);
+      nav4.style.position = 'relative';
+      nav4.appendChild(badge);
     }
   }
 }
