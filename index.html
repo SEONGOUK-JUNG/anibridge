@@ -1206,6 +1206,10 @@ select option { background: #131929; }
         <div id="hospList"><a class="map-btn" href="https://map.kakao.com/?q=동물병원" target="_blank">🗺️ 카카오맵에서 동물병원 찾기</a></div>
       </div>
       <div class="disclaimer">⚠️ AI 참고 정보이며 수의사의 의료적 진단을 대체하지 않습니다.</div>
+      <button onclick="shareAnalysisResult()" style="width:100%;margin-bottom:10px;padding:14px;background:#FEE500;color:#3C1E1E;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>
+        카카오톡으로 공유하기
+      </button>
       <button class="retry-btn" onclick="resetAnalyze()">🔄 다른 사진 분석하기</button>
     </div>
   </div>
@@ -3266,7 +3270,11 @@ function exportMunj(){
   openM('munj');
 }
 function getMunjText(){return document.getElementById('munj-cont').innerText||'';}
-function shareKakao(){const text=getMunjText();if(!text)return;const encoded=encodeURIComponent(text);const fallback=()=>{navigator.clipboard.writeText(text).then(()=>alert('📋 문진서가 복사되었습니다!\n카카오톡을 열고 붙여넣기 해주세요.')).catch(()=>alert('카카오톡 앱을 열고 직접 붙여넣기 해주세요.'));};if(/Android|iPhone|iPad/i.test(navigator.userAgent)){const ifr=document.createElement('iframe');ifr.style.display='none';ifr.src=`kakaolink://send?msg=${encoded}`;document.body.appendChild(ifr);setTimeout(()=>{document.body.removeChild(ifr);fallback();},1500);}else fallback();}
+function shareKakao(){
+  const text = getMunjText();
+  if(!text) return;
+  shareKakaoMsg(text, 'AniBridge 사전 문진서', '병원 방문 전 문진서를 공유합니다 🐾');
+}
 function sendEmail(){const email=document.getElementById('munj-email').value.trim();const text=getMunjText();if(!text){alert('문진서 내용이 없습니다.');return;}if(!email){alert('병원 이메일 주소를 입력해주세요.');return;}if(!email.includes('@')){alert('올바른 이메일을 입력해주세요.');return;}const petName=document.getElementById('hdrName').textContent||'반려동물';const subject=encodeURIComponent(`[AniBridge] ${petName} 사전 문진서 - ${today()}`);const body=encodeURIComponent(text+'\n\n※ AniBridge 앱에서 자동 생성된 사전 문진서입니다.');window.location.href=`mailto:${email}?subject=${subject}&body=${body}`;setTimeout(()=>toast('이메일 앱이 열렸습니다 ✓'),800);}
 function copyMunj(){const text=getMunjText();if(!text)return;if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>toast('📋 복사되었습니다! ✓')).catch(()=>fallbackCopy(text));}else fallbackCopy(text);}
 function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('📋 복사되었습니다! ✓');}catch(e){alert('복사에 실패했습니다.');}document.body.removeChild(ta);}
@@ -3768,8 +3776,51 @@ function shareTransResult(){
   const result = window._lastTransResult; if(!result) return;
   const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : transType;
   const text = `🐾 AniBridge 동물 번역기\n\n${transEmoji} ${petName}의 말:\n"${result.mainMsg}"\n\n${result.subMsg}\n\n---\nEvery Animal Deserves a Happy Life\nhttps://anibridge.com`;
-  if(navigator.share){ navigator.share({title:'AniBridge 동물 번역기', text}); }
-  else { navigator.clipboard.writeText(text).then(()=>toast('📋 번역 결과가 복사되었습니다!')); }
+  shareKakaoMsg(text, 'AniBridge 동물 번역기', `${petName}의 마음을 읽어봤어요 🐾`);
+}
+
+// ── 카카오 공유하기 ──
+function shareKakaoMsg(text, title, desc){
+  try {
+    if(window.Kakao && Kakao.isInitialized() && Kakao.Share){
+      Kakao.Share.sendDefault({
+        objectType: 'text',
+        text: text,
+        link: {
+          mobileWebUrl: 'https://anibridge.com',
+          webUrl: 'https://anibridge.com'
+        },
+        buttons: [{
+          title: 'AniBridge 앱 열기',
+          link: {
+            mobileWebUrl: 'https://anibridge.com',
+            webUrl: 'https://anibridge.com'
+          }
+        }]
+      });
+    } else {
+      // 카카오 SDK 미사용 시 네이티브 공유 or 클립보드
+      if(navigator.share){
+        navigator.share({ title, text });
+      } else {
+        navigator.clipboard.writeText(text).then(()=>toast('📋 복사되었습니다! 카카오톡에 붙여넣기 해주세요'));
+      }
+    }
+  } catch(e){
+    if(navigator.share){ navigator.share({ title, text }); }
+    else { navigator.clipboard.writeText(text).then(()=>toast('📋 복사되었습니다!')); }
+  }
+}
+
+// AI 분석 결과 공유
+function shareAnalysisResult(){
+  const title = document.getElementById('urgTitle')?.textContent || '';
+  const desc = document.getElementById('urgDesc')?.textContent || '';
+  const det = document.getElementById('detText')?.textContent || '';
+  const care = document.getElementById('careText')?.textContent || '';
+  const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : '반려동물';
+  const text = `🐾 AniBridge AI 건강 분석 결과\n\n👤 ${petName}\n\n✅ ${title}\n${desc}\n\n🔍 상세 분석\n${det}\n\n💡 케어 추천\n${care}\n\n---\nEvery Animal Deserves a Happy Life\nhttps://anibridge.com`;
+  shareKakaoMsg(text, 'AniBridge AI 건강 분석', `${petName}의 건강 분석 결과 🐾`);
 }
 
 // ── 카카오 로그인 ──
