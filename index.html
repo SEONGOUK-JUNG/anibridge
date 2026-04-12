@@ -3333,14 +3333,20 @@ function renderPetTabs(){
 }
 
 function renderCurPet(){
-  if(!PETS.length) return;
-  const p = PETS[curPetIdx];
-
-  // 홈 히어로 타이틀 — 등록 여부에 따라 분기
   const heroTitle = document.getElementById('heroTitle');
   const heroLabel = document.getElementById('heroLabel');
   const heroSub   = document.getElementById('heroSub');
-  const isRegistered = p.name && p.name !== '이름 없음' && p.name !== '새 반려동물' && p.breed;
+
+  // 반려동물 미등록 상태
+  if(!PETS.length){
+    if(heroLabel) heroLabel.textContent = 'WELCOME';
+    if(heroTitle) heroTitle.innerHTML = `첫 방문을 환영해요 🐾<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">소중한 아이를 AI가 케어해요</span>`;
+    if(heroSub) heroSub.innerHTML = `MY에서 반려동물을 등록하면<br><b style="color:var(--g1)">맞춤 건강 케어가 시작됩니다</b>`;
+    return;
+  }
+
+  const p = PETS[curPetIdx];
+  const isRegistered = PETS.length > 0 && p.name && p.name.trim() !== '' && p.name !== '이름 없음' && p.name !== '새 반려동물';
 
   if(isRegistered){
     // 등록 완료 — 반려동물 이름으로 표시
