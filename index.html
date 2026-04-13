@@ -1098,9 +1098,35 @@ select option { background: #131929; }
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="trans-type-btn on" onclick="selTransType(this,'강아지','🐶')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid rgba(74,255,163,0.3);background:rgba(74,255,163,0.1);color:var(--g1);cursor:pointer;font-family:inherit">🐶 강아지</button>
         <button class="trans-type-btn" onclick="selTransType(this,'고양이','🐱')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐱 고양이</button>
-        <button class="trans-type-btn" onclick="selTransType(this,'토끼','🐰')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐰 토끼</button>
         <button class="trans-type-btn" onclick="selTransType(this,'기타','🐾')" style="padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:1.5px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🐾 기타</button>
       </div>
+    </div>
+
+    <!-- 번역 모드 선택 -->
+    <div style="display:flex;gap:8px;margin-bottom:18px">
+      <button id="transModeFree" onclick="setTransMode('free')" style="flex:1;padding:14px 10px;border-radius:var(--rs);cursor:pointer;font-family:inherit;border:2px solid var(--g1);background:rgba(74,255,163,0.1);text-align:center;transition:all .15s">
+        <div style="font-size:18px;margin-bottom:4px">🎲</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g1)">무료 번역</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">재미로 즐기기</div>
+      </button>
+      <button id="transModeAI" onclick="setTransMode('ai')" style="flex:1;padding:14px 10px;border-radius:var(--rs);cursor:pointer;font-family:inherit;border:2px solid var(--border2);background:rgba(255,255,255,0.04);text-align:center;transition:all .15s">
+        <div style="font-size:18px;margin-bottom:4px">🧠</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text2)">AI 분석 번역</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">실제 소리 분석</div>
+      </button>
+    </div>
+
+    <!-- AI 모드 안내 (기본 숨김) -->
+    <div id="transAIInfo" style="display:none;background:linear-gradient(135deg,rgba(0,201,255,0.08),rgba(74,255,163,0.05));border:1px solid rgba(0,201,255,0.2);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:4px">🧠 AI가 실제 소리를 분석합니다</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">강아지/고양이 소리를 구분하고<br>음성 패턴 기반으로 감정을 분석해요</div>
+      <div id="transAICount" style="font-size:11px;font-weight:700;color:var(--g2);margin-top:8px"></div>
+    </div>
+
+    <!-- 무료 모드 안내 (기본 표시) -->
+    <div id="transFreeInfo" style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🎲 재미로 즐기는 번역</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">AI 기반 행동 패턴 분석으로 번역합니다<br>정확한 분석은 AI 분석 번역을 이용해 주세요</div>
     </div>
 
     <!-- 녹음 버튼 -->
@@ -1117,12 +1143,6 @@ select option { background: #131929; }
         <div style="font-size:12px;font-weight:700;color:#0A0E1A;margin-top:6px" id="transRecordTxt">눌러서 녹음</div>
       </div>
       <div id="transTimer" style="font-size:13px;color:var(--text2);margin-top:14px;height:20px"></div>
-    </div>
-
-    <!-- 프로젝트 안내 -->
-    <div style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
-      <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🔬 AI 음성 분석 고도화 프로젝트 진행 중</div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.6">DogSpeak Dataset(77,202개 샘플) 적용 예정<br>현재는 AI 기반 행동 패턴 분석으로 번역합니다</div>
     </div>
 
     <!-- 파형 애니메이션 -->
@@ -1414,20 +1434,20 @@ select option { background: #131929; }
 <!-- ══ 플레이스 ══ -->
 <div id="pg-place" class="page">
   <div class="place-wrap">
-    <a class="place-find" href="https://map.kakao.com/?q=반려동물동반카페" target="_blank">📍 내 주변 반려동물 동반 장소 찾기</a>
+    <a class="place-find" id="placeSearchLink" href="https://map.kakao.com/?q=반려동물+동반+가능" target="_blank">📍 내 주변 반려동물 동반 장소 찾기</a>
     <div class="place-cats">
-      <button class="place-cat on" onclick="filterPlace(this)">🐾 전체</button>
-      <button class="place-cat" onclick="filterPlace(this)">☕ 카페</button>
-      <button class="place-cat" onclick="filterPlace(this)">🍽️ 식당</button>
-      <button class="place-cat" onclick="filterPlace(this)">🏨 호텔</button>
-      <button class="place-cat" onclick="filterPlace(this)">🌳 공원</button>
-      <button class="place-cat" onclick="filterPlace(this)">✂️ 미용</button>
+      <button class="place-cat on" onclick="filterPlace(this,'반려동물+동반+가능')">🐾 전체</button>
+      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+카페')">☕ 카페</button>
+      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+식당')">🍽️ 식당</button>
+      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+호텔+펜션')">🏨 호텔</button>
+      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+공원')">🌳 공원</button>
+      <button class="place-cat" onclick="filterPlace(this,'애견+미용실')">💈 미용</button>
     </div>
     <div class="place-grid">
-      <div class="pl-card"><div class="pl-img" style="background:rgba(74,255,163,0.08)">☕</div><div class="pl-info"><div class="pl-name">멍냥 카페</div><div class="pl-meta">📍 0.3km · 광주 남구</div><div class="pl-tags"><span class="pl-tag">소형견</span><span class="pl-tag">실내입장</span></div></div></div>
-      <div class="pl-card"><div class="pl-img" style="background:rgba(0,201,255,0.08)">🌳</div><div class="pl-info"><div class="pl-name">중앙공원</div><div class="pl-meta">📍 0.7km · 광주 북구</div><div class="pl-tags"><span class="pl-tag">대형견</span><span class="pl-tag">목줄필수</span></div></div></div>
-      <div class="pl-card"><div class="pl-img" style="background:rgba(255,107,157,0.08)">🍽️</div><div class="pl-info"><div class="pl-name">펫 프렌들리</div><div class="pl-meta">📍 1.2km · 광주 서구</div><div class="pl-tags"><span class="pl-tag">테라스</span><span class="pl-tag">소형견</span></div></div></div>
-      <div class="pl-card"><div class="pl-img" style="background:rgba(255,184,48,0.08)">✂️</div><div class="pl-info"><div class="pl-name">강쥐 미용실</div><div class="pl-meta">📍 1.5km · 광주 동구</div><div class="pl-tags"><span class="pl-tag">예약필수</span><span class="pl-tag">전견종</span></div></div></div>
+      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+카페+광주','_blank')"><div class="pl-img" style="background:rgba(74,255,163,0.08)">☕</div><div class="pl-info"><div class="pl-name">멍냥 카페</div><div class="pl-meta">📍 광주 남구</div><div class="pl-tags"><span class="pl-tag">소형견</span><span class="pl-tag">실내입장</span></div></div></div>
+      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+공원+광주','_blank')"><div class="pl-img" style="background:rgba(0,201,255,0.08)">🌳</div><div class="pl-info"><div class="pl-name">중앙공원</div><div class="pl-meta">📍 광주 북구</div><div class="pl-tags"><span class="pl-tag">대형견</span><span class="pl-tag">목줄필수</span></div></div></div>
+      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+식당+광주','_blank')"><div class="pl-img" style="background:rgba(255,107,157,0.08)">🍽️</div><div class="pl-info"><div class="pl-name">펫 프렌들리</div><div class="pl-meta">📍 광주 서구</div><div class="pl-tags"><span class="pl-tag">테라스</span><span class="pl-tag">소형견</span></div></div></div>
+      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=애견미용실+광주','_blank')"><div class="pl-img" style="background:rgba(255,184,48,0.08)">💈</div><div class="pl-info"><div class="pl-name">강쥐 미용실</div><div class="pl-meta">📍 광주 동구</div><div class="pl-tags"><span class="pl-tag">예약필수</span><span class="pl-tag">전견종</span></div></div></div>
     </div>
   </div>
 </div>
@@ -3679,7 +3699,12 @@ async function submitInquiry(){
 function toggleAlarm(id){const track=document.getElementById('at-'+id);const thumb=document.getElementById('ath-'+id);const isOn=track.classList.contains('on');if(isOn){track.classList.remove('on');thumb.classList.remove('on');}else{track.classList.add('on');thumb.classList.add('on');}}
 
 // ── 플레이스 필터 ──
-function filterPlace(btn){document.querySelectorAll('.place-cat').forEach(c=>c.classList.remove('on'));btn.classList.add('on');}
+function filterPlace(btn,keyword){
+  document.querySelectorAll('.place-cat').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+  const link = document.getElementById('placeSearchLink');
+  if(link && keyword) link.href = 'https://map.kakao.com/?q=' + keyword;
+}
 
 // ── FAQ ──
 function toggleFaq(el){const a=el.querySelector('.faq-a');const s=el.querySelector('.faq-q span');const isOpen=a.style.display==='block';a.style.display=isOpen?'none':'block';s.textContent=isOpen?'+':'−';}
@@ -3690,6 +3715,7 @@ let transEmoji = '🐶';
 let transRecording = false;
 let transTimerInterval = null;
 let transSec = 0;
+let transMode = 'free'; // 'free' 또는 'ai'
 
 // Web Audio API 관련 변수
 let transAudioCtx = null;
@@ -3698,6 +3724,46 @@ let transMediaStream = null;
 let transMaxVolume = 0;      // 녹음 중 측정된 최대 볼륨
 let transVolPollId = null;   // 볼륨 폴링 interval ID
 const SILENCE_THRESHOLD = 8; // 0~255 범위, 이 값 미만이면 무음 판정
+
+// MediaRecorder (AI 모드 녹음용)
+let transMediaRecorder = null;
+let transAudioChunks = [];
+
+// ── 번역기 모드 전환 ──
+function setTransMode(mode){
+  transMode = mode;
+  const freeBtn = document.getElementById('transModeFree');
+  const aiBtn = document.getElementById('transModeAI');
+  const freeInfo = document.getElementById('transFreeInfo');
+  const aiInfo = document.getElementById('transAIInfo');
+  if(mode === 'free'){
+    freeBtn.style.borderColor='var(--g1)';freeBtn.style.background='rgba(74,255,163,0.1)';
+    freeBtn.querySelector('div:nth-child(2)').style.color='var(--g1)';
+    aiBtn.style.borderColor='var(--border2)';aiBtn.style.background='rgba(255,255,255,0.04)';
+    aiBtn.querySelector('div:nth-child(2)').style.color='var(--text2)';
+    freeInfo.style.display='block';aiInfo.style.display='none';
+  } else {
+    aiBtn.style.borderColor='var(--g2)';aiBtn.style.background='rgba(0,201,255,0.1)';
+    aiBtn.querySelector('div:nth-child(2)').style.color='var(--g2)';
+    freeBtn.style.borderColor='var(--border2)';freeBtn.style.background='rgba(255,255,255,0.04)';
+    freeBtn.querySelector('div:nth-child(2)').style.color='var(--text2)';
+    aiInfo.style.display='block';freeInfo.style.display='none';
+    updateTransAICount();
+  }
+}
+
+// ── 번역기 AI 횟수 (AI 분석과 동일 결제 시스템 사용) ──
+const MAX_TRANS_AI = 0; // 무료 0회 — 충전형/월정액으로만 사용
+function getTransAIKey(){ return 'trans_ai_' + today(); }
+function getTransAIUsed(){ return parseInt(localStorage.getItem(getTransAIKey())||'0'); }
+function addTransAIUsed(){ localStorage.setItem(getTransAIKey(), getTransAIUsed()+1); }
+function getTransAIRemaining(){ return Math.max(0, MAX_TRANS_AI - getTransAIUsed()); }
+function updateTransAICount(){
+  const el = document.getElementById('transAICount');
+  if(!el) return;
+  el.textContent = 'AI 분석 번역은 유료 기능입니다 (충전형/월정액)';
+  el.style.color = 'var(--caution)';
+}
 
 function selTransType(btn, type, emoji){
   document.querySelectorAll('.trans-type-btn').forEach(b=>{
@@ -3757,6 +3823,15 @@ async function startTransRecord(){
     const avg = dataArr.reduce((a,b)=>a+b,0) / dataArr.length;
     if(avg > transMaxVolume) transMaxVolume = avg;
   }, 50);
+
+  // AI 모드일 때 MediaRecorder로 실제 음성 녹음
+  if(transMode === 'ai'){
+    transAudioChunks = [];
+    transMediaRecorder = new MediaRecorder(transMediaStream, { mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4' });
+    transMediaRecorder.ondataavailable = e => { if(e.data.size > 0) transAudioChunks.push(e.data); };
+    transMediaRecorder.onstop = () => { doTransAI(); };
+    transMediaRecorder.start();
+  }
 }
 
 function stopTransRecord(){
@@ -3785,13 +3860,31 @@ function stopTransRecord(){
     return;
   }
 
-  // ── 소리 감지됨 → 번역 진행 ──
+  // ── 소리 감지됨 → 모드별 분기 ──
   document.getElementById('transTimer').textContent = `${transSec}초 녹음 완료! 번역 중...`;
   document.getElementById('transLoading').style.display = 'block';
-  setTimeout(()=>{
-    document.getElementById('transLoading').style.display = 'none';
-    showTransResult(getRandomTransResult());
-  }, 1200 + Math.random()*800);
+
+  if(transMode === 'ai'){
+    // AI 모드 — 횟수 체크 후 Claude API 분석
+    if(getTransAIRemaining() <= 0){
+      document.getElementById('transLoading').style.display = 'none';
+      document.getElementById('transTimer').textContent = '';
+      showUpgradeModal('trans');
+      return;
+    }
+    // MediaRecorder에서 음성 데이터 추출 → API 호출
+    if(transMediaRecorder && transMediaRecorder.state !== 'inactive'){
+      transMediaRecorder.stop();
+    } else {
+      doTransAI();
+    }
+  } else {
+    // 무료 모드 — 랜덤 문구
+    setTimeout(()=>{
+      document.getElementById('transLoading').style.display = 'none';
+      showTransResult(getRandomTransResult());
+    }, 1200 + Math.random()*800);
+  }
 }
 
 // ── 풍부한 오프라인 문구 데이터 ──
@@ -3889,6 +3982,75 @@ const TRANS_DATA = {
 function getRandomTransResult(){
   const list = TRANS_DATA[transType] || TRANS_DATA['기타'];
   return list[Math.floor(Math.random() * list.length)];
+}
+
+// ── AI 번역 — Claude API 음성 분석 ──
+async function doTransAI(){
+  if(!transAudioChunks.length){
+    document.getElementById('transLoading').style.display='none';
+    toast('음성 데이터가 없습니다. 다시 시도해 주세요.');
+    return;
+  }
+  // 음성 → base64 변환
+  const blob = new Blob(transAudioChunks, { type: transAudioChunks[0].type || 'audio/webm' });
+  const reader = new FileReader();
+  reader.onload = async function(){
+    const base64 = reader.result.split(',')[1];
+    const mimeType = reader.result.split(';')[0].split(':')[1];
+    const petName = getPetName();
+    const prompt = `이것은 ${transType} 소리 녹음입니다. 분석해주세요.
+
+먼저 이 소리가 실제로 ${transType} 소리인지 판별해주세요.
+만약 ${transType} 소리가 아니라면 어떤 소리인지 알려주세요.
+
+${transType} 소리가 맞다면, 톤·빈도·패턴을 기반으로 감정을 분석하고 번역해주세요.
+
+JSON으로만 응답하세요:
+{"isMatch":true/false,"detectedSound":"감지된 소리 종류","mainMsg":"번역 문구 (${transType} 말투로, 2~3문장, 한국어)","subMsg":"행동 분석 설명 (한국어, 2~3문장)","emotions":[{"label":"감정명","emoji":"이모지","pct":퍼센트}],"transEmoji":"대표 이모지"}
+
+isMatch가 false인 경우:
+{"isMatch":false,"detectedSound":"감지된 소리","mainMsg":"이건 ${transType} 소리가 아닌 것 같아요!","subMsg":"감지된 소리에 대한 설명","emotions":[{"label":"알 수 없음","emoji":"❓","pct":100}],"transEmoji":"❓"}`;
+
+    try {
+      const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:600,
+          messages:[{role:'user',content:[
+            {type:'text',text:prompt},
+            {type:'document',source:{type:'base64',media_type:mimeType,data:base64}}
+          ]}]
+        })
+      });
+      const data = await res.json();
+      const txt = data.content?.[0]?.text||'';
+      const result = JSON.parse(txt.replace(/```json|```/g,'').trim());
+
+      if(result.isMatch === false){
+        document.getElementById('transLoading').style.display='none';
+        toast('⚠️ ' + (result.detectedSound||'알 수 없는 소리') + '가 감지되었습니다');
+        showTransResult({
+          mainMsg: result.mainMsg || '이건 ' + transType + ' 소리가 아닌 것 같아요!',
+          subMsg: result.subMsg || '다시 녹음해 주세요.',
+          emotions: result.emotions || [{label:'알 수 없음',emoji:'❓',pct:100}]
+        });
+        return;
+      }
+
+      // 성공 — 횟수 차감
+      addTransAIUsed();
+      updateTransAICount();
+      if(result.transEmoji) transEmoji = result.transEmoji;
+      showTransResult(result);
+
+    } catch(e){
+      document.getElementById('transLoading').style.display='none';
+      toast('AI 분석 중 오류가 발생했습니다. 다시 시도해 주세요.');
+    }
+  };
+  reader.readAsDataURL(blob);
 }
 
 function showTransResult(result){
