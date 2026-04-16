@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniBridge 계정 및 데이터 삭제 요청</title>
+<meta name="description" content="AniBridge 계정 삭제 요청 안내">
+<style>
+  body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 24px; color: #333; line-height: 1.8; }
+  h1 { font-size: 28px; color: #0A0E1A; margin-bottom: 8px; }
+  .sub { color: #666; font-size: 14px; margin-bottom: 32px; }
+  h2 { font-size: 18px; color: #0A0E1A; margin-top: 32px; margin-bottom: 12px; border-left: 4px solid #4AFFA3; padding-left: 12px; }
+  p { font-size: 14px; color: #444; margin-bottom: 12px; }
+  ol, ul { font-size: 14px; color: #444; padding-left: 24px; }
+  li { margin-bottom: 8px; }
+  .step-box { background: #f5f7fa; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .step-num { display: inline-block; width: 28px; height: 28px; background: linear-gradient(135deg, #4AFFA3, #00C9FF); color: #0A0E1A; border-radius: 50%; text-align: center; font-weight: 700; margin-right: 8px; line-height: 28px; }
+  .email-box { background: linear-gradient(135deg, rgba(74,255,163,0.1), rgba(0,201,255,0.05)); border: 1px solid rgba(74,255,163,0.3); border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center; }
+  .email-box a { color: #0088CC; font-weight: 700; font-size: 16px; }
+  .warning { background: #fff3cd; border-left: 4px solid #ffa500; padding: 14px 18px; margin: 16px 0; font-size: 13px; border-radius: 8px; }
+  .date { font-size: 12px; color: #999; margin-top: 48px; text-align: center; }
+  .brand { background: linear-gradient(135deg, #4AFFA3, #00C9FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; }
+  th { background: #f5f7fa; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>🗑️ <span class="brand">AniBridge</span> 계정 및 데이터 삭제 요청</h1>
+<div class="sub">개발자: ㈜에이브릿지 · 앱: AniBridge</div>
+
+<h2>계정 삭제 요청 방법</h2>
+
+<p>AniBridge 계정 및 관련 데이터를 삭제하려면 아래 방법 중 하나를 선택하세요.</p>
+
+<div class="step-box">
+  <h3 style="margin-bottom:10px">방법 1: 앱 내에서 직접 삭제</h3>
+  <ol>
+    <li>AniBridge 앱을 실행합니다</li>
+    <li>하단 메뉴에서 <b>MY</b> 탭을 선택합니다</li>
+    <li>카카오 로그인 섹션에서 <b>"로그아웃"</b> 버튼을 누릅니다</li>
+    <li>반려동물 카드에서 <b>🗑️ 삭제</b> 버튼을 눌러 등록된 반려동물 정보를 삭제합니다</li>
+    <li>앱을 삭제하면 기기에 저장된 모든 데이터가 제거됩니다</li>
+  </ol>
+</div>
+
+<div class="step-box">
+  <h3 style="margin-bottom:10px">방법 2: 이메일로 삭제 요청</h3>
+  <p>서버에 저장된 데이터(카카오 로그인 정보 등)를 완전히 삭제하려면 아래 이메일로 삭제를 요청해 주세요.</p>
+  <div class="email-box">
+    📧 <a href="mailto:koreagwangju@gmail.com?subject=[AniBridge] 계정 삭제 요청">koreagwangju@gmail.com</a>
+  </div>
+  <p><b>요청 시 포함할 정보:</b></p>
+  <ul>
+    <li>카카오 닉네임 또는 카카오 계정 이메일</li>
+    <li>삭제 요청 사유 (선택)</li>
+  </ul>
+  <p>요청 접수 후 <b>영업일 기준 7일 이내</b>에 처리됩니다.</p>
+</div>
+
+<h2>삭제되는 데이터</h2>
+
+<table>
+  <tr>
+    <th>데이터 유형</th>
+    <th>저장 위치</th>
+    <th>삭제 시점</th>
+  </tr>
+  <tr>
+    <td>카카오 로그인 정보 (닉네임, 프로필 사진)</td>
+    <td>카카오 OAuth 토큰</td>
+    <td>로그아웃 시 즉시</td>
+  </tr>
+  <tr>
+    <td>반려동물 정보 (이름, 품종, 생년월일 등)</td>
+    <td>기기 내 localStorage</td>
+    <td>앱 삭제 또는 개별 삭제 시</td>
+  </tr>
+  <tr>
+    <td>케어수첩 (증상, 병원, 접종, 메모)</td>
+    <td>기기 내 localStorage</td>
+    <td>앱 삭제 시</td>
+  </tr>
+  <tr>
+    <td>산책 기록 (GPS 거리, 시간)</td>
+    <td>기기 내 localStorage</td>
+    <td>앱 삭제 시</td>
+  </tr>
+  <tr>
+    <td>체중 기록</td>
+    <td>기기 내 localStorage</td>
+    <td>앱 삭제 시</td>
+  </tr>
+  <tr>
+    <td>AI 분석/상담 사용 횟수 기록</td>
+    <td>기기 내 localStorage</td>
+    <td>매일 자정 자동 초기화</td>
+  </tr>
+</table>
+
+<h2>보관되는 데이터</h2>
+
+<div class="warning">
+  ⚠️ 아래 데이터는 법령에 따라 일정 기간 보관될 수 있습니다.
+</div>
+
+<ul>
+  <li><b>결제 기록:</b> 전자상거래법에 따라 5년 보관</li>
+  <li><b>소비자 불만/분쟁 처리 기록:</b> 전자상거래법에 따라 3년 보관</li>
+</ul>
+
+<p>보관 기간이 경과한 데이터는 즉시 파기됩니다.</p>
+
+<h2>문의</h2>
+<p>
+· 개발사: ㈜에이브릿지<br>
+· 개인정보 보호책임자: 정성욱<br>
+· 이메일: <a href="mailto:koreagwangju@gmail.com">koreagwangju@gmail.com</a>
+</p>
+
+<div class="date">
+  시행일: 2026년 4월 12일<br>
+  최종 업데이트: 2026년 4월 12일
+</div>
+
+</body>
+</html>
