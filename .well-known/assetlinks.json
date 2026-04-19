@@ -1,8 +1,15 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.anibridge.app",
-        "sha256_cert_fingerprints": ["69:09:92:D2:6B:D4:3F:99:23:D9:1F:60:64:17:F6:58:32:90:E0:A7:21:16:83:6E:05:4A:DB:95:95:5C:89:67"]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.anibridge.app",
+      "sha256_cert_fingerprints": [
+        "69:09:92:D2:6B:D4:3F:99:23:D9:1F:60:64:17:F6:58:32:90:E0:A7:21:16:83:6E:05:4A:DB:95:95:5C:89:67",
+        "17:32:27:59:47:FA:A1:C6:88:6C:6C:7C:53:86:AE:7D:DC:55:8B:49:6F:8C:89:3F:D8:53:B6:CC:77:6F:45:2C"
+      ]
+    }
+  }
+]
