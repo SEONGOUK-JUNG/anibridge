@@ -1,7 +1,8 @@
 {
   "name": "AniBridge",
   "short_name": "AniBridge",
-  "description": "Every Animal Deserves a Happy Life",
+  "description": "광고없는 동물 번역기 · AI 펫케어. Every Animal Deserves a Happy Life",
+  "version": "2.5.1",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0E1A",
