@@ -1429,8 +1429,8 @@ select option { background: #131929; }
       <div style="max-width:80%">
         <div style="font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:600">AniBridge AI</div>
         <div class="chat-bubble-ai">
-          안녕하세요! 반려동물 건강 정보 도우미입니다 🐾<br><br>
-          증상, 식이, 행동 변화 등 궁금한 점을 자유롭게 물어보세요.<br>
+          안녕하세요! AniBridge AI 건강 도우미입니다 🐾<br><br>
+          우리 아이의 증상, 식이, 행동 변화 등 궁금한 점을 자유롭게 물어보세요. 24시간 언제든 답변해드려요!<br>
           <span style="font-size:11px;opacity:.7">※ 진단·처방이 아닌 일반 정보를 제공합니다</span>
         </div>
         <!-- 빠른 질문 버튼 -->
@@ -1549,7 +1549,7 @@ select option { background: #131929; }
       <div class="mi" onclick="openM('subscribe')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">💳</div><div class="mi-text">구독 관리</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
     </div>
-    <div class="ver-txt">AniBridge v2.5<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
+    <div class="ver-txt">AniBridge v2.5.1<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
     <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;padding-bottom:8px">
       <button onclick="openM('privacy')" style="background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline">개인정보처리방침</button>
       <span style="color:var(--border2);font-size:11px">|</span>
@@ -2203,7 +2203,7 @@ function escHtml(str){
 const DB_KEY = 'anibridge_db';
 
 // ── 버전 체크 — 버전 기록만 갱신 (사용자 데이터 보존) ──
-const APP_VERSION = '2.5';
+const APP_VERSION = '2.5.1';
 const savedVersion = localStorage.getItem('anibridge_version');
 if(savedVersion !== APP_VERSION){
   // 분석·상담 횟수 카운트만 초기화 (오래된 횟수 표시 방지)
@@ -2473,7 +2473,8 @@ function stopWalk(){
   saveTodayWalkSec(walkSec, walkDist);
   const btn = document.getElementById('walkBtn');
   if(btn){ btn.innerHTML = '🐾 산책 시작'; btn.className = 'walk-action wa-start'; }
-  document.getElementById('walkSub').textContent = '코코에게 필요한 운동량을 채워주세요';
+  const petName = getPetName();
+  document.getElementById('walkSub').textContent = `${petName}에게 필요한 운동량을 채워주세요`;
   updWeeklyChart();
   updWalkHistory();
   toast('산책 기록이 저장되었습니다 ✓');
@@ -2519,7 +2520,7 @@ function updWalkHistory(){
     }catch(e){}
   }
   if(items.length===0){
-    hist.innerHTML='<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">아직 산책 기록이 없어요 🐾</div>';
+    hist.innerHTML='<div style="text-align:center;padding:32px 20px;color:var(--text3);font-size:13px;line-height:1.7">아직 산책 기록이 없어요 🐾<br><span style="font-size:11px;opacity:0.7">위의 산책 시작 버튼을 눌러<br>첫 산책을 기록해보세요!</span></div>';
     return;
   }
   hist.innerHTML = items.map(it=>`
