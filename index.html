@@ -961,42 +961,9 @@ select option { background: #131929; }
 <!-- 헤더 -->
 <div class="header">
   <div class="logo-wrap">
-    <!-- SVG 로고 심볼 -->
-    <svg class="logo-icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="hg1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#4AFFA3"/>
-          <stop offset="100%" stop-color="#00C9FF"/>
-        </linearGradient>
-        <linearGradient id="hg2" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#00C9FF"/>
-          <stop offset="100%" stop-color="#4AFFA3"/>
-        </linearGradient>
-        <filter id="hglow">
-          <feGaussianBlur stdDeviation="1.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <!-- 발가락 4개 - 채워진 원, 부채꼴 배치 -->
-      <circle class="toe1" cx="36" cy="28" r="7" fill="url(#hg2)"/>
-      <circle class="toe2" cx="50" cy="18" r="7" fill="url(#hg2)"/>
-      <circle class="toe3" cx="68" cy="18" r="7" fill="url(#hg2)"/>
-      <circle class="toe4" cx="82" cy="28" r="7" fill="url(#hg2)"/>
-      <!-- 큰 발바닥 패드 - 둥근 삼각형 -->
-      <path class="pad" d="M42,40 Q46,34 59,34 Q72,34 76,40 Q78,44 74,52 Q68,60 59,62 Q50,60 44,52 Q40,44 42,40Z" fill="url(#hg1)" filter="url(#hglow)"/>
-      <!-- 브릿지 -->
-      <g class="bridge-line">
-        <path d="M 18 85 Q 60 48 102 85" fill="none" stroke="url(#hg1)" stroke-width="5" stroke-linecap="round" filter="url(#hglow)"/>
-        <line x1="27" y1="85" x2="27" y2="100" stroke="url(#hg1)" stroke-width="4" stroke-linecap="round"/>
-        <line x1="93" y1="85" x2="93" y2="100" stroke="url(#hg1)" stroke-width="4" stroke-linecap="round"/>
-        <line x1="10" y1="100" x2="110" y2="100" stroke="url(#hg1)" stroke-width="3.5" stroke-linecap="round"/>
-        <line x1="40" y1="65" x2="40" y2="100" stroke="url(#hg2)" stroke-width="1.2" opacity="0.55"/>
-        <line x1="52" y1="57" x2="52" y2="100" stroke="url(#hg2)" stroke-width="1.2" opacity="0.55"/>
-        <line x1="60" y1="54" x2="60" y2="100" stroke="url(#hg2)" stroke-width="1.2" opacity="0.55"/>
-        <line x1="68" y1="57" x2="68" y2="100" stroke="url(#hg2)" stroke-width="1.2" opacity="0.55"/>
-        <line x1="80" y1="65" x2="80" y2="100" stroke="url(#hg2)" stroke-width="1.2" opacity="0.55"/>
-      </g>
-    </svg>
+    <!-- 앱 아이콘 -->
+    <img class="logo-icon" src="icon-512.png" alt="AniBridge" style="border-radius:12px;object-fit:cover">
+
     <div class="logo-text">
       <div class="logo">AniBridge</div>
       <div class="logo-slogan">Every Animal Deserves a Happy Life</div>
@@ -1055,6 +1022,20 @@ select option { background: #131929; }
         <div class="ai-cta-title">AniBridge AI 분석</div>
         <div class="ai-cta-sub">사진 한 장으로 10초 만에<br>건강 상태 + 병원 연결</div>
         <div class="ai-cta-badge" id="homeAiBadge">오늘 3회 남음</div>
+      </div>
+      <div class="ai-cta-arr">›</div>
+    </button>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="sec-title">AI 건강 상담</div></div>
+    <button class="ai-cta" onclick="if(getChatRemainingCount()<=0){showUpgradeModal('chat');}else{showPage('chat');}" style="background:linear-gradient(135deg,#1A2040,#0F2030);border-color:rgba(255,107,157,0.25)">
+      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(255,107,157,0.3),transparent)"></div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#00C9FF)">💬</div>
+      <div class="ai-cta-text">
+        <div class="ai-cta-title">AI 건강 상담</div>
+        <div class="ai-cta-sub">증상·식이·행동 등<br>궁금한 점을 AI에게 물어보세요</div>
+        <div class="ai-cta-badge" id="homeChatBadge" style="background:var(--g3)">오늘 5회 남음</div>
       </div>
       <div class="ai-cta-arr">›</div>
     </button>
@@ -1573,17 +1554,17 @@ select option { background: #131929; }
   <div class="nav-item active" id="nav0" onclick="showPage('home')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>홈<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav1" onclick="showPage('translator')">
+  <div class="nav-item" id="nav1" onclick="showPage('care')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" id="nav2" onclick="showPage('translator')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav2" onclick="showPage('analyze')">
+  <div class="nav-item" id="nav3" onclick="showPage('analyze')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>AI 분석<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav3" onclick="showPage('chat')">
+  <div class="nav-item" id="nav4" onclick="showPage('chat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI 상담<div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" id="nav4" onclick="showPage('care')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav5" onclick="showPage('my')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>MY<div class="nav-dot"></div>
@@ -2552,7 +2533,7 @@ setTimeout(()=>{ document.getElementById('splash').style.display='none'; }, 6000
 
 // ── 페이지 ──
 const PG={home:'pg-home',analyze:'pg-analyze',chat:'pg-chat',walk:'pg-walk',care:'pg-care',place:'pg-place',my:'pg-my',translator:'pg-translator'};
-const NV={home:0,translator:1,analyze:2,chat:3,walk:0,care:4,my:5,place:5};
+const NV={home:0,care:1,translator:2,analyze:3,chat:4,walk:0,my:5,place:5};
 function showPage(k){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -3156,6 +3137,12 @@ function updateChatCountUI(){
   if(el){
     el.textContent = remain > 0 ? `오늘 ${remain}회 남음` : '오늘 소진';
     el.style.color = remain > 0 ? 'var(--g1)' : 'var(--urgent)';
+  }
+  // 홈 화면 배지 업데이트
+  const homeChatBadge = document.getElementById('homeChatBadge');
+  if(homeChatBadge){
+    homeChatBadge.textContent = remain > 0 ? `오늘 ${remain}회 남음` : '오늘 소진';
+    homeChatBadge.style.background = remain > 0 ? 'var(--g3)' : 'rgba(255,255,255,0.15)';
   }
   const btn = document.getElementById('chatSendBtn');
   if(btn && remain <= 0){
@@ -4393,17 +4380,17 @@ function updDdayBadge(){
     el.className = 'today-val green';
   }
 
-  // 케어수첩 탭 뱃지 (nav4 = 케어수첩)
-  const nav4 = document.getElementById('nav4');
-  if(nav4){
-    const existing = nav4.querySelector('.vaccine-alert');
+  // 케어수첩 탭 뱃지 (nav1 = 케어수첩)
+  const navCare = document.getElementById('nav1');
+  if(navCare){
+    const existing = navCare.querySelector('.vaccine-alert');
     if(existing) existing.remove();
     if(next.dd >= 0 && next.dd <= 7){
       const badge = document.createElement('div');
       badge.className = 'vaccine-alert';
       badge.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--urgent);position:absolute;top:6px;right:6px';
-      nav4.style.position = 'relative';
-      nav4.appendChild(badge);
+      navCare.style.position = 'relative';
+      navCare.appendChild(badge);
     }
   }
 }
