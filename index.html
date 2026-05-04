@@ -3063,11 +3063,10 @@ async function sendChat(){
   document.getElementById('chatSendBtn').style.opacity = '0.4';
 
   try {
-    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
+    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev/groq-chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
         system: getChatSystem(),
         messages: chatHistory
