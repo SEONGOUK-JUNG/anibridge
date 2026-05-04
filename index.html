@@ -1149,12 +1149,13 @@ select option { background: #131929; }
       <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:4px">🧠 AI가 실제 소리를 분석합니다</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">강아지/고양이 소리를 구분하고<br>음성 패턴 기반으로 감정을 분석해요</div>
       <div id="transAICount" style="font-size:11px;font-weight:700;color:var(--g2);margin-top:8px"></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.1);line-height:1.5">⚠️ 동물 음성 분석은 학술 연구 단계로<br>실제 의미와 다를 수 있습니다 (참고용)</div>
     </div>
 
     <!-- 무료 모드 안내 (기본 표시) -->
     <div id="transFreeInfo" style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
       <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🎲 재미로 즐기는 번역</div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.6">AI 기반 행동 패턴 분석으로 번역합니다<br>정확한 분석은 AI 분석 번역을 이용해 주세요</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">행동 패턴 기반의 가벼운 추측 번역입니다<br>정확한 분석은 AI 분석 번역을 이용해 주세요</div>
     </div>
 
     <!-- 녹음 버튼 -->
@@ -1209,6 +1210,15 @@ select option { background: #131929; }
       <div style="display:flex;gap:10px">
         <button onclick="shareTransResult()" style="flex:1;padding:14px;background:#FEE500;color:#3C1E1E;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">카카오톡 공유 💬</button>
         <button onclick="resetTrans()" style="flex:1;padding:14px;background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border2);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">다시 번역 🔄</button>
+      </div>
+
+      <!-- 면책 안내 -->
+      <div style="margin-top:14px;background:rgba(255,184,48,0.08);border:1px solid rgba(255,184,48,0.2);border-radius:var(--rs);padding:12px 14px;font-size:11px;color:var(--text3);line-height:1.7">
+        ⚠️ <b style="color:var(--caution)">알아두세요</b><br>
+        • 동물 음성 분석은 현재 학술 연구 단계입니다<br>
+        • 실제 동물의 마음을 정확히 알 수 없습니다<br>
+        • 본 기능은 재미와 추정 목적으로 사용해 주세요<br>
+        • 정확도가 낮을 수 있습니다
       </div>
     </div>
 
@@ -2007,7 +2017,7 @@ select option { background: #131929; }
 
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (서비스 이용요금)</div>
     <p style="margin-bottom:14px">
-      · 무료: AI 분석 1회/일, AI 상담 3회/일<br>
+      · 무료: AI 분석 2회/일, AI 상담 5회/일, 번역기 AI 1회/일<br>
       · 충전형 10회: 1,000원 (유효기간 없음)<br>
       · 충전형 30회: 2,700원 (유효기간 없음)<br>
       · 월정액: 9,900원/월 (30일 이용, 재결제 안내 후 갱신)
@@ -2585,14 +2595,14 @@ function scheduleReset(){
 scheduleReset();
 
 // ── AI 분석 횟수 제한 (하루 1회) ──
-const MAX_ANALYZE = 1;
+const MAX_ANALYZE = 2;
 function getTodayKey(){ return 'analyze_' + today(); }
 function getUsedCount(){ return parseInt(localStorage.getItem(getTodayKey())||'0'); }
 function addUsedCount(){ localStorage.setItem(getTodayKey(), getUsedCount()+1); }
 function getRemainingCount(){ return Math.max(0, MAX_ANALYZE - getUsedCount()); }
 
 // ── AI 상담 횟수 제한 (하루 3회) ──
-const MAX_CHAT = 3;
+const MAX_CHAT = 5;
 function getChatTodayKey(){ return 'chat_' + today(); }
 function getChatUsedCount(){ return parseInt(localStorage.getItem(getChatTodayKey())||'0'); }
 function addChatUsedCount(){ localStorage.setItem(getChatTodayKey(), getChatUsedCount()+1); }
@@ -2678,7 +2688,7 @@ async function doAnalyze(){
 {"petType":"동물종류","petBreed":"추정품종","urgencyLevel":"urgent/caution/safe","urgencyTitle":"긴급도요약","urgencyDesc":"이유한문장","s1":"양호/주의/위험","l1":"good/caution/warning","s2":"활발/보통/저하","l2":"good/caution/warning","s3":"행복/편안/불안","l3":"good/caution/warning","s4":"정상/과체중/저체중","l4":"good/caution/warning","detailText":"상세분석3~5문장한국어","careText":"케어추천3~4가지한국어","hospitalKeyword":"동물병원"}
 반려동물없으면:{"error":"반려동물을 찾을 수 없습니다."}`;
   try{
-    const res=await fetch('https://anibridge-api.koreagwangju.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
+    const res=await fetch('https://anibridge-api.koreagwangju.workers.dev/groq-vision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
     const data=await res.json();
     const txt=data.content?.[0]?.text||'';
     const result=JSON.parse(txt.replace(/```json|```/g,'').trim());
@@ -2739,7 +2749,7 @@ function showUpgradeModal(type){
 
   if(type === 'chat'){
     if(titleEl) titleEl.textContent = '🔒 오늘 AI 상담 횟수 소진';
-    if(copyEl) copyEl.innerHTML = `${petName}와 더 많은 대화를<br>나누고 싶으신가요?<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 상담 3회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
+    if(copyEl) copyEl.innerHTML = `${petName}와 더 많은 대화를<br>나누고 싶으신가요?<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 상담 5회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
   } else {
     if(titleEl) titleEl.textContent = '🔒 오늘 무료 분석 소진';
     if(copyEl) copyEl.innerHTML = `${petName}가 더 자주<br>검사받고 싶어해요<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 분석 1회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
@@ -3804,7 +3814,7 @@ function setTransMode(mode){
 }
 
 // ── 번역기 AI 횟수 (AI 분석과 동일 결제 시스템 사용) ──
-const MAX_TRANS_AI = 0; // 무료 0회 — 충전형/월정액으로만 사용
+const MAX_TRANS_AI = 1; // 무료 1회/일
 function getTransAIKey(){ return 'trans_ai_' + today(); }
 function getTransAIUsed(){ return parseInt(localStorage.getItem(getTransAIKey())||'0'); }
 function addTransAIUsed(){ localStorage.setItem(getTransAIKey(), getTransAIUsed()+1); }
@@ -3812,8 +3822,14 @@ function getTransAIRemaining(){ return Math.max(0, MAX_TRANS_AI - getTransAIUsed
 function updateTransAICount(){
   const el = document.getElementById('transAICount');
   if(!el) return;
-  el.textContent = 'AI 분석 번역은 유료 기능입니다 (충전형/월정액)';
-  el.style.color = 'var(--caution)';
+  const remain = getTransAIRemaining();
+  if(remain > 0){
+    el.textContent = `오늘 ${remain}회 무료 사용 가능`;
+    el.style.color = 'var(--g2)';
+  } else {
+    el.textContent = '오늘 무료 횟수 소진 — 충전 후 이용';
+    el.style.color = 'var(--caution)';
+  }
 }
 
 function selTransType(btn, type, emoji){
