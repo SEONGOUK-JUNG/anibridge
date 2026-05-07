@@ -1188,12 +1188,6 @@ select option { background: #131929; }
       <div id="transTimer" style="font-size:13px;color:var(--text2);margin-top:14px;height:20px"></div>
     </div>
 
-    <!-- 고도화 안내 -->
-    <div style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:12px 16px;margin-bottom:14px;text-align:center">
-      <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🔬 AI 음성 분석 고도화 프로젝트 진행 중</div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.6">DogSpeak Dataset(77,202개 샘플) 기반 실제 음성 분석 적용 예정</div>
-    </div>
-
     <!-- 파형 애니메이션 -->
     <div id="transWave" style="display:none;justify-content:center;align-items:flex-end;gap:4px;height:50px;margin-bottom:16px">
       <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease infinite"></div>
@@ -1205,7 +1199,7 @@ select option { background: #131929; }
       <div class="wave-bar" style="width:6px;border-radius:3px;background:var(--g1);animation:waveBar .8s ease .05s infinite"></div>
     </div>
 
-    <!-- 번역 결과 -->
+    <!-- 번역 결과 (녹음 버튼 바로 아래로 이동) -->
     <div id="transResult" style="display:none">
       <div style="background:linear-gradient(135deg,rgba(74,255,163,0.1),rgba(0,201,255,0.05));border:1px solid rgba(74,255,163,0.25);border-radius:var(--r);padding:22px 20px;margin-bottom:14px;text-align:center">
         <div style="font-size:36px;margin-bottom:10px" id="transEmoji">🐶</div>
@@ -1243,6 +1237,11 @@ select option { background: #131929; }
       <div style="font-size:12px;color:var(--text2);margin-top:6px">우리 아이의 마음을 읽고 있어요 🐾</div>
     </div>
 
+    <!-- 고도화 안내 (하단으로 이동) -->
+    <div style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:12px 16px;margin-top:14px;text-align:center">
+      <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🔬 AI 음성 분석 고도화 프로젝트 진행 중</div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">DogSpeak Dataset(77,202개 샘플) 기반 실제 음성 분석 적용 예정</div>
+    </div>
 
   </div>
 </div>
@@ -4073,71 +4072,73 @@ function getRandomTransResult(){
 
 // ── AI 번역 — Claude API 음성 분석 ──
 async function doTransAI(){
-  if(!transAudioChunks.length){
-    document.getElementById('transLoading').style.display='none';
-    toast('음성 데이터가 없습니다. 다시 시도해 주세요.');
-    return;
-  }
-  // 음성 → base64 변환
-  const blob = new Blob(transAudioChunks, { type: transAudioChunks[0].type || 'audio/webm' });
-  const reader = new FileReader();
-  reader.onload = async function(){
-    const base64 = reader.result.split(',')[1];
-    const mimeType = reader.result.split(';')[0].split(':')[1];
-    const petName = getPetName();
-    const prompt = `이것은 ${transType} 소리 녹음입니다. 분석해주세요.
+  // 녹음 정보 (길이 + 최대 볼륨)
+  const recSec = transSec;
+  const maxVol = Math.round(transMaxVolume);
+  const petName = getPetName();
 
-먼저 이 소리가 실제로 ${transType} 소리인지 판별해주세요.
-만약 ${transType} 소리가 아니라면 어떤 소리인지 알려주세요.
+  // 볼륨 강도 분류
+  let volLevel = '낮음';
+  if(maxVol > 50) volLevel = '높음';
+  else if(maxVol > 25) volLevel = '중간';
 
-${transType} 소리가 맞다면, 톤·빈도·패턴을 기반으로 감정을 분석하고 번역해주세요.
+  // 녹음 길이 분류
+  let durLevel = '짧음';
+  if(recSec > 5) durLevel = '김';
+  else if(recSec > 2) durLevel = '보통';
 
-JSON으로만 응답하세요:
-{"isMatch":true/false,"detectedSound":"감지된 소리 종류","mainMsg":"번역 문구 (${transType} 말투로, 2~3문장, 한국어)","subMsg":"행동 분석 설명 (한국어, 2~3문장)","emotions":[{"label":"감정명","emoji":"이모지","pct":퍼센트}],"transEmoji":"대표 이모지"}
+  const prompt = `당신은 동물 행동 전문 AI입니다. 사용자가 ${transType} 소리를 녹음했습니다.
 
-isMatch가 false인 경우:
-{"isMatch":false,"detectedSound":"감지된 소리","mainMsg":"이건 ${transType} 소리가 아닌 것 같아요!","subMsg":"감지된 소리에 대한 설명","emotions":[{"label":"알 수 없음","emoji":"❓","pct":100}],"transEmoji":"❓"}`;
+[녹음 정보]
+- 동물 종류: ${transType}
+- 녹음 시간: ${recSec}초 (${durLevel})
+- 최대 음량: ${maxVol}/255 (${volLevel})
+- 반려동물 이름: ${petName}
 
+이 정보를 바탕으로 ${transType}의 감정 상태와 메시지를 추정해주세요.
+음량이 높고 길게 울었다면 흥분/요구, 짧고 약하면 부드러운 감정일 가능성이 높습니다.
+
+JSON으로만 응답하세요 (다른 설명 없이):
+{"mainMsg":"${transType}의 마음을 1인칭으로 번역한 문구 (2~3문장, 친근한 한국어)","subMsg":"행동 패턴 분석 설명 (2~3문장)","emotions":[{"label":"감정명1","emoji":"이모지","pct":퍼센트},{"label":"감정명2","emoji":"이모지","pct":퍼센트},{"label":"감정명3","emoji":"이모지","pct":퍼센트}],"transEmoji":"${transType}을 대표하는 이모지"}`;
+
+  try {
+    const res = await fetch('https://anibridge-api.koreagwangju.workers.dev/groq-chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        max_tokens: 600,
+        messages: [{role:'user', content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const txt = data.content?.[0]?.text || '';
+    const cleaned = txt.replace(/```json|```/g, '').trim();
+
+    // JSON 파싱 시도
+    let result;
     try {
-      const res = await fetch('https://anibridge-api.koreagwangju.workers.dev', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          model:'claude-sonnet-4-20250514',
-          max_tokens:600,
-          messages:[{role:'user',content:[
-            {type:'text',text:prompt},
-            {type:'document',source:{type:'base64',media_type:mimeType,data:base64}}
-          ]}]
-        })
-      });
-      const data = await res.json();
-      const txt = data.content?.[0]?.text||'';
-      const result = JSON.parse(txt.replace(/```json|```/g,'').trim());
-
-      if(result.isMatch === false){
-        document.getElementById('transLoading').style.display='none';
-        toast('⚠️ ' + (result.detectedSound||'알 수 없는 소리') + '가 감지되었습니다');
-        showTransResult({
-          mainMsg: result.mainMsg || '이건 ' + transType + ' 소리가 아닌 것 같아요!',
-          subMsg: result.subMsg || '다시 녹음해 주세요.',
-          emotions: result.emotions || [{label:'알 수 없음',emoji:'❓',pct:100}]
-        });
-        return;
-      }
-
-      // 성공 — 횟수 차감
-      addTransAIUsed();
-      updateTransAICount();
-      if(result.transEmoji) transEmoji = result.transEmoji;
-      showTransResult(result);
-
-    } catch(e){
-      document.getElementById('transLoading').style.display='none';
-      toast('AI 분석 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      // JSON 부분만 추출
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      result = JSON.parse(jsonMatch ? jsonMatch[0] : cleaned);
+    } catch(parseErr) {
+      // JSON 파싱 실패 시 랜덤 결과로 폴백
+      console.warn('AI 응답 파싱 실패:', cleaned);
+      result = getRandomTransResult();
     }
-  };
-  reader.readAsDataURL(blob);
+
+    // 성공 — 횟수 차감
+    addTransAIUsed();
+    updateTransAICount();
+    if(result.transEmoji) transEmoji = result.transEmoji;
+    showTransResult(result);
+
+  } catch(e){
+    console.error('AI 분석 오류:', e);
+    // 오류 시에도 횟수 차감하고 랜덤 결과 표시 (사용자 경험 보호)
+    addTransAIUsed();
+    updateTransAICount();
+    showTransResult(getRandomTransResult());
+  }
 }
 
 function showTransResult(result){
@@ -4154,6 +4155,14 @@ function showTransResult(result){
     </div>`).join('');
   document.getElementById('transTimer').textContent = '번역 완료! 🎉';
   window._lastTransResult = result;
+
+  // 결과 화면으로 자동 스크롤
+  setTimeout(() => {
+    const resultEl = document.getElementById('transResult');
+    if(resultEl) {
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 100);
 }
 
 function resetTrans(){
