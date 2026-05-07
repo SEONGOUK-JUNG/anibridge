@@ -4116,28 +4116,34 @@ JSON으로만 응답하세요 (다른 설명 없이):
 
     // JSON 파싱 시도
     let result;
+    let isAISuccess = true;
     try {
       // JSON 부분만 추출
       const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
       result = JSON.parse(jsonMatch ? jsonMatch[0] : cleaned);
     } catch(parseErr) {
-      // JSON 파싱 실패 시 랜덤 결과로 폴백
+      // JSON 파싱 실패 시 랜덤 결과로 폴백 (AI 응답 실패)
       console.warn('AI 응답 파싱 실패:', cleaned);
       result = getRandomTransResult();
+      isAISuccess = false;
     }
 
-    // 성공 — 횟수 차감
-    addTransAIUsed();
-    updateTransAICount();
+    // AI 분석 성공 시에만 횟수 차감
+    if(isAISuccess){
+      addTransAIUsed();
+      updateTransAICount();
+    } else {
+      toast('⚠️ AI 분석에 일시적 문제가 있어 기본 번역으로 표시했습니다');
+    }
     if(result.transEmoji) transEmoji = result.transEmoji;
     showTransResult(result);
 
   } catch(e){
     console.error('AI 분석 오류:', e);
-    // 오류 시에도 횟수 차감하고 랜덤 결과 표시 (사용자 경험 보호)
-    addTransAIUsed();
-    updateTransAICount();
-    showTransResult(getRandomTransResult());
+    // 네트워크 오류 시 횟수 차감 안 함 (사용자에게 다시 시도 기회 부여)
+    document.getElementById('transLoading').style.display='none';
+    document.getElementById('transTimer').textContent = '';
+    toast('AI 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
   }
 }
 
