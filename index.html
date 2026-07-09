@@ -1828,6 +1828,7 @@ select option { background: #131929; }
         · 갑자기 뒷다리를 못 쓰거나 일어나지 못함<br>
         · 한여름 헐떡임 + 침 흘림 + 비틀거림 (열사병 의심)
       </div>
+      <button onclick="closeM(null,'signal');goEmergencyHospital()" style="width:100%;margin-top:12px;padding:13px;background:linear-gradient(135deg,#FF4D6D,#FF7A5C);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">🌙 지금 문 연 24시 병원 찾기</button>
     </div>
 
     <div style="background:rgba(255,184,48,0.07);border:1.5px solid rgba(255,184,48,0.3);border-radius:var(--r);padding:16px;margin-bottom:12px">
@@ -1878,6 +1879,7 @@ select option { background: #131929; }
   <div class="modal-body">
     <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6">진료실에서 수의사 선생님께 바로 보여주세요.<br>케어수첩 기록으로 자동 작성되었습니다.</div>
     <div id="emg-card" style="background:linear-gradient(135deg,rgba(255,77,109,0.08),rgba(255,184,48,0.05));border:1.5px solid rgba(255,77,109,0.3);border-radius:var(--r);padding:18px;margin-bottom:16px"></div>
+    <button onclick="goEmergencyHospital()" style="width:100%;padding:15px;background:linear-gradient(135deg,#FF4D6D,#FF7A5C);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px">🌙 지금 문 연 24시 병원 찾기</button>
     <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.04em">전달 방법</div>
     <button onclick="shareEmergencyCard()" class="kakao-btn"><svg width="20" height="20" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>카카오톡으로 공유하기</button>
     <button onclick="copyEmergencyCard()" class="copy-btn">📋 텍스트 복사</button>
@@ -3964,6 +3966,15 @@ function renderVetHome(){
 
 // ── 내 주변 동물병원 (카카오 로컬 API, Worker 경유) ──
 let _hospQuery = '동물병원';
+
+// 응급 카드/건강 시그널 → 24시 병원 찾기 바로 연결
+function goEmergencyHospital(){
+  closeM(null,'emergency');
+  showPage('place');
+  const chip = document.getElementById('hc-24');
+  findHospitals('24시 동물병원', chip);
+  toast('🌙 주변 24시 병원을 찾고 있어요');
+}
 function findHospitals(query, chipEl){
   if(query) _hospQuery = query;
   if(chipEl){
