@@ -1357,6 +1357,12 @@ select option { background: #131929; }
       </div>
     </div>
     <div class="walk-section">
+      <div class="ws-title">🗺️ 산책 경로</div>
+      <div class="hist-card" id="routeList">
+        <div style="text-align:center;padding:28px 20px;color:var(--text3);font-size:13px;line-height:1.7">아직 저장된 경로가 없어요 🐾<br><span style="font-size:11px;opacity:0.7">GPS를 켜고 산책하면 이동 경로가<br>발자국 지도로 저장됩니다!</span></div>
+      </div>
+    </div>
+    <div class="walk-section">
       <div class="ws-title">📝 최근 산책 기록</div>
       <div class="hist-card">
         <div class="hi-item"><div class="hi-ico">🌅</div><div class="hi-info"><div class="hi-date">오늘 오전 7:30</div><div class="hi-detail">13분 · 0.8km · 52kcal</div></div><div class="hi-res hi-warn">부족</div></div>
@@ -1747,6 +1753,17 @@ select option { background: #131929; }
     <div class="fg"><label class="fl">🏥 기저질환 · 수술 이력</label><input type="text" id="pe-disease" placeholder="예) 슬개골 탈구 1기, 중성화 수술(2024)"></div>
     <div class="fg"><label class="fl">특이사항</label><textarea id="pe-note" placeholder="예) 낯가림 심함, 목 만지는 것 싫어함"></textarea></div>
     <button class="save-btn" onclick="savePetProfile()">저장하기</button>
+  </div>
+</div></div>
+
+<!-- 산책 경로 지도 -->
+<div class="overlay" id="m-walkmap" onclick="closeM(event,'walkmap')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🗺️ 산책 경로</span><button class="modal-close" onclick="closeM(null,'walkmap')">✕</button></div>
+  <div class="modal-body">
+    <div id="wm-info" style="display:flex;gap:14px;justify-content:center;font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px"></div>
+    <div id="walkMap" style="height:380px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border2);background:#f2f0ed"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;text-align:center">🐾 우리 아이가 걸어간 길이에요</div>
   </div>
 </div></div>
 
@@ -2476,6 +2493,9 @@ function updWalk(){
 let gpsWatchId = null;
 let lastPos = null;
 // walkDist는 초기화 시 이미 선언됨
+let walkPath = [];        // 이번 산책 GPS 경로
+let _sessStartSec = 0;    // 세션 시작 시점의 누적 시간
+let _sessStartDist = 0;   // 세션 시작 시점의 누적 거리
 
 // ── 두 GPS 좌표 간 거리 계산 (Haversine) ──
 function calcDist(lat1, lon1, lat2, lon2){
@@ -2515,6 +2535,9 @@ function toggleWalk(){
 
 function startWalkGPS(){
   walking = true;
+  walkPath = lastPos ? [{lat:lastPos.coords.latitude, lng:lastPos.coords.longitude}] : [];
+  _sessStartSec = walkSec;
+  _sessStartDist = walkDist;
   const btn = document.getElementById('walkBtn');
   btn.innerHTML = '⏹️ 산책 종료';
   btn.className = 'walk-action wa-stop';
@@ -2542,6 +2565,7 @@ function startWalkGPS(){
         // 노이즈 필터 — 0.003km(3m) 이상 이동 시만 반영
         if(d > 0.003 && d < 0.5){
           walkDist += d;
+          if(walkPath.length < 2000) walkPath.push({lat:pos.coords.latitude, lng:pos.coords.longitude});
           saveTodayWalkSec(walkSec, walkDist);
           updWalk();
         }
@@ -2581,6 +2605,7 @@ function stopWalk(){
   }
   lastPos = null;
   saveTodayWalkSec(walkSec, walkDist);
+  saveWalkRoute();
   const btn = document.getElementById('walkBtn');
   if(btn){ btn.innerHTML = '🐾 산책 시작'; btn.className = 'walk-action wa-start'; }
   const petName = getPetName();
@@ -2643,6 +2668,154 @@ function updWalkHistory(){
       <div class="hi-res ${it.pct>=100?'hi-ok':'hi-warn'}">${it.pct>=100?'달성 ✓':'부족'}</div>
     </div>`).join('');
 }
+
+// ── 산책 경로 저장 (GPS 세션) ──
+function saveWalkRoute(){
+  if(walkPath.length < 5) { walkPath = []; return; }
+  const sessSec = walkSec - _sessStartSec;
+  const sessDist = walkDist - _sessStartDist;
+  if(sessSec < 60 || sessDist < 0.05) { walkPath = []; return; }
+  // 400포인트 초과 시 다운샘플
+  let path = walkPath;
+  if(path.length > 400){
+    const step = Math.ceil(path.length / 400);
+    path = path.filter((_,i)=> i % step === 0 || i === walkPath.length-1);
+  }
+  path = path.map(p=>({lat:+p.lat.toFixed(6), lng:+p.lng.toFixed(6)}));
+  try{
+    const walks = JSON.parse(localStorage.getItem('anibridge_walks')||'[]');
+    const now = new Date();
+    walks.unshift({
+      date: today(),
+      time: `${now.getHours()<12?'오전':'오후'} ${now.getHours()%12||12}:${String(now.getMinutes()).padStart(2,'0')}`,
+      sec: sessSec,
+      dist: +sessDist.toFixed(2),
+      path: path
+    });
+    localStorage.setItem('anibridge_walks', JSON.stringify(walks.slice(0,15)));
+  }catch(e){}
+  walkPath = [];
+  updWalkRoutes();
+}
+
+// ── 산책 경로 목록 ──
+function getWalkRoutes(){
+  try{ return JSON.parse(localStorage.getItem('anibridge_walks')||'[]'); }catch(e){ return []; }
+}
+
+function updWalkRoutes(){
+  const el = document.getElementById('routeList');
+  if(!el) return;
+  const walks = getWalkRoutes();
+  if(!walks.length){
+    el.innerHTML = '<div style="text-align:center;padding:28px 20px;color:var(--text3);font-size:13px;line-height:1.7">아직 저장된 경로가 없어요 🐾<br><span style="font-size:11px;opacity:0.7">GPS를 켜고 산책하면 이동 경로가<br>발자국 지도로 저장됩니다!</span></div>';
+    return;
+  }
+  el.innerHTML = walks.slice(0,5).map((w,i)=>{
+    const min = Math.floor(w.sec/60);
+    const d = w.date === today() ? '오늘' : w.date.slice(5).replace('-','.');
+    return `<div class="hi-item" onclick="openWalkRoute(${i})" style="cursor:pointer">
+      <div class="hi-ico">🗺️</div>
+      <div class="hi-info"><div class="hi-date">${escHtml(d)} ${escHtml(w.time||'')}</div><div class="hi-detail">${min}분 · ${w.dist}km</div></div>
+      <div class="hi-res" style="background:rgba(74,255,163,0.1);color:var(--g1)">경로 보기 ›</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Leaflet 지연 로드 ──
+let _leafletLoading = null;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  if(_leafletLoading) return _leafletLoading;
+  _leafletLoading = new Promise((resolve, reject)=>{
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(css);
+    const js = document.createElement('script');
+    js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    js.onload = resolve;
+    js.onerror = ()=>{ _leafletLoading = null; reject(); };
+    document.head.appendChild(js);
+  });
+  return _leafletLoading;
+}
+
+// ── 발자국 지도 ──
+let _lfMap = null;
+const PAW_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="#8B6B4F" opacity="0.85"><ellipse cx="12" cy="16" rx="4.6" ry="3.9"/><ellipse cx="5.6" cy="10.2" rx="2" ry="2.6"/><ellipse cx="9.8" cy="7.4" rx="2" ry="2.7"/><ellipse cx="14.2" cy="7.4" rx="2" ry="2.7"/><ellipse cx="18.4" cy="10.2" rx="2" ry="2.6"/></svg>';
+
+function bearing(a, b){
+  const dLng = (b.lng - a.lng) * Math.PI/180;
+  const la1 = a.lat * Math.PI/180, la2 = b.lat * Math.PI/180;
+  const y = Math.sin(dLng) * Math.cos(la2);
+  const x = Math.cos(la1)*Math.sin(la2) - Math.sin(la1)*Math.cos(la2)*Math.cos(dLng);
+  return (Math.atan2(y,x) * 180/Math.PI + 360) % 360;
+}
+
+function offsetPoint(p, brgDeg, meters){
+  const brg = brgDeg * Math.PI/180;
+  return {
+    lat: p.lat + (meters * Math.cos(brg)) / 111320,
+    lng: p.lng + (meters * Math.sin(brg)) / (111320 * Math.cos(p.lat * Math.PI/180))
+  };
+}
+
+function pawPointsAlong(path, stepM){
+  const pts = [];
+  let acc = 0, side = 1;
+  for(let i=1; i<path.length; i++){
+    const a = path[i-1], b = path[i];
+    const segM = calcDist(a.lat, a.lng, b.lat, b.lng) * 1000;
+    if(segM <= 0) continue;
+    const brg = bearing(a, b);
+    let dist = stepM - acc;
+    while(dist <= segM){
+      const t = dist / segM;
+      const base = { lat: a.lat + (b.lat-a.lat)*t, lng: a.lng + (b.lng-a.lng)*t };
+      pts.push({ ...offsetPoint(base, brg + 90*side, 1.5), brg });
+      side = -side;
+      dist += stepM;
+    }
+    acc = (acc + segM) % stepM;
+  }
+  return pts;
+}
+
+async function openWalkRoute(i){
+  const w = getWalkRoutes()[i];
+  if(!w || !w.path || w.path.length < 2){ toast('저장된 경로가 없습니다'); return; }
+  const min = Math.floor(w.sec/60);
+  document.getElementById('wm-info').innerHTML =
+    `<span>📅 ${escHtml(w.date)} ${escHtml(w.time||'')}</span><span>📍 ${w.dist}km</span><span>🕐 ${min}분</span>`;
+  openM('walkmap');
+  try{ await loadLeaflet(); }
+  catch(e){ toast('⚠️ 지도를 불러오지 못했습니다. 네트워크를 확인해주세요'); return; }
+  if(_lfMap){ _lfMap.remove(); _lfMap = null; }
+  _lfMap = L.map('walkMap', { zoomControl:true, attributionControl:true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution:'© OpenStreetMap © CARTO', maxZoom:19
+  }).addTo(_lfMap);
+  const latlngs = w.path.map(p=>[p.lat, p.lng]);
+  // 옅은 경로선
+  L.polyline(latlngs, { color:'#8B6B4F', weight:2, opacity:0.15 }).addTo(_lfMap);
+  // 발자국: 총 거리에 따라 간격 자동 조절 (약 45쌍)
+  const stepM = Math.min(60, Math.max(12, (w.dist*1000)/45));
+  pawPointsAlong(w.path, stepM).forEach(p=>{
+    L.marker([p.lat, p.lng], {
+      icon: L.divIcon({ className:'', html:`<div style="transform:rotate(${Math.round(p.brg)}deg)">${PAW_SVG}</div>`, iconSize:[16,16], iconAnchor:[8,8] }),
+      interactive:false
+    }).addTo(_lfMap);
+  });
+  // 출발·도착
+  const mkBadge = (txt,bg)=>L.divIcon({ className:'', html:`<div style="background:${bg};color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.25);font-family:'Pretendard',sans-serif">${txt}</div>`, iconSize:[44,20], iconAnchor:[22,10] });
+  L.marker(latlngs[0], { icon: mkBadge('출발','#00C9FF') }).addTo(_lfMap);
+  L.marker(latlngs[latlngs.length-1], { icon: mkBadge('도착 🏁','#FF4D6D') }).addTo(_lfMap);
+  _lfMap.fitBounds(L.latLngBounds(latlngs), { padding:[30,30] });
+  setTimeout(()=>{ _lfMap && _lfMap.invalidateSize(); }, 250);
+}
+
+updWalkRoutes();
 
 // ── 스플래시 제거 ──
 setTimeout(()=>{ document.getElementById('splash').style.display='none'; }, 6000);
