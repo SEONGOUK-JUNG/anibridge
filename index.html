@@ -2508,21 +2508,27 @@ function calcDist(lat1, lon1, lat2, lon2){
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
+let _gpsRequesting = false;
 function toggleWalk(){
   const btn = document.getElementById('walkBtn');
   if(!walking){
+    if(_gpsRequesting) return; // GPS 확인 중 중복 시작 방지
     // GPS 권한 요청
     if(!navigator.geolocation){
       toast('⚠️ 이 기기는 GPS를 지원하지 않습니다');
       startWalkTimer(); // GPS 없으면 타이머만
       return;
     }
+    _gpsRequesting = true;
+    if(btn){ btn.innerHTML = '📍 GPS 확인 중...'; }
     navigator.geolocation.getCurrentPosition(
       pos => {
+        _gpsRequesting = false;
         lastPos = pos;
         startWalkGPS();
       },
       err => {
+        _gpsRequesting = false;
         toast('📍 GPS 권한을 허용하면 실제 거리가 측정됩니다');
         startWalkTimer(); // 권한 거부 시 타이머만
       },
@@ -2534,6 +2540,8 @@ function toggleWalk(){
 }
 
 function startWalkGPS(){
+  if(walking) return;               // 이미 산책 중이면 무시
+  if(walkTimer) clearInterval(walkTimer); // 남아있는 타이머 제거
   walking = true;
   walkPath = lastPos ? [{lat:lastPos.coords.latitude, lng:lastPos.coords.longitude}] : [];
   _sessStartSec = walkSec;
@@ -2580,6 +2588,8 @@ function startWalkGPS(){
 }
 
 function startWalkTimer(){
+  if(walking) return;               // 이미 산책 중이면 무시
+  if(walkTimer) clearInterval(walkTimer); // 남아있는 타이머 제거
   walking = true;
   const btn = document.getElementById('walkBtn');
   btn.innerHTML = '⏹️ 산책 종료';
@@ -2601,6 +2611,7 @@ function stopWalk(){
   walking = false;
   window._walkGoalToasted = false;
   clearInterval(walkTimer);
+  walkTimer = null;
   if(gpsWatchId !== null){
     navigator.geolocation.clearWatch(gpsWatchId);
     gpsWatchId = null;
