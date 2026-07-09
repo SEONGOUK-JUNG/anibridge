@@ -1067,6 +1067,15 @@ select option { background: #131929; }
     </div>
   </div>
 
+  <!-- 함께한 시간 -->
+  <div id="togetherCard"></div>
+
+  <!-- 오늘의 케어 팁 -->
+  <div class="section" id="tipSec" style="display:none">
+    <div class="sec-head"><div class="sec-title">🩺 오늘의 케어 팁</div></div>
+    <div id="tipCard" style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px"></div>
+  </div>
+
   <div class="section">
     <div class="sec-head"><div class="sec-title">AI 건강 분석</div></div>
     <button class="ai-cta" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{showPage('analyze');}">
@@ -3820,6 +3829,127 @@ function renderList(type){
 }
 function delRec(type,id){if(!confirm('삭제하시겠습니까?'))return;DB[type]=DB[type].filter(d=>d.id!==id);saveDB();renderList(type);updDdayBadge();toast('삭제되었습니다');}
 
+// ── 오늘의 케어 팁 (종·나이·계절 맞춤, 매일 교체) ──
+// s: all|dog|cat / a: all|sr(7살+)|yg(12개월 미만) / se: 0=상시 1=봄 2=여름 3=가을 4=겨울
+const VET_TIPS = [
+  {s:'all',a:'all',se:0,i:'💧',t:'물그릇은 하루 한 번 세척해주세요. 미끈한 막(바이오필름)은 세균의 집이에요.'},
+  {s:'all',a:'all',se:0,i:'⚖️',t:'한 달에 한 번 체중 기록만 해도 질병의 절반은 조기에 발견할 수 있어요.'},
+  {s:'all',a:'all',se:0,i:'👄',t:'일주일에 한 번 잇몸 색을 확인해보세요. 분홍색이 정상, 창백하면 빈혈 신호일 수 있어요.'},
+  {s:'all',a:'all',se:0,i:'🍖',t:'간식은 하루 필요 칼로리의 10%까지만. 비만은 관절·심장·당뇨, 만병의 시작이에요.'},
+  {s:'all',a:'all',se:0,i:'🍚',t:'사료를 바꿀 땐 7일에 걸쳐 조금씩 섞어주세요. 급하게 바꾸면 배탈이 나요.'},
+  {s:'all',a:'all',se:0,i:'🚰',t:'물 마시는 양이 갑자기 늘었다면 신장·호르몬 질환의 조기 신호일 수 있어요. 기록해두세요.'},
+  {s:'all',a:'all',se:0,i:'⚠️',t:'초콜릿·포도·양파·자일리톨은 소량도 위험해요. 손 닿지 않는 곳에 보관하세요.'},
+  {s:'all',a:'all',se:0,i:'🧂',t:'사람 음식의 간은 반려동물에게 너무 짜요. 국물 한 숟갈도 참아주세요.'},
+  {s:'all',a:'all',se:0,i:'👂',t:'일주일에 한 번 귀 냄새를 맡아보세요. 시큼한 냄새가 나면 외이염 신호예요.'},
+  {s:'all',a:'all',se:0,i:'🦷',t:'양치는 최고의 건강 관리예요. 3살 이상 반려동물의 80%가 치주질환을 갖고 있어요.'},
+  {s:'all',a:'all',se:0,i:'💩',t:'대변은 매일 보는 건강검진표예요. 색과 굳기의 변화를 케어수첩에 기록해두세요.'},
+  {s:'all',a:'all',se:0,i:'🫣',t:'숨는 시간이 많아지면 아픈 걸 숨기는 중일 수 있어요. 행동 변화를 메모해두세요.'},
+  {s:'dog',a:'all',se:0,i:'🐾',t:'산책 후 발바닥 사이를 확인해주세요. 풀씨나 이물질이 잘 박혀요.'},
+  {s:'dog',a:'all',se:0,i:'💊',t:'심장사상충 예방약은 매달 같은 날! 모기 없는 계절에도 거르면 안 돼요.'},
+  {s:'dog',a:'all',se:0,i:'👃',t:'마른 코가 꼭 아픈 건 아니에요. 식욕과 활력이 훨씬 정확한 지표예요.'},
+  {s:'dog',a:'all',se:0,i:'🦴',t:'익힌 뼈는 쉽게 부서져 위장을 다치게 해요. 절대 주지 마세요.'},
+  {s:'dog',a:'all',se:0,i:'🦵',t:'걷다가 뒷다리를 갑자기 들었다 내려놓으면 슬개골 탈구 신호일 수 있어요. 소형견은 특히 주의!'},
+  {s:'dog',a:'all',se:0,i:'🚶',t:'하루 30분 산책은 몸보다 마음 건강에 더 중요해요. 냄새 맡을 시간을 충분히 주세요.'},
+  {s:'cat',a:'all',se:0,i:'🚽',t:'화장실 개수는 고양이 수 + 1개가 정답이에요. 위치도 조용한 곳으로.'},
+  {s:'cat',a:'all',se:0,i:'🍽️',t:'고양이가 하루 이상 굶으면 지방간 위험이 있어요. 즉시 병원에 가야 해요.'},
+  {s:'cat',a:'all',se:0,i:'🚨',t:'수컷 고양이가 화장실을 들락거리며 소변을 못 보면 응급 상황이에요. 바로 병원으로!'},
+  {s:'cat',a:'all',se:0,i:'🌷',t:'백합은 고양이에게 치명적이에요. 꽃가루, 심지어 꽃병의 물도 위험해요.'},
+  {s:'cat',a:'all',se:0,i:'⛲',t:'물을 잘 안 마시는 고양이에겐 분수형 급수기가 도움이 돼요. 방광 건강의 기본은 수분!'},
+  {s:'cat',a:'all',se:0,i:'🧶',t:'그루밍이 줄어 털이 푸석해졌다면 아프다는 신호일 수 있어요.'},
+  {s:'cat',a:'all',se:0,i:'🌀',t:'헤어볼 토는 주 1회 이하가 정상이에요. 잦다면 빗질 횟수를 늘려주세요.'},
+  {s:'all',a:'sr',se:0,i:'🩺',t:'7살부터는 1년에 2번 건강검진이 좋아요. 아이의 1년은 사람의 4~5년이니까요.'},
+  {s:'all',a:'sr',se:0,i:'🛋️',t:'계단이나 소파에 오르길 주저하면 관절염 초기 신호일 수 있어요.'},
+  {s:'cat',a:'sr',se:0,i:'🔬',t:'노령묘는 신장 수치(SDMA)와 갑상선(T4) 검사를 꼭 챙겨주세요.'},
+  {s:'dog',a:'sr',se:0,i:'❤️',t:'노령견, 특히 소형견은 심장 청진을 정기적으로 받아주세요. 밤 기침은 심장 신호일 수 있어요.'},
+  {s:'all',a:'sr',se:0,i:'🌙',t:'밤에 자다 깨서 우는 일이 잦아지면 인지장애 초기일 수 있어요. 기록해서 상담해보세요.'},
+  {s:'all',a:'yg',se:0,i:'🌱',t:'생후 3~14주는 사회화 황금기예요. 다양한 소리·사람·환경을 긍정적으로 경험하게 해주세요.'},
+  {s:'all',a:'yg',se:0,i:'💦',t:'어린 아이들은 반나절 설사에도 탈수가 빨라요. 지속되면 바로 병원으로.'},
+  {s:'all',a:'all',se:2,i:'🌅',t:'여름 산책은 아침·저녁에! 아스팔트에 손등을 5초 못 대면 발바닥 화상 위험이에요.'},
+  {s:'all',a:'all',se:2,i:'🥵',t:'심한 헐떡임 + 침 흘림 + 비틀거림은 열사병 3대 신호예요. 시원한 물수건으로 감싸고 즉시 병원으로!'},
+  {s:'all',a:'all',se:2,i:'🚗',t:'여름철 차 안은 5분 만에 위험해져요. 잠깐이라도 아이만 두고 내리지 마세요.'},
+  {s:'all',a:'all',se:2,i:'❄️',t:'에어컨 바람이 직접 닿지 않게 해주세요. 실내 26~28도가 반려동물에게 적당해요.'},
+  {s:'all',a:'all',se:2,i:'🛁',t:'습한 여름은 피부병의 계절이에요. 목욕 후엔 속털까지 바싹 말려주세요.'},
+  {s:'dog',a:'all',se:2,i:'🦟',t:'모기가 많은 계절이에요. 심장사상충 예방을 절대 거르지 마세요.'},
+  {s:'all',a:'all',se:1,i:'🕷️',t:'봄철 풀숲 산책 후엔 진드기 체크! 귀 뒤·겨드랑이·발가락 사이를 확인하세요.'},
+  {s:'all',a:'all',se:1,i:'🌸',t:'반려동물도 꽃가루 알레르기가 있어요. 봄에 유난히 긁는다면 의심해보세요.'},
+  {s:'all',a:'all',se:1,i:'🪮',t:'봄은 털갈이 시즌! 빗질을 늘리면 헤어볼과 피부병을 함께 예방할 수 있어요.'},
+  {s:'all',a:'all',se:3,i:'🍄',t:'가을 산책길 야생 버섯은 절대 못 먹게 해주세요. 소량도 중독될 수 있어요.'},
+  {s:'all',a:'all',se:3,i:'🐟',t:'가을 털갈이 시기엔 오메가3가 피부와 털 건강에 도움이 돼요.'},
+  {s:'all',a:'all',se:3,i:'🌡️',t:'일교차가 큰 환절기엔 기침·호흡 변화를 더 자주 살펴주세요. 노령 아이는 특히요.'},
+  {s:'all',a:'all',se:4,i:'🧊',t:'겨울 산책 후엔 발을 씻어주세요. 제설제(염화칼슘)가 발바닥을 상하게 해요.'},
+  {s:'dog',a:'all',se:4,i:'🧥',t:'소형견·단모종은 겨울 산책 때 옷이 도움이 돼요. 몸을 떨면 바로 귀가하세요.'},
+  {s:'all',a:'all',se:4,i:'💨',t:'겨울철 건조한 실내엔 가습과 수분 섭취를 챙겨주세요. 빗질 전 보습 스프레이로 정전기 예방!'}
+];
+
+function renderVetHome(){
+  const tipSec = document.getElementById('tipSec');
+  const tipCard = document.getElementById('tipCard');
+  const tgCard = document.getElementById('togetherCard');
+  if(!tipSec || !tgCard) return;
+  const p = PETS.length ? PETS[curPetIdx] : null;
+
+  // ── 오늘의 케어 팁 ──
+  const now = new Date();
+  const month = now.getMonth()+1;
+  const season = month>=3&&month<=5 ? 1 : month>=6&&month<=8 ? 2 : month>=9&&month<=11 ? 3 : 4;
+  const sp = p ? (getPetSpecies(p)==='고양이' ? 'cat' : 'dog') : 'all';
+  let ag = 'all';
+  if(p && p.birth){
+    const st = getLifeStage(p.birth);
+    ag = st==='senior' ? 'sr' : st==='puppy' ? 'yg' : 'all';
+  }
+  const pool = VET_TIPS.filter(t =>
+    (t.s==='all' || t.s===sp || sp==='all') &&
+    (t.a==='all' || t.a===ag) &&
+    (t.se===0 || t.se===season)
+  );
+  if(pool.length){
+    const start = new Date(now.getFullYear(),0,0);
+    const dayOfYear = Math.floor((now - start) / 86400000);
+    const tip = pool[dayOfYear % pool.length];
+    tipCard.innerHTML = `
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div style="font-size:26px;flex-shrink:0">${tip.i}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;line-height:1.75;color:var(--text)">${escHtml(tip.t)}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:10px">${p&&p.name?escHtml(p.name)+' 맞춤 · ':''}매일 자정 새로운 팁이 도착해요</div>
+        </div>
+      </div>`;
+    tipSec.style.display = '';
+  } else tipSec.style.display = 'none';
+
+  // ── 함께한 시간 ──
+  if(!p || !p.birth){ tgCard.innerHTML = ''; return; }
+  const b = new Date(p.birth);
+  if(isNaN(b)){ tgCard.innerHTML = ''; return; }
+  const days = Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate()) - new Date(b.getFullYear(),b.getMonth(),b.getDate())) / 86400000) + 1;
+  const isBday = now.getMonth()===b.getMonth() && now.getDate()===b.getDate();
+  const age = now.getFullYear() - b.getFullYear();
+  let next = new Date(now.getFullYear(), b.getMonth(), b.getDate());
+  if(next < new Date(now.getFullYear(),now.getMonth(),now.getDate())) next = new Date(now.getFullYear()+1, b.getMonth(), b.getDate());
+  const dday = Math.round((next - new Date(now.getFullYear(),now.getMonth(),now.getDate())) / 86400000);
+  const nm = escHtml(p.name||'우리 아이');
+  if(isBday){
+    tgCard.innerHTML = `
+    <div class="section" style="margin-bottom:0">
+      <div style="background:linear-gradient(135deg,rgba(255,184,48,0.14),rgba(255,107,157,0.12));border:1.5px solid rgba(255,184,48,0.4);border-radius:var(--r);padding:20px;text-align:center">
+        <div style="font-size:34px;margin-bottom:6px">🎂</div>
+        <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:18px;line-height:1.4">오늘은 ${nm}의 ${age}번째 생일! 🎉</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6">세상에 온 지 ${days.toLocaleString()}일째 되는 날이에요.<br>${nm}, 태어나줘서 고마워 💚</div>
+      </div>
+    </div>`;
+  } else {
+    tgCard.innerHTML = `
+    <div class="section" style="margin-bottom:0">
+      <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:22px">💚</div>
+        <div style="flex:1;font-size:13px;color:var(--text2)">${nm}${(function(n){const c=n.charCodeAt(n.length-1);return (c-44032)%28>0?'이':''})(p.name||'아이')}가 세상에 온 지 <b style="color:var(--g1);font-size:15px;font-family:'Outfit',sans-serif">${days.toLocaleString()}일</b>째</div>
+        ${dday<=30 ? `<div style="font-size:11px;font-weight:700;color:#FFB830;background:rgba(255,184,48,0.1);border:1px solid rgba(255,184,48,0.3);padding:4px 10px;border-radius:999px;white-space:nowrap">🎂 생일 D-${dday}</div>` : ''}
+      </div>
+    </div>`;
+  }
+}
+
 // ── 연령별 건강검진 체크리스트 ──
 const CHECKUP_DATA = {
   '강아지': {
@@ -4036,6 +4166,7 @@ function renderPetTabs(){
 }
 
 function renderCurPet(){
+  renderVetHome();
   const heroTitle = document.getElementById('heroTitle');
   const heroLabel = document.getElementById('heroLabel');
   const heroSub   = document.getElementById('heroSub');
