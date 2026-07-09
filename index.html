@@ -1550,20 +1550,19 @@ select option { background: #131929; }
       <button id="hospFindBtn" onclick="findHospitals()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">📍 현재 위치로 찾기</button>
       <div id="hospNearList" style="margin-top:4px"></div>
     </div>
-    <a class="place-find" id="placeSearchLink" href="https://map.kakao.com/?q=반려동물+동반+가능" target="_blank">📍 내 주변 반려동물 동반 장소 찾기</a>
-    <div class="place-cats">
-      <button class="place-cat on" onclick="filterPlace(this,'반려동물+동반+가능')">🐾 전체</button>
-      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+카페')">☕ 카페</button>
-      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+식당')">🍽️ 식당</button>
-      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+호텔+펜션')">🏨 호텔</button>
-      <button class="place-cat" onclick="filterPlace(this,'반려동물+동반+공원')">🌳 공원</button>
-      <button class="place-cat" onclick="filterPlace(this,'애견+미용실')">💈 미용</button>
-    </div>
-    <div class="place-grid">
-      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+카페+광주','_blank')"><div class="pl-img" style="background:rgba(74,255,163,0.08)">☕</div><div class="pl-info"><div class="pl-name">멍냥 카페</div><div class="pl-meta">📍 광주 남구</div><div class="pl-tags"><span class="pl-tag">소형견</span><span class="pl-tag">실내입장</span></div></div></div>
-      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+공원+광주','_blank')"><div class="pl-img" style="background:rgba(0,201,255,0.08)">🌳</div><div class="pl-info"><div class="pl-name">중앙공원</div><div class="pl-meta">📍 광주 북구</div><div class="pl-tags"><span class="pl-tag">대형견</span><span class="pl-tag">목줄필수</span></div></div></div>
-      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=반려동물+동반+식당+광주','_blank')"><div class="pl-img" style="background:rgba(255,107,157,0.08)">🍽️</div><div class="pl-info"><div class="pl-name">펫 프렌들리</div><div class="pl-meta">📍 광주 서구</div><div class="pl-tags"><span class="pl-tag">테라스</span><span class="pl-tag">소형견</span></div></div></div>
-      <div class="pl-card" onclick="window.open('https://map.kakao.com/?q=애견미용실+광주','_blank')"><div class="pl-img" style="background:rgba(255,184,48,0.08)">💈</div><div class="pl-info"><div class="pl-name">강쥐 미용실</div><div class="pl-meta">📍 광주 동구</div><div class="pl-tags"><span class="pl-tag">예약필수</span><span class="pl-tag">전견종</span></div></div></div>
+    <!-- 내 주변 동반 장소 -->
+    <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:16px 18px">
+      <div style="font-size:15px;font-weight:800;margin-bottom:12px">🐾 내 주변 동반 장소</div>
+      <div class="place-cats" style="margin-bottom:2px">
+        <button class="place-cat on" onclick="findPlaces('애견동반카페',this)">☕ 카페</button>
+        <button class="place-cat" onclick="findPlaces('애견동반식당',this)">🍽️ 식당</button>
+        <button class="place-cat" onclick="findPlaces('애견동반숙소',this)">🏨 숙소</button>
+        <button class="place-cat" onclick="findPlaces('공원',this)">🌳 공원</button>
+        <button class="place-cat" onclick="findPlaces('애견미용',this)">💈 미용</button>
+        <button class="place-cat" onclick="findPlaces('애견운동장',this)">🐕 운동장</button>
+      </div>
+      <button id="placeFindBtn" onclick="findPlaces()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px">📍 현재 위치로 찾기</button>
+      <div id="placeNearList" style="margin-top:4px"></div>
     </div>
   </div>
 </div>
@@ -3975,6 +3974,60 @@ function goEmergencyHospital(){
   findHospitals('24시 동물병원', chip);
   toast('🌙 주변 24시 병원을 찾고 있어요');
 }
+function searchNearby(query, btnId, listId){
+  const btn = document.getElementById(btnId);
+  const list = document.getElementById(listId);
+  if(!navigator.geolocation){ toast('⚠️ 이 기기는 위치 조회를 지원하지 않습니다'); return; }
+  btn.textContent = '📡 위치 확인 중...';
+  list.innerHTML = '';
+  navigator.geolocation.getCurrentPosition(
+    pos => loadNearby(query, btnId, listId, pos.coords.longitude, pos.coords.latitude),
+    err => {
+      btn.textContent = '📍 현재 위치로 찾기';
+      list.innerHTML = `<div style="padding:16px 4px;font-size:12px;color:var(--text3);line-height:1.7">📍 위치 권한을 허용하면 가까운 곳을 찾아드려요.<br><a href="https://map.kakao.com/?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--g2)">카카오맵에서 직접 검색하기 ›</a></div>`;
+    },
+    { enableHighAccuracy:true, timeout:8000 }
+  );
+}
+
+async function loadNearby(query, btnId, listId, x, y){
+  const btn = document.getElementById(btnId);
+  const list = document.getElementById(listId);
+  btn.textContent = '🔍 주변 검색 중...';
+  try{
+    const res = await fetch(`https://anibridge-api.koreagwangju.workers.dev/places?x=${x}&y=${y}&query=${encodeURIComponent(query)}`);
+    if(!res.ok) throw new Error('server');
+    const data = await res.json();
+    renderDocs(list, data.documents || [], query);
+  }catch(e){
+    list.innerHTML = `<div style="padding:16px 4px;font-size:12px;color:var(--text3);line-height:1.7">⚠️ 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요.<br><a href="https://map.kakao.com/?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--g2)">카카오맵에서 직접 검색하기 ›</a></div>`;
+  }
+  btn.textContent = '📍 현재 위치로 찾기';
+}
+
+function renderDocs(list, docs, query){
+  if(!docs.length){
+    list.innerHTML = `<div style="padding:16px 4px;font-size:12px;color:var(--text3)">주변 5km 안에서 찾지 못했어요 😢 <a href="https://map.kakao.com/?q=${encodeURIComponent(query||'')}" target="_blank" style="color:var(--g2)">카카오맵에서 넓게 검색 ›</a></div>`;
+    return;
+  }
+  const iconStyle = 'flex-shrink:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;text-decoration:none';
+  list.innerHTML = docs.slice(0,10).map(d=>{
+    const dist = +d.distance;
+    const distTxt = dist >= 1000 ? (dist/1000).toFixed(1)+'km' : dist+'m';
+    const addr = d.road_address_name || d.address_name || '';
+    return `<div style="border-top:1px solid var(--border);padding:13px 2px;display:flex;align-items:center;gap:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(d.place_name||'')}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(addr)}</div>
+      </div>
+      <div style="font-size:11px;font-weight:800;color:var(--g1);white-space:nowrap">${escHtml(distTxt)}</div>
+      ${d.phone ? `<a href="tel:${escHtml(d.phone)}" style="${iconStyle};background:rgba(74,255,163,0.1);border:1px solid rgba(74,255,163,0.3)">📞</a>` : ''}
+      <a href="${escHtml(d.place_url||'#')}" target="_blank" style="${iconStyle};background:rgba(0,201,255,0.1);border:1px solid rgba(0,201,255,0.3)">🗺️</a>
+      <a href="https://map.naver.com/p/search/${encodeURIComponent(d.place_name||'')}" target="_blank" style="${iconStyle};background:rgba(3,199,90,0.1);border:1px solid rgba(3,199,90,0.35);color:#03C75A;font-weight:900;font-size:15px;font-family:'Outfit',sans-serif">N</a>
+    </div>`;
+  }).join('');
+}
+
 function findHospitals(query, chipEl){
   if(query) _hospQuery = query;
   if(chipEl){
@@ -3985,56 +4038,17 @@ function findHospitals(query, chipEl){
     chipEl.classList.add('on');
     chipEl.style.border='1px solid rgba(74,255,163,0.3)'; chipEl.style.background='rgba(74,255,163,0.12)'; chipEl.style.color='var(--g1)';
   }
-  const list = document.getElementById('hospNearList');
-  const btn = document.getElementById('hospFindBtn');
-  if(!navigator.geolocation){ toast('⚠️ 이 기기는 위치 조회를 지원하지 않습니다'); return; }
-  btn.textContent = '📡 위치 확인 중...';
-  list.innerHTML = '';
-  navigator.geolocation.getCurrentPosition(
-    pos => loadHospitals(pos.coords.longitude, pos.coords.latitude),
-    err => {
-      btn.textContent = '📍 현재 위치로 찾기';
-      list.innerHTML = `<div style="padding:16px 4px;font-size:12px;color:var(--text3);line-height:1.7">📍 위치 권한을 허용하면 가까운 병원을 찾아드려요.<br><a href="https://map.kakao.com/?q=${encodeURIComponent(_hospQuery)}" target="_blank" style="color:var(--g2)">카카오맵에서 직접 검색하기 ›</a></div>`;
-    },
-    { enableHighAccuracy:true, timeout:8000 }
-  );
+  searchNearby(_hospQuery, 'hospFindBtn', 'hospNearList');
 }
 
-async function loadHospitals(x, y){
-  const list = document.getElementById('hospNearList');
-  const btn = document.getElementById('hospFindBtn');
-  btn.textContent = '🔍 주변 병원 검색 중...';
-  try{
-    const res = await fetch(`https://anibridge-api.koreagwangju.workers.dev/places?x=${x}&y=${y}&query=${encodeURIComponent(_hospQuery)}`);
-    if(!res.ok) throw new Error('server');
-    const data = await res.json();
-    renderHospitals(data.documents || []);
-  }catch(e){
-    list.innerHTML = `<div style="padding:16px 4px;font-size:12px;color:var(--text3);line-height:1.7">⚠️ 병원 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요.<br><a href="https://map.kakao.com/?q=${encodeURIComponent(_hospQuery)}" target="_blank" style="color:var(--g2)">카카오맵에서 직접 검색하기 ›</a></div>`;
+let _placeQuery = '애견동반카페';
+function findPlaces(query, chipEl){
+  if(query) _placeQuery = query;
+  if(chipEl){
+    document.querySelectorAll('.place-cat').forEach(c=>c.classList.remove('on'));
+    chipEl.classList.add('on');
   }
-  btn.textContent = '📍 현재 위치로 찾기';
-}
-
-function renderHospitals(docs){
-  const list = document.getElementById('hospNearList');
-  if(!docs.length){
-    list.innerHTML = '<div style="padding:16px 4px;font-size:12px;color:var(--text3)">주변 5km 안에서 병원을 찾지 못했어요 😢</div>';
-    return;
-  }
-  list.innerHTML = docs.slice(0,10).map(d=>{
-    const dist = +d.distance;
-    const distTxt = dist >= 1000 ? (dist/1000).toFixed(1)+'km' : dist+'m';
-    const addr = d.road_address_name || d.address_name || '';
-    return `<div style="border-top:1px solid var(--border);padding:13px 2px;display:flex;align-items:center;gap:10px">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(d.place_name||'')}</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(addr)}</div>
-      </div>
-      <div style="font-size:11px;font-weight:800;color:var(--g1);white-space:nowrap">${escHtml(distTxt)}</div>
-      ${d.phone ? `<a href="tel:${escHtml(d.phone)}" style="flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(74,255,163,0.1);border:1px solid rgba(74,255,163,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;text-decoration:none">📞</a>` : ''}
-      <a href="${escHtml(d.place_url||'#')}" target="_blank" style="flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(0,201,255,0.1);border:1px solid rgba(0,201,255,0.3);display:flex;align-items:center;justify-content:center;font-size:14px;text-decoration:none">🗺️</a>
-    </div>`;
-  }).join('');
+  searchNearby(_placeQuery, 'placeFindBtn', 'placeNearList');
 }
 
 // ── 연령별 건강검진 체크리스트 ──
