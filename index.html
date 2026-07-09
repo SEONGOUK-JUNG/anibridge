@@ -2568,6 +2568,8 @@ function startWalkGPS(){
           if(walkPath.length < 2000) walkPath.push({lat:pos.coords.latitude, lng:pos.coords.longitude});
           saveTodayWalkSec(walkSec, walkDist);
           updWalk();
+          const sub = document.getElementById('walkSub');
+          if(sub) sub.textContent = `📍 GPS 산책 중 · 경로 ${walkPath.length}개 기록 중 🐾`;
         }
       }
       lastPos = pos;
