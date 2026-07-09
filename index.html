@@ -1377,6 +1377,7 @@ select option { background: #131929; }
     <button class="ctab" onclick="switchCare(this,'memo')">📝 메모</button>
   </div>
   <div id="cp-symptom" class="care-pg on">
+    <button onclick="openEmergencyCard()" style="width:100%;padding:14px;background:linear-gradient(135deg,rgba(255,77,109,0.15),rgba(255,184,48,0.1));color:var(--urgent);border:1px solid rgba(255,77,109,0.3);border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px">🆘 응급 카드 — 병원에서 바로 보여주세요</button>
     <button class="munj-btn" onclick="exportMunj()">📋 사전 문진서로 내보내기</button>
     <button class="add-btn" onclick="openM('symptom')">＋ 이상증상 기록 추가</button>
     <div id="lst-symptom"></div>
@@ -1565,6 +1566,7 @@ select option { background: #131929; }
     </div>
 
     <div class="menu-list">
+      <div class="mi" onclick="openEmergencyCard()"><div class="mi-ico" style="background:rgba(255,77,109,0.12)">🆘</div><div class="mi-text" style="font-weight:700">응급 카드</div><div class="mi-arr" style="color:var(--urgent)">›</div></div>
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
@@ -1725,8 +1727,28 @@ select option { background: #131929; }
     <div class="fg"><label class="fl">체중 (kg)</label><input type="number" id="pe-weight" value="5.2" step="0.1"></div>
     <div class="fg"><label class="fl">중성화</label><div class="radio-group" id="rg-neuter"><button class="rb on" onclick="selRB(this,'rg-neuter')">완료</button><button class="rb" onclick="selRB(this,'rg-neuter')">미완료</button></div></div>
     <div class="fg"><label class="fl">혈액형</label><input type="text" id="pe-blood" value="DEA 1.1+"></div>
-    <div class="fg"><label class="fl">특이사항</label><textarea id="pe-note" placeholder="예) 닭고기 알러지, 슬개골 탈구 이력"></textarea></div>
+    <hr class="divider">
+    <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">🆘 응급 정보 <span style="font-weight:500;color:var(--text3)">— 응급 카드에 표시됩니다</span></div>
+    <div class="fg"><label class="fl">⚠️ 알레르기 · 약물 부작용</label><input type="text" id="pe-allergy" placeholder="예) 닭고기 알레르기, 트릴로스탄 부작용"></div>
+    <div class="fg"><label class="fl">💊 현재 복용 중인 약</label><input type="text" id="pe-meds" placeholder="예) 관절 보조제, 심장약 (아침 1회)"></div>
+    <div class="fg"><label class="fl">🍚 사료 · 식이</label><input type="text" id="pe-food" placeholder="예) 오리젠 스몰브리드, 하루 2회"></div>
+    <div class="fg"><label class="fl">🏥 기저질환 · 수술 이력</label><input type="text" id="pe-disease" placeholder="예) 슬개골 탈구 1기, 중성화 수술(2024)"></div>
+    <div class="fg"><label class="fl">특이사항</label><textarea id="pe-note" placeholder="예) 낯가림 심함, 목 만지는 것 싫어함"></textarea></div>
     <button class="save-btn" onclick="savePetProfile()">저장하기</button>
+  </div>
+</div></div>
+
+<!-- 응급 카드 -->
+<div class="overlay" id="m-emergency" onclick="closeM(event,'emergency')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🆘 응급 카드</span><button class="modal-close" onclick="closeM(null,'emergency')">✕</button></div>
+  <div class="modal-body">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6">진료실에서 수의사 선생님께 바로 보여주세요.<br>케어수첩 기록으로 자동 작성되었습니다.</div>
+    <div id="emg-card" style="background:linear-gradient(135deg,rgba(255,77,109,0.08),rgba(255,184,48,0.05));border:1.5px solid rgba(255,77,109,0.3);border-radius:var(--r);padding:18px;margin-bottom:16px"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.04em">전달 방법</div>
+    <button onclick="shareEmergencyCard()" class="kakao-btn"><svg width="20" height="20" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>카카오톡으로 공유하기</button>
+    <button onclick="copyEmergencyCard()" class="copy-btn">📋 텍스트 복사</button>
+    <button class="save-btn" style="background:rgba(255,255,255,0.08);color:var(--text2)" onclick="closeM(null,'emergency')">닫기</button>
   </div>
 </div></div>
 
@@ -3493,6 +3515,70 @@ function renderList(type){
 }
 function delRec(type,id){if(!confirm('삭제하시겠습니까?'))return;DB[type]=DB[type].filter(d=>d.id!==id);saveDB();renderList(type);updDdayBadge();toast('삭제되었습니다');}
 
+// ── 응급 카드 ──
+function buildEmergencyData(){
+  const p = PETS.length ? PETS[curPetIdx] : {};
+  const rows = [];
+  // 기본 정보 (Signalment)
+  const sig = [p.breed, p.sex ? p.sex + (p.neuter==='완료'?'(중성화)':'') : '', calcAge(p.birth)!=='—'?calcAge(p.birth):'', p.weight?p.weight+'kg':'', p.blood||''].filter(Boolean).join(' · ');
+  // 최근 접종 (최신순 4개)
+  const vac = [...DB.vaccine].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,4)
+    .map(v=>`${v.name} (${v.date||'날짜 미상'})`);
+  // 최근 30일 증상
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);
+  const cutStr = cutoff.toISOString().split('T')[0];
+  const sym = DB.symptom.filter(s=>(s.date||'')>=cutStr)
+    .map(s=>`${s.symptoms.map(x=>x.replace(/[^\w가-힣\s]/g,'').trim()).join('·')||'증상'} (${s.date})${s.detail?' — '+s.detail:''}`);
+  // 최근 병원 기록 1건
+  const hosp = [...DB.hospital].sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  return { p, sig, vac, sym, hosp };
+}
+
+function openEmergencyCard(){
+  if(!PETS.length || !PETS[curPetIdx]?.name){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  const { p, sig, vac, sym, hosp } = buildEmergencyData();
+  const e = escHtml;
+  let html = `<div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:20px;margin-bottom:4px">🆘 ${e(p.name||'')}</div>`;
+  html += `<div style="font-size:13px;color:var(--text2);margin-bottom:14px">${e(sig)}</div>`;
+  const row = (icon,label,val,warn)=>`<div style="display:flex;gap:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.07);font-size:13px;line-height:1.6"><div style="flex-shrink:0">${icon}</div><div><b style="color:${warn?'var(--urgent)':'var(--text)'};font-size:11px;letter-spacing:.04em">${label}</b><br><span style="color:var(--text2)">${val}</span></div></div>`;
+  html += row('⚠️','알레르기 · 약물 부작용', p.allergy?e(p.allergy):'<span style="opacity:.5">등록된 정보 없음</span>', !!p.allergy);
+  html += row('💊','현재 복용 약물', p.meds?e(p.meds):'<span style="opacity:.5">없음</span>');
+  html += row('💉','접종 이력', vac.length?vac.map(v=>e(v)).join('<br>'):'<span style="opacity:.5">기록 없음</span>');
+  html += row('🍚','사료 · 식이', p.food?e(p.food):'<span style="opacity:.5">등록된 정보 없음</span>');
+  html += row('🏥','기저질환 · 수술 이력', p.disease?e(p.disease):'<span style="opacity:.5">없음</span>');
+  if(hosp) html += row('📋','최근 진료', `${e(hosp.date||'')} ${e(hosp.name||'')}${hosp.diag?' — '+e(hosp.diag):''}`);
+  html += row('🤒','최근 30일 증상', sym.length?sym.map(s=>e(s)).join('<br>'):'<span style="opacity:.5">없음</span>', sym.length>0);
+  if(p.note) html += row('📝','특이사항', e(p.note));
+  document.getElementById('emg-card').innerHTML = html;
+  openM('emergency');
+}
+
+function getEmergencyText(){
+  const { p, sig, vac, sym, hosp } = buildEmergencyData();
+  let t = `🆘 ${p.name||''} 응급 카드\n━━━━━━━━━━━━━━\n${sig}\n\n`;
+  t += `⚠️ 알레르기·약물 부작용: ${p.allergy||'등록된 정보 없음'}\n`;
+  t += `💊 현재 복용 약물: ${p.meds||'없음'}\n`;
+  t += `💉 접종 이력:\n${vac.length?vac.map(v=>'  · '+v).join('\n'):'  · 기록 없음'}\n`;
+  t += `🍚 사료·식이: ${p.food||'등록된 정보 없음'}\n`;
+  t += `🏥 기저질환·수술 이력: ${p.disease||'없음'}\n`;
+  if(hosp) t += `📋 최근 진료: ${hosp.date||''} ${hosp.name||''}${hosp.diag?' — '+hosp.diag:''}\n`;
+  t += `🤒 최근 30일 증상:\n${sym.length?sym.map(s=>'  · '+s).join('\n'):'  · 없음'}\n`;
+  if(p.note) t += `📝 특이사항: ${p.note}\n`;
+  t += `━━━━━━━━━━━━━━\nAniBridge 응급 카드 · ${today()}`;
+  return t;
+}
+
+function shareEmergencyCard(){
+  const text = getEmergencyText();
+  shareKakaoMsg(text, 'AniBridge 응급 카드', '진료에 필요한 핵심 정보입니다 🆘');
+}
+
+function copyEmergencyCard(){
+  const text = getEmergencyText();
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>toast('📋 복사되었습니다! ✓')).catch(()=>fallbackCopy(text));}
+  else fallbackCopy(text);
+}
+
 // ── 문진서 ──
 function exportMunj(){
   if(!DB.symptom.length){alert('이상증상 기록이 없습니다.\n먼저 증상을 기록해주세요.');return;}
@@ -3633,6 +3719,11 @@ function renderCurPet(){
   const peW = document.getElementById('pe-weight'); if(peW) peW.value = p.weight||'';
   const peBirth = document.getElementById('pe-birth'); if(peBirth) peBirth.value = p.birth||'';
   const peBl = document.getElementById('pe-blood'); if(peBl) peBl.value = p.blood||'';
+  const peAl = document.getElementById('pe-allergy'); if(peAl) peAl.value = p.allergy||'';
+  const peMd = document.getElementById('pe-meds'); if(peMd) peMd.value = p.meds||'';
+  const peFd = document.getElementById('pe-food'); if(peFd) peFd.value = p.food||'';
+  const peDs = document.getElementById('pe-disease'); if(peDs) peDs.value = p.disease||'';
+  const peNt = document.getElementById('pe-note'); if(peNt) peNt.value = p.note||'';
 }
 
 function switchPet(idx){
@@ -3644,7 +3735,7 @@ function switchPet(idx){
 
 function addPet(){
   if(PETS.length >= MAX_PETS){ toast(`최대 ${MAX_PETS}마리까지 등록 가능합니다`); return; }
-  const newPet = { id:Date.now(), name:'새 반려동물', breed:'', sex:'', birth:'', weight:'', neuter:'', emoji:'🐾', photoSrc:'', blood:'' };
+  const newPet = { id:Date.now(), name:'새 반려동물', breed:'', sex:'', birth:'', weight:'', neuter:'', emoji:'🐾', photoSrc:'', blood:'', allergy:'', meds:'', food:'', disease:'', note:'' };
   PETS.push(newPet);
   savePets();
   curPetIdx = PETS.length - 1;
@@ -3677,6 +3768,12 @@ function savePetProfile(){
   p.birth = document.getElementById('pe-birth').value||'';
   p.neuter = getRB('rg-neuter')||p.neuter||'';
   p.blood = document.getElementById('pe-blood').value||'';
+  // 응급 정보
+  p.allergy = document.getElementById('pe-allergy').value||'';
+  p.meds = document.getElementById('pe-meds').value||'';
+  p.food = document.getElementById('pe-food').value||'';
+  p.disease = document.getElementById('pe-disease').value||'';
+  p.note = document.getElementById('pe-note').value||'';
   // 이모지/사진
   const emojiEl = document.getElementById('prof-av-emoji');
   if(emojiEl) p.emoji = emojiEl.textContent;
