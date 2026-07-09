@@ -1379,6 +1379,11 @@ select option { background: #131929; }
   <div id="cp-symptom" class="care-pg on">
     <button onclick="openEmergencyCard()" style="width:100%;padding:14px;background:linear-gradient(135deg,rgba(255,77,109,0.15),rgba(255,184,48,0.1));color:var(--urgent);border:1px solid rgba(255,77,109,0.3);border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px">🆘 응급 카드 — 병원에서 바로 보여주세요</button>
     <button class="munj-btn" onclick="exportMunj()">📋 사전 문진서로 내보내기</button>
+    <div onclick="openM('signal')" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);margin-bottom:10px;cursor:pointer">
+      <div style="font-size:18px">🚨</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">건강 시그널</div><div style="font-size:11px;color:var(--text3)">이런 증상은 즉시 병원으로 — 응급도별 가이드</div></div>
+      <div style="color:var(--text3)">›</div>
+    </div>
     <button class="add-btn" onclick="openM('symptom')">＋ 이상증상 기록 추가</button>
     <div id="lst-symptom"></div>
   </div>
@@ -1387,6 +1392,11 @@ select option { background: #131929; }
     <div id="lst-hospital"></div>
   </div>
   <div id="cp-vaccine" class="care-pg">
+    <div onclick="openCheckup()" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:linear-gradient(135deg,rgba(74,255,163,0.08),rgba(0,201,255,0.05));border:1px solid rgba(74,255,163,0.25);border-radius:var(--r);margin-bottom:10px;cursor:pointer">
+      <div style="font-size:18px">🩺</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">우리 아이 맞춤 건강검진 체크리스트</div><div style="font-size:11px;color:var(--text3)">나이에 맞는 검진 항목을 확인하고 체크하세요</div></div>
+      <div style="color:var(--text3)">›</div>
+    </div>
     <button class="add-btn" onclick="openM('vaccine')">＋ 예방접종 기록 추가</button>
     <div id="lst-vaccine"></div>
   </div>
@@ -1567,6 +1577,8 @@ select option { background: #131929; }
 
     <div class="menu-list">
       <div class="mi" onclick="openEmergencyCard()"><div class="mi-ico" style="background:rgba(255,77,109,0.12)">🆘</div><div class="mi-text" style="font-weight:700">응급 카드</div><div class="mi-arr" style="color:var(--urgent)">›</div></div>
+      <div class="mi" onclick="openM('signal')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🚨</div><div class="mi-text">건강 시그널</div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="openCheckup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">🩺</div><div class="mi-text">건강검진 체크리스트</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
@@ -1735,6 +1747,68 @@ select option { background: #131929; }
     <div class="fg"><label class="fl">🏥 기저질환 · 수술 이력</label><input type="text" id="pe-disease" placeholder="예) 슬개골 탈구 1기, 중성화 수술(2024)"></div>
     <div class="fg"><label class="fl">특이사항</label><textarea id="pe-note" placeholder="예) 낯가림 심함, 목 만지는 것 싫어함"></textarea></div>
     <button class="save-btn" onclick="savePetProfile()">저장하기</button>
+  </div>
+</div></div>
+
+<!-- 건강 시그널 -->
+<div class="overlay" id="m-signal" onclick="closeM(event,'signal')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🚨 건강 시그널</span><button class="modal-close" onclick="closeM(null,'signal')">✕</button></div>
+  <div class="modal-body">
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.6">우리 아이의 증상, 얼마나 급한 걸까요?<br>증상별 병원 방문 시점을 확인하세요.</div>
+
+    <div style="background:rgba(255,77,109,0.08);border:1.5px solid rgba(255,77,109,0.35);border-radius:var(--r);padding:16px;margin-bottom:12px">
+      <div style="font-size:14px;font-weight:800;color:var(--urgent);margin-bottom:10px">🔴 지금 즉시 병원으로</div>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        · 호흡곤란, 혀·잇몸이 파랗거나 하얗게 변함<br>
+        · 경련·발작, 의식이 없거나 흐림<br>
+        · 헛구역질만 반복 + 배가 빵빵하게 부풀어 오름<br>
+        · 소변을 못 봄 <b>(특히 수컷 고양이는 응급!)</b><br>
+        · 피가 멈추지 않는 출혈, 높은 곳 추락·교통사고<br>
+        · 중독 의심: 초콜릿·포도·자일리톨·양파·사람 약·백합(고양이)<br>
+        · 갑자기 뒷다리를 못 쓰거나 일어나지 못함<br>
+        · 한여름 헐떡임 + 침 흘림 + 비틀거림 (열사병 의심)
+      </div>
+    </div>
+
+    <div style="background:rgba(255,184,48,0.07);border:1.5px solid rgba(255,184,48,0.3);border-radius:var(--r);padding:16px;margin-bottom:12px">
+      <div style="font-size:14px;font-weight:800;color:#FFB830;margin-bottom:10px">🟡 24시간 안에 진료 받기</div>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        · 하루 이상 계속되는 구토·설사<br>
+        · 변·소변에 피가 섞임, 검은색 변<br>
+        · 하루 이상 아무것도 안 먹음 <b>(고양이는 더 위험)</b><br>
+        · 눈을 못 뜨거나 눈이 부어오름, 눈 표면 상처 의심<br>
+        · 갑자기 다리를 절뚝거림<br>
+        · 잇몸이 창백하고 기운이 없음
+      </div>
+    </div>
+
+    <div style="background:rgba(74,255,163,0.06);border:1.5px solid rgba(74,255,163,0.25);border-radius:var(--r);padding:16px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:800;color:var(--g1);margin-bottom:10px">🟢 기록하며 관찰 후 진료</div>
+      <div style="font-size:13px;color:var(--text2);line-height:2">
+        · 가끔 하는 기침·재채기가 계속될 때<br>
+        · 피부를 긁거나 핥는 횟수 증가, 붉어짐<br>
+        · 물 마시는 양·소변량이 눈에 띄게 늘어남<br>
+        · 한 달 새 체중이 확 늘거나 빠짐<br>
+        · 수면 시간·활동량의 변화<br>
+        <span style="color:var(--text3);font-size:12px">→ 케어수첩에 기록해두면 진료 때 큰 도움이 됩니다 📝</span>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:14px">※ 본 내용은 일반적인 건강 정보이며 수의학적 진단을 대체하지 않습니다. 판단이 어려울 땐 가까운 동물병원에 문의하세요.</div>
+    <button class="save-btn" style="background:rgba(255,255,255,0.08);color:var(--text2)" onclick="closeM(null,'signal')">닫기</button>
+  </div>
+</div></div>
+
+<!-- 연령별 건강검진 체크리스트 -->
+<div class="overlay" id="m-checkup" onclick="closeM(event,'checkup')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🩺 건강검진 체크리스트</span><button class="modal-close" onclick="closeM(null,'checkup')">✕</button></div>
+  <div class="modal-body">
+    <div id="chk-head" style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6"></div>
+    <div id="chk-body"></div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.7;margin:14px 0">※ 일반적인 생애주기별 권장 항목입니다. 아이의 품종·건강 상태에 따라 달라질 수 있으니 검진 항목은 동물병원과 상담해 결정하세요.</div>
+    <button class="save-btn" style="background:rgba(255,255,255,0.08);color:var(--text2)" onclick="closeM(null,'checkup')">닫기</button>
   </div>
 </div></div>
 
@@ -3039,19 +3113,43 @@ function checkOnboarding(){
 // ── AI 상담 채팅 ──
 function getChatSystem(){
   const pet = PETS.length ? PETS[curPetIdx] : null;
-  const petInfo = pet ? `${pet.name||'반려동물'} (${pet.breed||''} ${pet.sex||''})` : '정보 없음';
+  let petInfo = '정보 없음';
+  let recentSym = '';
+  if(pet){
+    const parts = [];
+    parts.push(`이름: ${pet.name||'반려동물'}`);
+    parts.push(`종: ${getPetSpecies(pet)}`);
+    if(pet.breed) parts.push(`품종: ${pet.breed}`);
+    if(pet.sex) parts.push(`성별: ${pet.sex}${pet.neuter==='완료'?'(중성화 완료)':''}`);
+    if(pet.birth) parts.push(`나이: ${calcAge(pet.birth)}`);
+    if(pet.weight) parts.push(`체중: ${pet.weight}kg`);
+    if(pet.allergy) parts.push(`⚠️알레르기·약물 부작용: ${pet.allergy}`);
+    if(pet.meds) parts.push(`복용 중인 약: ${pet.meds}`);
+    if(pet.disease) parts.push(`기저질환·수술 이력: ${pet.disease}`);
+    if(pet.food) parts.push(`사료·식이: ${pet.food}`);
+    petInfo = parts.join(' / ');
+    try{
+      const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);
+      const cutStr = cutoff.toISOString().split('T')[0];
+      const sym = (DB.symptom||[]).filter(s=>(s.date||'')>=cutStr).slice(0,5)
+        .map(s=>`${s.date}: ${(s.symptoms||[]).join(',')}${s.detail?' ('+s.detail+')':''}`);
+      if(sym.length) recentSym = `\n최근 30일 케어수첩 증상 기록: ${sym.join(' / ')}`;
+    }catch(e){}
+  }
   return `당신은 AniBridge의 반려동물 건강 정보 도우미입니다.
 반려동물 보호자의 질문에 친절하고 쉽게 답변합니다.
 
 반드시 지켜야 할 규칙:
-1. 진단·처방·투약 지시는 절대 하지 않습니다
+1. 진단·처방·투약 지시는 절대 하지 않습니다. 특정 약 이름과 용량을 알려주지 않습니다
 2. 답변 마지막에 항상 수의사 상담 권고를 추가합니다
-3. 응급 증상(경련, 호흡곤란, 대량출혈 등)은 즉시 병원 방문을 강하게 권고합니다
-4. 한국어로 답변합니다
-5. 이모지를 적절히 사용해 친근하게 답변합니다
-6. 답변은 3~5문장으로 간결하게 합니다
+3. [응급 신호 감지] 보호자의 설명에 다음 증상이 포함되면 답변 첫 줄에 "🚨 지금 바로 동물병원에 가셔야 합니다"로 시작하고 이유를 짧게 설명합니다: 호흡곤란/혀·잇몸 색 변화, 경련·발작, 의식 저하, 소변을 못 봄, 헛구역질+복부 팽만, 지혈 안 되는 출혈, 중독 물질 섭취(초콜릿·포도·자일리톨·양파·백합·사람 약), 뒷다리 마비, 열사병 의심
+4. 아래 반려동물 정보를 활용해 맞춤 답변합니다. 알레르기·복용약·기저질환이 질문과 관련되면 반드시 언급합니다 (예: 알레르기가 있는 음식 추천 금지, 복용약과의 상호작용 주의 안내)
+5. 나이를 고려합니다: 어린 동물과 노령 동물은 같은 증상도 더 빨리 악화될 수 있음을 안내합니다
+6. 한국어로 답변합니다
+7. 이모지를 적절히 사용해 친근하게 답변합니다
+8. 답변은 3~5문장으로 간결하게 합니다 (응급 신호 감지 시에는 병원 안내를 최우선)
 
-현재 반려동물 정보: ${petInfo}`;
+현재 반려동물 정보: ${petInfo}${recentSym}`;
 }
 
 let chatHistory = [];
@@ -3514,6 +3612,68 @@ function renderList(type){
   }).join('');
 }
 function delRec(type,id){if(!confirm('삭제하시겠습니까?'))return;DB[type]=DB[type].filter(d=>d.id!==id);saveDB();renderList(type);updDdayBadge();toast('삭제되었습니다');}
+
+// ── 연령별 건강검진 체크리스트 ──
+const CHECKUP_DATA = {
+  '강아지': {
+    puppy: { title:'🐶 퍼피 (12개월 미만)', desc:'평생 건강의 기초를 만드는 시기예요.', items:['종합백신(DHPPL) 기초접종 완료','켄넬코프·코로나 장염 접종','광견병 예방접종','심장사상충 예방 시작 (매월)','내·외부 기생충 구충','분변검사','중성화 수술 시기 상담'] },
+    adult: { title:'🐕 성견 (1~6살)', desc:'1년에 한 번, 건강검진으로 이상을 조기에 발견하세요.', items:['연 1회 신체검사 (청진·촉진)','연 1회 혈액검사','심장사상충 검사 + 매월 예방','치아·치석 점검 (스케일링 상담)','체중·체형(BCS) 평가','백신 추가접종 (부스터)','슬개골 상태 점검 (소형견)'] },
+    senior: { title:'🐕‍🦺 노령견 (7살 이상)', desc:'사람 나이로 중년 이후! 6개월마다 검진이 권장돼요.', items:['6개월마다 정기 건강검진','혈액검사 + 전해질 검사','흉부 방사선 촬영','심장 청진·심장병 검사 (소형견 필수 권장)','복부 초음파 (연 1회)','관절·슬개골 점검','안과 검진 (백내장 등)','혈압 측정'] }
+  },
+  '고양이': {
+    puppy: { title:'🐱 자묘 (12개월 미만)', desc:'평생 건강의 기초를 만드는 시기예요.', items:['종합백신(FVRCP) 기초접종 완료','광견병 예방접종','백혈병(FeLV) 검사·접종 상담','내·외부 기생충 구충','분변검사','중성화 수술 시기 상담'] },
+    adult: { title:'🐈 성묘 (1~6살)', desc:'1년에 한 번, 건강검진으로 이상을 조기에 발견하세요.', items:['연 1회 신체검사 (청진·촉진)','연 1회 혈액검사','치아·치은염 점검','체중·체형(BCS) 평가','심장사상충 예방 (고양이도 권장)','백신 추가접종 (부스터)'] },
+    senior: { title:'🐈‍⬛ 노령묘 (7살 이상)', desc:'신장·갑상선 관리가 중요한 시기! 6개월마다 검진이 권장돼요.', items:['6개월마다 정기 건강검진','신장 수치 검사 (크레아티닌·SDMA)','갑상선 호르몬(T4) 검사','소변검사 (비중·단백뇨)','혈압 측정','흉부 방사선·심장 검사 상담','관절 상태 점검'] }
+  }
+};
+
+function getPetSpecies(p){ return (p && p.emoji === '🐱') ? '고양이' : '강아지'; }
+
+function getLifeStage(birth){
+  if(!birth) return 'adult';
+  const b = new Date(birth), now = new Date();
+  const totalM = (now.getFullYear()-b.getFullYear())*12 + (now.getMonth()-b.getMonth());
+  if(totalM < 12) return 'puppy';
+  if(totalM < 84) return 'adult';
+  return 'senior';
+}
+
+function openCheckup(){
+  if(!PETS.length || !PETS[curPetIdx]?.name){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  const p = PETS[curPetIdx];
+  const species = getPetSpecies(p);
+  const stage = getLifeStage(p.birth);
+  const data = CHECKUP_DATA[species][stage];
+  const key = `anibridge_checkup_${p.id}_${stage}`;
+  const checked = JSON.parse(localStorage.getItem(key)||'[]');
+  document.getElementById('chk-head').innerHTML =
+    `<b style="color:var(--text);font-size:14px">${escHtml(data.title)}</b> · ${escHtml(p.name||'')} (${calcAge(p.birth)})<br>${escHtml(data.desc)}`;
+  let html = `<div style="font-size:12px;color:var(--g1);font-weight:700;margin-bottom:10px" id="chk-progress"></div>`;
+  data.items.forEach((item,i)=>{
+    const on = checked.includes(i);
+    html += `<div onclick="toggleChk('${key}',${i})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:${on?'rgba(74,255,163,0.07)':'var(--card-solid)'};border:1px solid ${on?'rgba(74,255,163,0.3)':'var(--border2)'};border-radius:var(--rs);margin-bottom:8px;cursor:pointer;transition:.15s">
+      <div style="width:22px;height:22px;flex-shrink:0;border-radius:6px;border:1.5px solid ${on?'var(--g1)':'var(--border2)'};background:${on?'var(--g1)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:13px;color:#0A0E1A;font-weight:900">${on?'✓':''}</div>
+      <div style="font-size:13px;color:${on?'var(--text)':'var(--text2)'};line-height:1.5">${escHtml(item)}</div>
+    </div>`;
+  });
+  document.getElementById('chk-body').innerHTML = html;
+  updateChkProgress(key, data.items.length);
+  openM('checkup');
+}
+
+function toggleChk(key, i){
+  const checked = JSON.parse(localStorage.getItem(key)||'[]');
+  const idx = checked.indexOf(i);
+  if(idx>=0) checked.splice(idx,1); else checked.push(i);
+  localStorage.setItem(key, JSON.stringify(checked));
+  openCheckup();
+}
+
+function updateChkProgress(key, total){
+  const n = JSON.parse(localStorage.getItem(key)||'[]').length;
+  const el = document.getElementById('chk-progress');
+  if(el) el.textContent = n===total ? `🎉 ${total}개 항목 모두 완료! 훌륭해요` : `✅ ${n} / ${total} 완료`;
+}
 
 // ── 응급 카드 ──
 function buildEmergencyData(){
