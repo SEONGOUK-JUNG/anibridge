@@ -4016,13 +4016,12 @@ function renderDocs(list, docs, query){
     const distTxt = dist >= 1000 ? (dist/1000).toFixed(1)+'km' : dist+'m';
     const addr = d.road_address_name || d.address_name || '';
     return `<div style="border-top:1px solid var(--border);padding:13px 2px;display:flex;align-items:center;gap:8px">
-      <div style="flex:1;min-width:0">
+      <div style="flex:1;min-width:0;cursor:pointer" onclick="window.open('${escHtml(d.place_url||'#')}','_blank')">
         <div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(d.place_name||'')}</div>
         <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(addr)}</div>
       </div>
       <div style="font-size:11px;font-weight:800;color:var(--g1);white-space:nowrap">${escHtml(distTxt)}</div>
       ${d.phone ? `<a href="tel:${escHtml(d.phone)}" style="${iconStyle};background:rgba(74,255,163,0.1);border:1px solid rgba(74,255,163,0.3)">📞</a>` : ''}
-      <a href="${escHtml(d.place_url||'#')}" target="_blank" style="${iconStyle};background:rgba(0,201,255,0.1);border:1px solid rgba(0,201,255,0.3)">🗺️</a>
       <a href="https://map.naver.com/p/search/${encodeURIComponent(d.place_name||'')}" target="_blank" style="${iconStyle};background:rgba(3,199,90,0.1);border:1px solid rgba(3,199,90,0.35);color:#03C75A;font-weight:900;font-size:15px;font-family:'Outfit',sans-serif">N</a>
     </div>`;
   }).join('');
