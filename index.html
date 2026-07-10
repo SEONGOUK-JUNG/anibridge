@@ -1394,11 +1394,7 @@ select option { background: #131929; }
     </div>
     <div class="walk-section">
       <div class="ws-title">📝 최근 산책 기록</div>
-      <div class="hist-card">
-        <div class="hi-item"><div class="hi-ico">🌅</div><div class="hi-info"><div class="hi-date">오늘 오전 7:30</div><div class="hi-detail">13분 · 0.8km · 52kcal</div></div><div class="hi-res hi-warn">부족</div></div>
-        <div class="hi-item"><div class="hi-ico">🌇</div><div class="hi-info"><div class="hi-date">어제 오후 6:00</div><div class="hi-detail">35분 · 2.1km · 140kcal</div></div><div class="hi-res hi-ok">달성 ✓</div></div>
-        <div class="hi-item"><div class="hi-ico">🌤️</div><div class="hi-info"><div class="hi-date">2일 전 오전 8:00</div><div class="hi-detail">28분 · 1.6km · 112kcal</div></div><div class="hi-res hi-ok">달성 ✓</div></div>
-      </div>
+      <div class="hist-card" id="histList"></div>
     </div>
   </div>
 </div>
@@ -2690,7 +2686,7 @@ updWalkHistory();
 
 // ── 최근 산책 기록 업데이트 ──
 function updWalkHistory(){
-  const hist = document.querySelector('.hist-card');
+  const hist = document.getElementById('histList');
   if(!hist) return;
   const items = [];
   for(let i=0; i<7; i++){
