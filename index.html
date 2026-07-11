@@ -1042,7 +1042,7 @@ select option { background: #131929; }
     <div class="hero-orb hero-orb2"></div>
     <div class="hero-label" id="heroLabel">TODAY'S REPORT</div>
     <div class="hero-title" id="heroTitle">코코의 오늘,<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">AI가 함께합니다</span></div>
-    <div class="hero-sub" id="heroSub">사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요</div>
+    <div class="hero-sub" id="heroSub">기록하고, 살피고, 함께 걸어요<br>모든 기능이 무료입니다 🎉</div>
     <div style="margin-top:14px;display:inline-block;position:relative">
       <span style="font-family:'Outfit',sans-serif;font-size:12px;font-style:italic;font-weight:600;color:transparent;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;letter-spacing:.02em;opacity:.85">
         Every Animal Deserves a Happy Life
@@ -1079,46 +1079,35 @@ select option { background: #131929; }
     <div id="tipCard" style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px"></div>
   </div>
 
+  <!-- 우리 아이 건강 지키기 (케어 바로가기) -->
   <div class="section">
-    <div class="sec-head"><div class="sec-title">AI 건강 분석</div></div>
-    <button class="ai-cta" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{showPage('analyze');}">
-      <div class="ai-cta-glow"></div>
-      <div class="ai-cta-icon">📸</div>
-      <div class="ai-cta-text">
-        <div class="ai-cta-title">AniBridge AI 분석</div>
-        <div class="ai-cta-sub">사진 한 장으로 10초 만에<br>건강 상태 + 병원 연결</div>
-        <div class="ai-cta-badge" id="homeAiBadge">오늘 2회 남음</div>
+    <div class="sec-head"><div class="sec-title">우리 아이 건강 지키기</div></div>
+    <div class="quick-grid">
+      <div class="quick-item" onclick="openEmergencyCard()" style="border-color:rgba(255,77,109,0.3)">
+        <div class="qi-icon">🆘</div>
+        <div class="qi-title">응급 카드</div>
+        <div class="qi-sub">병원에서 바로 보여주세요</div>
+        <div class="qi-arr">›</div>
       </div>
-      <div class="ai-cta-arr">›</div>
-    </button>
-  </div>
-
-  <div class="section">
-    <div class="sec-head"><div class="sec-title">AI 건강 상담</div></div>
-    <button class="ai-cta" onclick="if(getChatRemainingCount()<=0){showUpgradeModal('chat');}else{showPage('chat');}" style="background:linear-gradient(135deg,#1A2040,#0F2030);border-color:rgba(255,107,157,0.25)">
-      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(255,107,157,0.3),transparent)"></div>
-      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#00C9FF)">💬</div>
-      <div class="ai-cta-text">
-        <div class="ai-cta-title">AI 건강 상담</div>
-        <div class="ai-cta-sub">증상·식이·행동 등<br>궁금한 점을 AI에게 물어보세요</div>
-        <div class="ai-cta-badge" id="homeChatBadge" style="background:var(--g3)">오늘 5회 남음</div>
+      <div class="quick-item" onclick="openM('signal')">
+        <div class="qi-icon">🚨</div>
+        <div class="qi-title">건강 시그널</div>
+        <div class="qi-sub">이 증상, 병원 가야 할까?</div>
+        <div class="qi-arr">›</div>
       </div>
-      <div class="ai-cta-arr">›</div>
-    </button>
-  </div>
-
-  <div class="section">
-    <div class="sec-head"><div class="sec-title">우리 아이 번역기</div></div>
-    <button class="ai-cta" onclick="showPage('translator')" style="background:linear-gradient(135deg,#0A2040,#0F2848);border-color:rgba(0,201,255,0.25)">
-      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(0,201,255,0.3),transparent)"></div>
-      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#FFB830)">🎙️</div>
-      <div class="ai-cta-text">
-        <div class="ai-cta-title">우리 아이 마음 번역</div>
-        <div class="ai-cta-sub">소리를 녹음하면<br>무슨 말인지 번역해드려요</div>
-        <div class="ai-cta-badge" style="background:var(--g2)">무료</div>
+      <div class="quick-item" onclick="openCheckup()">
+        <div class="qi-icon">🩺</div>
+        <div class="qi-title">검진 체크리스트</div>
+        <div class="qi-sub">나이별 맞춤 검진 항목</div>
+        <div class="qi-arr">›</div>
       </div>
-      <div class="ai-cta-arr">›</div>
-    </button>
+      <div class="quick-item" onclick="showPage('place')">
+        <div class="qi-icon">🏥</div>
+        <div class="qi-title">내 주변 병원</div>
+        <div class="qi-sub">24시 병원 · 거리순 검색</div>
+        <div class="qi-arr">›</div>
+      </div>
+    </div>
   </div>
 
   <div class="section">
@@ -1137,8 +1126,8 @@ select option { background: #131929; }
     </div>
   </div>
 
-  <div class="section" style="padding-bottom:20px">
-    <div class="sec-head"><div class="sec-title">빠른 메뉴</div></div>
+  <div class="section">
+    <div class="sec-head"><div class="sec-title">기록하기</div></div>
     <div class="quick-grid">
       <div class="quick-item" onclick="showPage('care')">
         <div class="qi-icon">📋</div>
@@ -1149,10 +1138,51 @@ select option { background: #131929; }
       <div class="quick-item" onclick="showPage('place')">
         <div class="qi-icon">📍</div>
         <div class="qi-title">펫 플레이스</div>
-        <div class="qi-sub">반려동물 동반 가능 장소</div>
+        <div class="qi-sub">동반 카페·공원·미용실</div>
         <div class="qi-arr">›</div>
       </div>
     </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><div class="sec-title">AI 도우미 <span style="font-size:11px;font-weight:500;color:var(--text3)">— 참고용이에요, 진단은 병원에서!</span></div></div>
+    <button class="ai-cta" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{showPage('analyze');}">
+      <div class="ai-cta-glow"></div>
+      <div class="ai-cta-icon">📸</div>
+      <div class="ai-cta-text">
+        <div class="ai-cta-title">AI 건강 분석</div>
+        <div class="ai-cta-sub">사진으로 피부·눈·귀 상태를<br>미리 살펴보고 병원 방문을 준비해요</div>
+        <div class="ai-cta-badge" id="homeAiBadge">하루 10회 무료</div>
+      </div>
+      <div class="ai-cta-arr">›</div>
+    </button>
+  </div>
+
+  <div class="section">
+    <button class="ai-cta" onclick="if(getChatRemainingCount()<=0){showUpgradeModal('chat');}else{showPage('chat');}" style="background:linear-gradient(135deg,#1A2040,#0F2030);border-color:rgba(255,107,157,0.25)">
+      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(255,107,157,0.3),transparent)"></div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#00C9FF)">💬</div>
+      <div class="ai-cta-text">
+        <div class="ai-cta-title">AI 건강 상담</div>
+        <div class="ai-cta-sub">증상·식이·행동 등<br>궁금한 점을 물어보세요</div>
+        <div class="ai-cta-badge" id="homeChatBadge" style="background:var(--g3)">하루 10회 무료</div>
+      </div>
+      <div class="ai-cta-arr">›</div>
+    </button>
+  </div>
+
+  <div class="section" style="padding-bottom:20px">
+    <div class="sec-head"><div class="sec-title">재미로 즐겨요</div></div>
+    <button class="ai-cta" onclick="showPage('translator')" style="background:linear-gradient(135deg,#0A2040,#0F2848);border-color:rgba(0,201,255,0.25)">
+      <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(0,201,255,0.3),transparent)"></div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#FFB830)">🎙️</div>
+      <div class="ai-cta-text">
+        <div class="ai-cta-title">우리 아이 마음 번역</div>
+        <div class="ai-cta-sub">소리를 녹음하면 무슨 말인지<br>재미로 번역해드려요 😄</div>
+        <div class="ai-cta-badge" style="background:var(--g2)">무료</div>
+      </div>
+      <div class="ai-cta-arr">›</div>
+    </button>
   </div>
 </div>
 
@@ -1282,6 +1312,12 @@ select option { background: #131929; }
 <!-- ══ AI 분석 ══ -->
 <div id="pg-analyze" class="page">
   <div class="analyze-wrap">
+    <!-- AI 분석 한계 고지 -->
+    <div style="background:rgba(255,184,48,0.08);border:1.5px solid rgba(255,184,48,0.35);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.8">
+      <b style="color:var(--caution)">⚠️ 꼭 읽어주세요</b><br>
+      AI 분석은 <b style="color:var(--text)">수의학적 진단이 아닌 참고 정보</b>입니다. 사진만으로는 정확한 판단이 불가능하며, AI가 놓치거나 잘못 보는 경우도 있습니다.<br>
+      <b style="color:var(--text)">증상이 있거나 평소와 다르다면, 분석 결과와 관계없이 반드시 동물병원에서 진료받으세요.</b> 분석 결과는 병원 방문 전 마음의 준비와 기록용으로만 활용해주세요.
+    </div>
     <div class="upload-zone" id="uploadZone" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{document.getElementById('fileInput').click();}">
       <input type="file" id="fileInput" accept="image/*" capture="environment">
       <div id="upPh">
@@ -1634,7 +1670,6 @@ select option { background: #131929; }
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
       <div class="mi" onclick="openM('alarm')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🔔</div><div class="mi-text">알림 설정</div><div class="mi-arr">›</div></div>
-      <div class="mi" onclick="openM('subscribe')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">💳</div><div class="mi-text">구독 관리</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
     </div>
     <div class="ver-txt">AniBridge v2.5.1<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
@@ -1936,154 +1971,33 @@ select option { background: #131929; }
   </div>
 </div></div>
 
-<!-- 프리미엄 유도 모달 -->
+<!-- 무료 한도 안내 모달 (구 프리미엄 유도 모달 — 결제 기능은 결제기능_백업_무료전환.md에 보관) -->
 <div class="overlay" id="m-upgrade" onclick="closeM(event,'upgrade')">
 <div class="modal">
   <div class="modal-hd">
-    <span class="modal-title">🔒 오늘 무료 분석 소진</span>
+    <span class="modal-title">오늘 무료 횟수 소진</span>
     <button class="modal-close" onclick="closeM(null,'upgrade')">✕</button>
   </div>
   <div class="modal-body">
-
-    <!-- 감성 카피 -->
-    <div style="text-align:center;padding:8px 0 22px">
+    <div style="text-align:center;padding:8px 0 18px">
       <div style="font-size:40px;margin-bottom:12px">🐾</div>
-      <div id="upgradeCopy" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:19px;line-height:1.4;margin-bottom:8px">코코가 더 자주<br>검사받고 싶어해요<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 분석 2회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div></div>
+      <div id="upgradeCopy" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:19px;line-height:1.4;margin-bottom:8px">오늘 준비된 횟수를<br>모두 사용했어요</div>
     </div>
-
-    <!-- 충전형 - 핵심 -->
-    <div style="background:linear-gradient(135deg,rgba(74,255,163,0.12),rgba(0,201,255,0.08));border:1.5px solid rgba(74,255,163,0.35);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;position:relative;cursor:pointer">
-      <div style="position:absolute;top:-10px;right:16px;background:var(--urgent);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:999px">인기</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div>
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:17px">충전형</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:2px">필요할 때만 부담 없이</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:26px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">1,000원</div>
-          <div style="font-size:11px;color:var(--text2)">10회 충전</div>
-        </div>
-      </div>
-      <div style="background:rgba(0,0,0,0.2);border-radius:var(--rs);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.9">
-        ✅ AI 건강 분석 10회 즉시 지급<br>
-        ✅ 회당 <b style="color:var(--g1)">100원</b> — 동물병원 방문보다 500배 저렴<br>
-        ✅ 유효기간 없음 — 언제든 사용<br>
-        ✅ 케어수첩·산책·플레이스 계속 무료
-      </div>
-      <button onclick="closeM(null,'upgrade');openPayment('charge10')" style="width:100%;margin-top:12px;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-        💳 1,000원으로 10회 충전하기
-      </button>
+    <div style="background:rgba(74,255,163,0.06);border:1px solid rgba(74,255,163,0.2);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.9;text-align:center">
+      AniBridge의 모든 기능은 <b style="color:var(--g1)">무료</b>입니다 🎉<br>
+      AI 기능은 안정적인 운영을 위해 하루 횟수만 정해져 있어요.<br>
+      <span style="color:var(--text)">내일 자정에 다시 충전됩니다.</span>
     </div>
-
-    <!-- 충전형 30회 -->
-    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:10px;cursor:pointer">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div>
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:17px">충전형 <span style="font-size:10px;background:rgba(74,255,163,0.15);color:var(--g1);padding:2px 8px;border-radius:999px;font-weight:700;margin-left:4px">10% 할인</span></div>
-          <div style="font-size:11px;color:var(--text2);margin-top:2px">많이 쓰시는 분께 추천</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:26px;color:var(--text)">2,700원</div>
-          <div style="font-size:11px;color:var(--g1)">30회 · 회당 90원</div>
-        </div>
-      </div>
-      <button onclick="closeM(null,'upgrade');openPayment('charge30')" style="width:100%;margin-top:8px;padding:13px;background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border2);border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-        2,700원으로 30회 충전하기
-      </button>
+    <div style="text-align:center;font-size:12px;color:var(--text3);margin-bottom:14px">
+      <span id="nextResetTime" style="color:var(--g1);font-weight:700"></span> 후 자동 충전 ⏰
     </div>
-
-    <!-- 월정액 -->
-    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;cursor:pointer">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div>
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:17px">월정액</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:2px">자주 쓰는 분께 추천</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:26px;color:var(--text)">9,900원</div>
-          <div style="font-size:11px;color:var(--text2)">월 / 언제든 해지</div>
-        </div>
-      </div>
-      <div style="background:rgba(0,0,0,0.15);border-radius:var(--rs);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.9">
-        ✅ AI 건강 분석 <b style="color:var(--text)">무제한</b><br>
-        ✅ 주간 건강 리포트 자동 생성<br>
-        ✅ 다중 반려동물 무제한 등록<br>
-        ✅ 케어수첩·산책·플레이스 계속 무료
-      </div>
-      <!-- 결제 안내 -->
-      <div style="margin-top:10px;background:rgba(255,184,48,0.08);border:1px solid rgba(255,184,48,0.2);border-radius:var(--rs);padding:10px 14px;font-size:11px;color:var(--caution);line-height:1.8">
-        📌 <b>결제 안내</b><br>
-        · 결제일로부터 30일간 이용 가능합니다<br>
-        · 30일 후 계속 이용 시 동일 금액으로 재결제 안내를 드립니다<br>
-        · 언제든지 해지 가능하며 해지 시 추가 결제되지 않습니다
-      </div>
-      <button onclick="closeM(null,'upgrade');openPayment('monthly')" style="width:100%;margin-top:12px;padding:13px;background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border2);border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
-        월정액 시작하기
-      </button>
+    <div style="background:rgba(255,255,255,0.03);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;font-size:11px;color:var(--text3);line-height:1.8;text-align:center">
+      기다리는 동안 케어수첩 기록, 산책, 건강 시그널,<br>내 주변 병원 찾기는 횟수 제한 없이 이용하실 수 있어요
     </div>
-
-    <!-- 무료 비교 -->
-    <div style="background:rgba(255,255,255,0.02);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:12px;color:var(--text3)">현재 무료 플랜</div>
-      <div style="font-size:12px;color:var(--text2)">AI 분석 2회/일 · 내일 자정 충전</div>
-    </div>
-
-    <!-- 자정까지 남은 시간 -->
-    <div style="text-align:center;font-size:12px;color:var(--text3)">
-      <span id="nextResetTime" style="color:var(--text2);font-weight:700"></span> 후 무료 1회 자동 충전
-    </div>
-    <div style="text-align:center;margin-top:10px">
-      <button onclick="closeM(null,'upgrade')" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline">괜찮아요, 내일 이용할게요</button>
-    </div>
-
+    <button class="save-btn" style="background:rgba(255,255,255,0.08);color:var(--text2)" onclick="closeM(null,'upgrade')">확인</button>
   </div>
 </div>
 </div>
-
-<!-- 구독 관리 -->
-<div class="overlay" id="m-subscribe" onclick="closeM(event,'subscribe')">
-<div class="modal">
-  <div class="modal-hd"><span class="modal-title">💳 AI 분석 횟수 관리</span><button class="modal-close" onclick="closeM(null,'subscribe')">✕</button></div>
-  <div class="modal-body">
-    <div style="background:linear-gradient(135deg,rgba(74,255,163,0.08),rgba(0,201,255,0.05));border:1px solid rgba(74,255,163,0.2);border-radius:var(--r);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
-      <div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">현재 플랜</div>
-        <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:17px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">무료 플랜</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:12px;color:var(--text3);margin-top:2px">케어수첩·산책 영구 무료</div>
-      </div>
-    </div>
-    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">AI 분석 횟수 선택</div>
-    <div style="background:linear-gradient(135deg,rgba(74,255,163,0.1),rgba(0,201,255,0.06));border:1.5px solid rgba(74,255,163,0.35);border-radius:var(--r);padding:16px 18px;margin-bottom:10px;position:relative">
-      <div style="position:absolute;top:-10px;right:14px;background:var(--urgent);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:999px">인기</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <div><div style="font-weight:700;font-size:15px">10회 충전</div><div style="font-size:11px;color:var(--text2);margin-top:2px">유효기간 없음</div></div>
-        <div style="text-align:right"><div style="font-family:Outfit,sans-serif;font-weight:900;font-size:24px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">1,000원</div><div style="font-size:10px;color:var(--text3)">회당 100원</div></div>
-      </div>
-      <button onclick="openPayment('charge10')" style="width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">💳 1,000원 결제하기</button>
-    </div>
-    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:16px 18px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <div><div style="font-weight:700;font-size:15px">30회 충전 <span style="font-size:10px;background:rgba(74,255,163,0.15);color:var(--g1);padding:2px 8px;border-radius:999px;font-weight:700;margin-left:4px">10% 할인</span></div><div style="font-size:11px;color:var(--text2);margin-top:2px">유효기간 없음</div></div>
-        <div style="text-align:right"><div style="font-family:Outfit,sans-serif;font-weight:900;font-size:24px;color:var(--text)">2,700원</div><div style="font-size:10px;color:var(--g1)">회당 90원</div></div>
-      </div>
-      <button onclick="openPayment('charge30')" style="width:100%;margin-top:10px;padding:12px;background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border2);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">2,700원 결제하기</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;margin:14px 0 12px"><div style="flex:1;height:1px;background:var(--border)"></div><div style="font-size:11px;color:var(--text3);white-space:nowrap">매일 쓰신다면</div><div style="flex:1;height:1px;background:var(--border)"></div></div>
-    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:var(--r);padding:16px 18px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <div><div style="font-weight:700;font-size:15px">월정액 무제한</div><div style="font-size:11px;color:var(--text2);margin-top:2px">언제든 해지 · 주간 리포트 포함</div></div>
-        <div style="text-align:right"><div style="font-family:Outfit,sans-serif;font-weight:900;font-size:24px;color:var(--text)">9,900원</div><div style="font-size:10px;color:var(--text3)">월정액</div></div>
-      </div>
-      <div style="margin-top:8px;background:rgba(255,184,48,0.08);border:1px solid rgba(255,184,48,0.2);border-radius:var(--rs);padding:8px 12px;font-size:10px;color:var(--caution);line-height:1.8">
-        📌 결제일로부터 30일간 이용 · 30일 후 재결제 안내 발송 · 언제든 해지 가능
-      </div>
-      <button onclick="openPayment('monthly')" style="width:100%;margin-top:10px;padding:12px;background:rgba(255,255,255,0.07);color:var(--text);border:1px solid var(--border2);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">월정액 시작하기</button>
-    </div>
-    <div style="text-align:center;font-size:11px;color:var(--text3);line-height:1.8">케어수첩 · 산책 · 펫 플레이스는<br>모든 플랜에서 영구 무료입니다 🎉</div>
-  </div>
-</div></div>
 
 <!-- API 키 설정 모달 -->
 <div class="overlay" id="m-apikey" onclick="closeM(event,'apikey')">
@@ -2120,7 +2034,7 @@ select option { background: #131929; }
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">어떤 반려동물을 분석할 수 있나요?<span>+</span></div><div class="faq-a">강아지, 고양이, 토끼, 햄스터 등 대부분의 반려동물을 분석할 수 있습니다.</div></div>
     <hr class="divider">
     <div style="font-size:13px;font-weight:700;margin-bottom:10px">문의하기</div>
-    <div class="fg"><label class="fl">문의 유형</label><select id="cs-type" name="type"><option>서비스 이용 문의</option><option>결제/구독 문의</option><option>버그 신고</option><option>기능 제안</option><option>기타</option></select></div>
+    <div class="fg"><label class="fl">문의 유형</label><select id="cs-type" name="type"><option>서비스 이용 문의</option><option>버그 신고</option><option>기능 제안</option><option>기타</option></select></div>
     <div class="fg"><label class="fl">문의 내용</label><textarea id="cs-content" name="message" placeholder="문의 내용을 입력해주세요" style="height:100px"></textarea></div>
     <div class="fg"><label class="fl">이메일</label><input type="text" id="cs-email" name="replyto" placeholder="답변 받을 이메일 주소"></div>
     <input type="hidden" name="access_key" value="749a5bcf-98a4-4028-ba38-c15552ed13ae">
@@ -2142,7 +2056,6 @@ select option { background: #131929; }
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제2조 (수집하는 개인정보 항목)</div>
     <p style="margin-bottom:14px">
       · 카카오 로그인: 닉네임, 프로필 사진<br>
-      · 결제 서비스: 결제 수단 정보 (페이앱을 통해 처리)<br>
       · 서비스 이용: 반려동물 정보, 건강 기록 (기기 내 저장)
     </p>
 
@@ -2153,7 +2066,7 @@ select option { background: #131929; }
     </p>
 
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제4조 (개인정보의 제3자 제공)</div>
-    <p style="margin-bottom:14px">운영자는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 단, 결제 처리를 위해 페이앱에 최소한의 정보가 제공됩니다.</p>
+    <p style="margin-bottom:14px">운영자는 이용자의 개인정보를 제3자에게 제공하지 않습니다.</p>
 
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제5조 (이용자의 권리)</div>
     <p style="margin-bottom:14px">
@@ -2188,20 +2101,13 @@ select option { background: #131929; }
       · 우리 아이 번역기, 케어수첩, 산책 기록 등
     </p>
 
-    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (환불 정책)</div>
-    <p style="margin-bottom:14px">
-      · 충전형: 미사용 횟수에 한해 환불 가능<br>
-      · 월정액: 이용 기간 중 해지 시 잔여 기간 환불<br>
-      · 환불 문의: koreagwangju@gmail.com
-    </p>
-
-    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제4조 (면책조항)</div>
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제3조 (면책조항)</div>
     <p style="margin-bottom:14px">
       · AI 분석 결과는 참고 정보이며 수의사의 의료적 진단을 대체하지 않습니다<br>
       · 운영자는 AI 분석 결과로 인한 손해에 대해 책임지지 않습니다
     </p>
 
-    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제5조 (준거법)</div>
+    <div style="font-weight:700;color:var(--text);margin-bottom:4px">제4조 (준거법)</div>
     <p style="margin-bottom:14px">본 약관은 대한민국 법률에 따라 해석됩니다.</p>
 
     <div style="font-size:11px;color:var(--text3);margin-top:8px">
@@ -3066,14 +2972,14 @@ function scheduleReset(){
 scheduleReset();
 
 // ── AI 분석 횟수 제한 (하루 1회) ──
-const MAX_ANALYZE = 2;
+const MAX_ANALYZE = 10;
 function getTodayKey(){ return 'analyze_' + today(); }
 function getUsedCount(){ return parseInt(localStorage.getItem(getTodayKey())||'0'); }
 function addUsedCount(){ localStorage.setItem(getTodayKey(), getUsedCount()+1); }
 function getRemainingCount(){ return Math.max(0, MAX_ANALYZE - getUsedCount()); }
 
-// ── AI 상담 횟수 제한 (하루 5회) ──
-const MAX_CHAT = 5;
+// ── AI 상담 횟수 제한 (하루 10회) ──
+const MAX_CHAT = 10;
 function getChatTodayKey(){ return 'chat_' + today(); }
 function getChatUsedCount(){ return parseInt(localStorage.getItem(getChatTodayKey())||'0'); }
 function addChatUsedCount(){ localStorage.setItem(getChatTodayKey(), getChatUsedCount()+1); }
@@ -3109,7 +3015,7 @@ function updateCountUI(){
   if(btn && imgB64){
     if(remain <= 0){
       btn.disabled=false;
-      btn.innerHTML='🔒 오늘 무료 횟수 소진 — 탭하여 충전하기';
+      btn.innerHTML='오늘 무료 횟수 소진 — 내일 자정 충전';
       btn.style.cssText='background:rgba(255,77,109,0.15);color:var(--urgent);border:1px solid rgba(255,77,109,0.3);cursor:pointer';
       btn.onclick = () => showUpgradeModal();
     } else {
@@ -3146,7 +3052,7 @@ async function doAnalyze(){
   if(!imgB64) return;
   // 횟수 체크
   if(getRemainingCount() <= 0){
-    showErr('오늘 무료 AI 분석 2회를 모두 사용했습니다.');
+    showErr('오늘 무료 AI 분석 10회를 모두 사용했습니다. 내일 자정에 충전됩니다.');
     showUpgradeModal('analyze');
     return;
   }
@@ -3201,7 +3107,7 @@ function resetAnalyze(){imgB64=null;document.getElementById('prev-img').style.di
 updateCountUI();
 updateChatCountUI();
 
-// ── 프리미엄 유도 모달 ──
+// ── 무료 한도 안내 모달 (결제 없음 — 내일 자정 충전 안내) ──
 function showUpgradeModal(type){
   const petName = PETS.length && PETS[curPetIdx]?.name ? PETS[curPetIdx].name : '우리 아이';
   const now = new Date();
@@ -3214,16 +3120,17 @@ function showUpgradeModal(type){
   const el = document.getElementById('nextResetTime');
   if(el) el.textContent = timeStr;
 
-  // 타입별 문구 변경
   const titleEl = document.querySelector('#m-upgrade .modal-title');
   const copyEl = document.getElementById('upgradeCopy');
-
   if(type === 'chat'){
-    if(titleEl) titleEl.textContent = '🔒 오늘 AI 상담 횟수 소진';
-    if(copyEl) copyEl.innerHTML = `${escHtml(petName)}와 더 많은 대화를<br>나누고 싶으신가요?<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 상담 5회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
+    if(titleEl) titleEl.textContent = '오늘 AI 상담 횟수 소진';
+    if(copyEl) copyEl.innerHTML = `${escHtml(petName)} 이야기,<br>내일 또 들려주세요 💬`;
+  } else if(type === 'trans'){
+    if(titleEl) titleEl.textContent = '오늘 AI 번역 횟수 소진';
+    if(copyEl) copyEl.innerHTML = `${escHtml(petName)}의 마음은<br>내일 또 번역해드릴게요 🎙️`;
   } else {
-    if(titleEl) titleEl.textContent = '🔒 오늘 무료 분석 소진';
-    if(copyEl) copyEl.innerHTML = `${escHtml(petName)}가 더 자주<br>검사받고 싶어해요<div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.7">오늘 무료 AI 분석 2회를 모두 사용했습니다<br>케어수첩·산책·플레이스는 계속 무료로 이용하세요 🎉</div>`;
+    if(titleEl) titleEl.textContent = '오늘 AI 분석 횟수 소진';
+    if(copyEl) copyEl.innerHTML = `오늘 준비된 분석을<br>모두 사용했어요 📸`;
   }
   openM('upgrade');
 }
@@ -4428,7 +4335,7 @@ function renderCurPet(){
     // 등록 완료 — 반려동물 이름으로 표시
     if(heroLabel) heroLabel.textContent = "TODAY'S REPORT";
     if(heroTitle) heroTitle.innerHTML = `${escHtml(p.name||'')}의 오늘,<br><span style="background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">AI가 함께합니다</span>`;
-    if(heroSub) heroSub.innerHTML = `사진 한 장으로 건강 상태를 확인하고<br>산책 목표를 달성해 보세요`;
+    if(heroSub) heroSub.innerHTML = `기록하고, 살피고, 함께 걸어요<br>모든 기능이 무료입니다 🎉`;
   } else {
     // 미등록 — 환영 메시지
     if(heroLabel) heroLabel.textContent = 'WELCOME';
@@ -4660,8 +4567,8 @@ function setTransMode(mode){
   }
 }
 
-// ── 번역기 AI 횟수 (AI 분석과 동일 결제 시스템 사용) ──
-const MAX_TRANS_AI = 1; // 무료 1회/일
+// ── 번역기 AI 횟수 (하루 3회 무료) ──
+const MAX_TRANS_AI = 3; // 무료 3회/일
 function getTransAIKey(){ return 'trans_ai_' + today(); }
 function getTransAIUsed(){ return parseInt(localStorage.getItem(getTransAIKey())||'0'); }
 function addTransAIUsed(){ localStorage.setItem(getTransAIKey(), getTransAIUsed()+1); }
@@ -4674,7 +4581,7 @@ function updateTransAICount(){
     el.textContent = `오늘 ${remain}회 무료 사용 가능`;
     el.style.color = 'var(--g2)';
   } else {
-    el.textContent = '오늘 무료 횟수 소진 — 충전 후 이용';
+    el.textContent = '오늘 무료 횟수 소진 — 내일 자정 충전';
     el.style.color = 'var(--caution)';
   }
 }
@@ -5200,23 +5107,7 @@ function kakaoLogout(){
   toast('로그아웃되었습니다');
 }
 
-// ── 페이앱 결제 ──
-const PAYAPP_URLS = {
-  charge10: 'https://www.payapp.kr/L/z4bWM5',
-  charge30: 'https://www.payapp.kr/L/z4bWN9',
-  monthly:  'https://www.payapp.kr/L/z4bWOE'
-};
-
-function openPayment(type){
-  const url = PAYAPP_URLS[type];
-  if(!url) return;
-  // 모바일: 새 탭, PC: 팝업
-  if(/Android|iPhone|iPad/i.test(navigator.userAgent)){
-    window.open(url, '_blank');
-  } else {
-    window.open(url, 'payapp', 'width=476,height=500,top=300,left=300');
-  }
-}
+// ── 결제 기능 제거됨 (무료 전환) — 원본 코드는 결제기능_백업_무료전환.md 참고 ──
 
 // ── 토스트 ──
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
