@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniBridge 홍보 영상 (화면 녹화용)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:'Pretendard','Noto Sans KR',sans-serif; }
+  /* 9:16 세로 무대 (릴스/쓰레드용) */
+  #stage {
+    position:relative; width:min(100vw, 56.25vh); aspect-ratio:9/16;
+    background:linear-gradient(180deg,#0A0E1A 0%,#0D1526 100%);
+    overflow:hidden; color:#EAF2FF;
+  }
+  .scene { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8%; text-align:center; opacity:0; pointer-events:none; transition:opacity .6s ease; }
+  #pawTrail { position:absolute; inset:0; z-index:1; pointer-events:none; transition:opacity .8s ease; }
+  .scene.on { opacity:1; }
+
+  .big { font-size:clamp(22px,7.5vmin,44px); font-weight:900; line-height:1.5; }
+  .mid { font-size:clamp(15px,4.6vmin,26px); font-weight:700; line-height:1.7; color:#B8C4DC; }
+  .accent { background:linear-gradient(135deg,#4AFFA3,#00C9FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .red { color:#FF4D6D; }
+
+  .pop { opacity:0; transform:translateY(24px) scale(.96); transition:all .5s cubic-bezier(.34,1.56,.64,1); }
+  .scene.on .pop { opacity:1; transform:none; }
+  .d1{transition-delay:.15s} .d2{transition-delay:.5s} .d3{transition-delay:.9s} .d4{transition-delay:1.3s} .d5{transition-delay:1.7s} .d6{transition-delay:2.1s}
+
+  /* 질문 연타 */
+  .q { font-size:clamp(19px,6vmin,34px); font-weight:900; margin:2.2vmin 0; padding:2.4vmin 5vmin; border-radius:999px; background:rgba(255,77,109,0.1); border:1.5px solid rgba(255,77,109,0.35); color:#FFD7DE; }
+
+  /* 기능 카드 */
+  .feat { width:88%; display:flex; align-items:center; gap:4vmin; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:2.6vmin; padding:3.4vmin 4.5vmin; margin:1.5vmin 0; text-align:left; }
+  .feat .ic { font-size:clamp(24px,7vmin,40px); flex-shrink:0; }
+  .feat b { font-size:clamp(15px,4.6vmin,26px); display:block; }
+  .feat span { font-size:clamp(11px,3.4vmin,18px); color:#93A2C4; }
+
+  /* 로고 애니메이션 */
+  .logo-box svg { width:min(48vmin,260px); height:auto; }
+  @keyframes hop { 0%,24%,100%{transform:translateY(-2px)} 8%{transform:translateY(-9px)} 16%{transform:translateY(-2px)} 20%{transform:translateY(-6px)} }
+  .pdog{ animation:hop 2.2s ease-in-out .3s infinite; } .pcat{ animation:hop 2.2s ease-in-out .8s infinite; }
+  .wordmark { font-family:'Outfit',sans-serif; font-weight:900; font-size:clamp(28px,9vmin,54px); letter-spacing:-.5px; margin-top:2vmin; }
+  .wordmark .ani{ color:#fff; }
+
+  /* 발자국 배경 */
+  .pawbg { position:absolute; font-size:5vmin; opacity:0; animation:pawIn .5s forwards; color:#E5304F; }
+  @keyframes pawIn { to{opacity:.5} }
+
+  /* 마지막 CTA */
+  .cta { background:linear-gradient(135deg,#4AFFA3,#00C9FF); color:#0A0E1A; font-weight:900; font-size:clamp(16px,5vmin,28px); padding:3vmin 8vmin; border-radius:999px; }
+  .free-line { display:flex; gap:3vmin; margin:3vmin 0; }
+  .free-line div { font-size:clamp(13px,4vmin,22px); font-weight:800; color:#4AFFA3; }
+
+  /* 시작 버튼 */
+  #startBtn { position:absolute; inset:0; z-index:50; background:rgba(10,14,26,0.9); border:none; color:#EAF2FF; font-size:20px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
+  #startBtn small { font-size:12px; color:#93A2C4; font-weight:500; line-height:1.8; }
+  #replayBtn { position:absolute; bottom:4%; left:50%; transform:translateX(-50%); z-index:40; display:none; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); color:#fff; padding:10px 22px; border-radius:999px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 장면 1: 훅 (0~4.5초) -->
+  <div class="scene" id="s1">
+    <div class="big pop d1">새벽 2시,</div>
+    <div class="big pop d2" style="margin-top:2vmin">아이가 갑자기 <span class="red">아프다면?</span></div>
+    <div class="mid pop d3" style="margin-top:5vmin">😰 급하게 뛰어간 24시 병원...</div>
+  </div>
+
+  <!-- 장면 2: 질문 연타 (4.5~9.5초) -->
+  <div class="scene" id="s2">
+    <div class="q pop d1">"접종은 언제 했어요?"</div>
+    <div class="q pop d2">"먹는 약 있어요?"</div>
+    <div class="q pop d3">"알레르기는요?"</div>
+    <div class="big pop d4" style="margin-top:5vmin">...기억나세요?</div>
+  </div>
+
+  <!-- 장면 3: 로고 + 타이틀 (9.5~15초) -->
+  <div class="scene" id="s3">
+    <div class="logo-box pop d1">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3FE8B0"/><stop offset="100%" stop-color="#2B5FC7"/></linearGradient>
+          <linearGradient id="pB" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5FB2F7"/><stop offset="100%" stop-color="#2E6BD6"/></linearGradient>
+        </defs>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M60 26 Q49.5 26 45.5 36 L18.5 86 Q13 100 26 100 L94 100 Q107 100 101.5 86 L74.5 36 Q70.5 26 60 26 Z M60 49 Q57 49 55.8 52 L42.2 81 Q38 91 34 100 L86 100 Q82 91 77.8 81 L64.2 52 Q63 49 60 49 Z" fill="url(#pA)"/>
+        <g class="pdog" fill="#FFC15E">
+          <path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/>
+        </g>
+        <g class="pcat" fill="#E8EDF5">
+          <path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/>
+        </g>
+        <path d="M10 87 Q60 60 110 87" fill="none" stroke="url(#pB)" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      <div class="wordmark"><span class="ani">ANI</span><span class="accent">BRIDGE</span></div>
+    </div>
+    <div class="big pop d2" style="margin-top:4vmin"><span class="accent">수의사가 만든</span></div>
+    <div class="big pop d3">반려동물 건강수첩</div>
+  </div>
+
+  <!-- 장면 4: 기능 1 (15~21초) -->
+  <div class="scene" id="s4">
+    <div class="feat pop d1"><div class="ic">🆘</div><div><b>응급 카드</b><span>병원에서 바로 보여주는 아이 정보</span></div></div>
+    <div class="feat pop d2"><div class="ic">🍇</div><div><b>먹어도 되나요?</b><span>위험 음식 검색 → 대처법 + 24시 병원</span></div></div>
+    <div class="feat pop d3"><div class="ic">🍚</div><div><b>급여량 자동 계산</b><span>체중에 딱 맞는 하루 사료량</span></div></div>
+  </div>
+
+  <!-- 장면 5: 기능 2 (21~27초) -->
+  <div class="scene" id="s5">
+    <div class="feat pop d1"><div class="ic">🐕</div><div><b>발자국 산책 지도</b><span>걸은 길이 빨간 발자국으로!</span></div></div>
+    <div class="feat pop d2"><div class="ic">🐈</div><div><b>고양이는 놀이 모드</b><span>산책 대신 놀이 시간 — 수의사 검토 반영</span></div></div>
+    <div class="feat pop d3"><div class="ic">📊</div><div><b>주간 건강 리포트</b><span>한 주 요약을 가족과 카톡 공유</span></div></div>
+  </div>
+
+  <!-- 장면 6: CTA (27~34초) -->
+  <div class="scene" id="s6">
+    <div class="free-line pop d1"><div>✓ 광고 없음</div><div>✓ 결제 없음</div><div>✓ 전부 무료</div></div>
+    <div class="big pop d2" style="margin-bottom:4vmin">지금 시작하세요 🐾</div>
+    <div class="cta pop d3">Play 스토어에서 "AniBridge" 검색</div>
+    <div class="mid pop d4" style="margin-top:4vmin;font-size:clamp(12px,3.6vmin,19px)">💻 컴퓨터에서는 www.anibridge.com<br>🍎 아이폰은 준비 중이에요</div>
+  </div>
+
+  <div id="pawTrail"></div>
+  <button id="startBtn">
+    ▶ 탭하면 영상이 시작됩니다 (약 34초)
+    <small>📹 화면 녹화를 먼저 켜고 시작하세요<br>인스타 릴스 = 이 화면 그대로 세로 녹화</small>
+  </button>
+  <button id="replayBtn" onclick="play()">↻ 다시 재생</button>
+</div>
+
+<script>
+const SCENES = [
+  { id:'s1', dur: 4500 },
+  { id:'s2', dur: 5000 },
+  { id:'s3', dur: 5500 },
+  { id:'s4', dur: 6000 },
+  { id:'s5', dur: 6000 },
+  { id:'s6', dur: 7000 }
+];
+let timers = [];
+
+function clearAll(){
+  timers.forEach(clearTimeout); timers = [];
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
+  document.getElementById('pawTrail').innerHTML = '';
+  document.getElementById('replayBtn').style.display = 'none';
+}
+
+function pawBurst(){
+  // 로고 장면(3번) 동안만 발자국이 아래에서 위로 찍히고, 장면이 끝나면 사라짐
+  const trail = document.getElementById('pawTrail');
+  trail.style.opacity = '1';
+  for(let i=0;i<9;i++){
+    timers.push(setTimeout(()=>{
+      const p = document.createElement('div');
+      p.className = 'pawbg';
+      p.textContent = '🐾';
+      p.style.left = (12 + Math.random()*70) + '%';
+      p.style.top = (88 - i*9) + '%';
+      p.style.transform = `rotate(${-20+Math.random()*40}deg)`;
+      trail.appendChild(p);
+    }, 10000 + i*480));
+  }
+  // 15초(기능 장면 시작) 직전에 서서히 사라진 뒤 제거
+  timers.push(setTimeout(()=>{ trail.style.opacity = '0'; }, 14600));
+  timers.push(setTimeout(()=>{ trail.innerHTML = ''; }, 15600));
+}
+
+function play(){
+  clearAll();
+  let t = 0;
+  SCENES.forEach((sc, idx)=>{
+    timers.push(setTimeout(()=>{
+      document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
+      document.getElementById(sc.id).classList.add('on');
+    }, t));
+    t += sc.dur;
+  });
+  timers.push(setTimeout(()=>{ document.getElementById('replayBtn').style.display = 'block'; }, t + 300));
+  pawBurst();
+}
+
+document.getElementById('startBtn').addEventListener('click', function(){
+  this.style.display = 'none';
+  play();
+});
+</script>
+</body>
+</html>
