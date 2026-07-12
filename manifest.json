@@ -1,8 +1,8 @@
 {
-  "name": "AniBridge",
+  "name": "AniBridge - 반려동물 건강수첩",
   "short_name": "AniBridge",
-  "description": "광고없는 동물 번역기 · AI 펫케어. Every Animal Deserves a Happy Life",
-  "version": "2.5.1",
+  "description": "반려동물 건강수첩 · AI 펫케어. Every Animal Deserves a Happy Life",
+  "version": "3.0.0",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0E1A",
