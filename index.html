@@ -1107,6 +1107,18 @@ select option { background: #131929; }
         <div class="qi-sub">24시 병원 · 거리순 검색</div>
         <div class="qi-arr">›</div>
       </div>
+      <div class="quick-item" onclick="openFoodDict()">
+        <div class="qi-icon">🍇</div>
+        <div class="qi-title">먹어도 되나요?</div>
+        <div class="qi-sub">위험 음식 바로 검색</div>
+        <div class="qi-arr">›</div>
+      </div>
+      <div class="quick-item" onclick="switchToFeedTab()">
+        <div class="qi-icon">🍚</div>
+        <div class="qi-title">오늘 식단</div>
+        <div class="qi-sub">급여량 계산 · 기록</div>
+        <div class="qi-arr">›</div>
+      </div>
     </div>
   </div>
 
@@ -1671,6 +1683,7 @@ select option { background: #131929; }
       <div class="mi" onclick="openEmergencyCard()"><div class="mi-ico" style="background:rgba(255,77,109,0.12)">🆘</div><div class="mi-text" style="font-weight:700">응급 카드</div><div class="mi-arr" style="color:var(--urgent)">›</div></div>
       <div class="mi" onclick="openM('signal')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🚨</div><div class="mi-text">건강 시그널</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openCheckup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">🩺</div><div class="mi-text">건강검진 체크리스트</div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="openFoodDict()"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">🍇</div><div class="mi-text">먹어도 되나요? (위험 음식)</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
@@ -1850,6 +1863,25 @@ select option { background: #131929; }
     <div id="walkMap" style="height:380px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border2);background:#f2f0ed"></div>
     <button onclick="replayWalkAnim()" style="width:100%;margin-top:10px;padding:11px;background:rgba(74,255,163,0.1);color:var(--g1);border:1px solid rgba(74,255,163,0.3);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">▶ 산책 다시 보기</button>
     <div style="font-size:11px;color:var(--text3);margin-top:8px;text-align:center">🐕🐈 우리 아이가 걸어간 길이에요</div>
+  </div>
+</div></div>
+
+<!-- 위험 음식 사전 -->
+<div class="overlay" id="m-food" onclick="closeM(event,'food')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">🚫 먹어도 되나요?</span><button class="modal-close" onclick="closeM(null,'food')">✕</button></div>
+  <div class="modal-body">
+    <input type="text" id="foodSearchInput" placeholder="음식 이름 검색 — 예) 포도, 초콜릿, 고구마" oninput="renderFoodResults(this.value)"
+      style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:var(--rs);font-size:14px;color:var(--text);font-family:inherit;margin-bottom:10px">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <button onclick="document.getElementById('foodSearchInput').value='포도';renderFoodResults('포도')" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🍇 포도</button>
+      <button onclick="document.getElementById('foodSearchInput').value='초콜릿';renderFoodResults('초콜릿')" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🍫 초콜릿</button>
+      <button onclick="document.getElementById('foodSearchInput').value='우유';renderFoodResults('우유')" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🥛 우유</button>
+      <button onclick="document.getElementById('foodSearchInput').value='고구마';renderFoodResults('고구마')" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🍠 고구마</button>
+      <button onclick="document.getElementById('foodSearchInput').value='';renderFoodResults('')" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);color:var(--urgent);cursor:pointer;font-family:inherit">🔴 위험 음식 전체</button>
+    </div>
+    <div id="foodResults"></div>
+    <div style="font-size:10px;color:var(--text3);line-height:1.7;margin-top:12px;text-align:center">일반적인 안내이며 아이의 체구·건강 상태에 따라 달라질 수 있어요.<br>이상 증상이 보이면 즉시 동물병원에 문의하세요.</div>
   </div>
 </div></div>
 
@@ -4105,7 +4137,111 @@ function findPlaces(query, chipEl){
   searchNearby(_placeQuery, 'placeFindBtn', 'placeNearList');
 }
 
+// ── 🚫 위험 음식 사전 ──
+// d=강아지, c=고양이 · 3=위험(병원) 2=주의(소량·조건부) 1=괜찮음(소량)
+const FOOD_DB = [
+  {n:'초콜릿', a:['초코','코코아','카카오','초코우유','초코파이'], d:3, c:3, why:'테오브로민 중독 — 구토, 경련, 심장 이상을 일으켜요. 다크초콜릿일수록 위험해요.', act:'먹은 양과 종류를 확인하고 즉시 병원에 연락하세요.'},
+  {n:'포도', a:['건포도','거봉','샤인머스캣','청포도','포도즙'], d:3, c:3, why:'급성 신부전을 일으킬 수 있어요. 한두 알로도 위험한 경우가 보고되어 있어요.', act:'양과 관계없이 즉시 병원으로 가세요.'},
+  {n:'자일리톨', a:['껌','무설탕 사탕','치약','무설탕'], d:3, c:2, why:'강아지에게 급격한 저혈당과 간 손상을 일으켜요. 껌 1~2개로도 위험해요.', act:'먹었다면 즉시 병원 — 시간이 생명입니다.'},
+  {n:'양파', a:['양파즙','어니언','양파링'], d:3, c:3, why:'적혈구를 파괴해 빈혈을 일으켜요. 익혀도, 가루여도 독성이 남아요.', act:'섭취량 확인 후 병원에 문의하세요. 3~5일 뒤 증상이 나타나기도 해요.'},
+  {n:'마늘', a:['갈릭','마늘빵'], d:3, c:3, why:'양파와 같은 성분 — 적혈구를 파괴해요. 소량 반복 섭취도 위험해요.', act:'다량 섭취 시 병원에 문의하세요.'},
+  {n:'파', a:['대파','쪽파','부추'], d:3, c:3, why:'양파·마늘과 같은 계열로 빈혈을 일으켜요. 국물에 우러난 것도 주의!', act:'파가 들어간 국·찌개 국물도 주지 마세요.'},
+  {n:'마카다미아', a:['마카다미아넛'], d:3, c:2, why:'강아지에게 구토, 떨림, 뒷다리 약화를 일으켜요.', act:'먹었다면 병원에 문의하세요. 보통 48시간 내 회복하지만 진료가 안전해요.'},
+  {n:'술', a:['알코올','맥주','소주','와인','막걸리'], d:3, c:3, why:'소량으로도 중독돼요. 몸이 작아 사람보다 훨씬 위험해요.', act:'핥기만 했어도 상태를 관찰하고, 비틀거리면 즉시 병원으로.'},
+  {n:'커피', a:['카페인','에스프레소','원두','녹차','홍차','에너지드링크'], d:3, c:3, why:'카페인 중독 — 심박 급증, 떨림, 경련을 일으켜요.', act:'원두나 티백을 삼켰다면 즉시 병원에 연락하세요.'},
+  {n:'아보카도', a:['과카몰리'], d:2, c:2, why:'페르신 성분이 구토·설사를 일으킬 수 있어요. 씨는 장폐색 위험!', act:'과육 소량은 관찰, 씨를 삼켰다면 즉시 병원으로.'},
+  {n:'익힌 뼈', a:['치킨 뼈','닭뼈','갈비뼈','족발 뼈'], d:3, c:3, why:'익힌 뼈는 쉽게 부서져 날카로운 조각이 식도·위장을 찌를 수 있어요.', act:'삼켰다면 억지로 토하게 하지 말고 병원에 문의하세요.'},
+  {n:'백합', a:['릴리','백합꽃','튤립','수선화'], d:2, c:3, why:'고양이에게 치명적 — 꽃가루, 잎, 꽃병 물까지 급성 신부전을 일으켜요.', act:'고양이가 접촉했다면 즉시 병원으로. 집에 백합을 두지 마세요.'},
+  {n:'타이레놀', a:['아세트아미노펜','감기약','진통제','사람 약'], d:3, c:3, why:'고양이에게는 한 알로도 치명적, 강아지도 간 손상을 일으켜요.', act:'사람 약을 먹었다면 약 이름을 확인하고 즉시 병원으로.'},
+  {n:'날반죽', a:['생반죽','이스트','빵 반죽'], d:3, c:3, why:'뱃속에서 부풀며 알코올을 만들어 위확장과 중독을 일으켜요.', act:'생반죽을 먹었다면 즉시 병원에 연락하세요.'},
+  {n:'은행', a:['은행알','은행나무 열매'], d:3, c:3, why:'청산배당체 중독 — 구토, 경련을 일으킬 수 있어요. 가을 산책길 주의!', act:'주웠다 먹었다면 개수를 확인하고 병원에 문의하세요.'},
+  {n:'야생 버섯', a:['버섯','독버섯'], d:3, c:3, why:'종류에 따라 간부전 등 치명적일 수 있어요. 산책길 버섯은 전부 위험하다고 보세요.', act:'먹은 버섯 사진을 찍어 즉시 병원으로.'},
+  {n:'체리', a:['체리씨','앵두'], d:2, c:2, why:'과육 소량은 괜찮지만 씨·잎·줄기에 독성이 있고 씨는 장폐색 위험이 있어요.', act:'씨를 여러 개 삼켰다면 병원에 문의하세요.'},
+  {n:'사과', a:['사과씨','애플'], d:1, c:1, why:'과육은 좋은 간식! 단, 씨와 심지는 빼주세요 (씨에 미량의 독성).', act:'씨 없는 과육을 작게 잘라 소량 주세요.'},
+  {n:'수박', a:['수박씨','수박껍질'], d:1, c:1, why:'수분 보충에 좋은 간식이에요. 씨와 껍질은 소화가 안 돼요.', act:'씨 빼고 과육만 소량 주세요. 당분이 있으니 조금만!'},
+  {n:'바나나', a:[], d:1, c:1, why:'괜찮은 간식이지만 당분이 많아요.', act:'하루 두세 조각 이내로 주세요.'},
+  {n:'딸기', a:[], d:1, c:1, why:'비타민이 풍부한 간식! 당분은 주의.', act:'꼭지 떼고 한두 개만 주세요.'},
+  {n:'블루베리', a:[], d:1, c:1, why:'항산화 성분이 풍부한 좋은 간식이에요.', act:'하루 몇 알 정도가 적당해요.'},
+  {n:'귤', a:['오렌지','감귤','한라봉'], d:2, c:2, why:'과육 소량은 괜찮지만 껍질·흰 심줄은 소화불량을 일으켜요. 고양이는 감귤향 자체를 싫어해요.', act:'껍질 완전히 제거 후 한두 조각만.'},
+  {n:'토마토', a:['방울토마토'], d:2, c:2, why:'빨갛게 익은 과육은 소량 괜찮지만, 덜 익은 것·줄기·잎은 독성이 있어요.', act:'완숙 과육만 소량 주세요.'},
+  {n:'감자', a:['감자싹','생감자'], d:2, c:2, why:'익힌 감자는 괜찮지만 생감자, 싹, 껍질의 솔라닌은 독성이 있어요.', act:'싹을 먹었다면 병원에 문의하세요. 익힌 것만 소량.'},
+  {n:'고구마', a:['군고구마'], d:1, c:1, why:'익힌 고구마는 좋은 간식! 식이섬유가 풍부해요.', act:'껍질 벗기고 식혀서 소량 주세요. 당분 주의.'},
+  {n:'단호박', a:['호박','늙은호박'], d:1, c:1, why:'익힌 단호박은 소화에도 좋은 훌륭한 간식이에요.', act:'씨와 껍질 제거 후 익혀서 주세요.'},
+  {n:'당근', a:[], d:1, c:1, why:'좋은 간식! 생으로도 익혀서도 괜찮아요.', act:'목에 걸리지 않게 작게 잘라 주세요.'},
+  {n:'오이', a:[], d:1, c:1, why:'수분 많고 칼로리 낮은 좋은 간식이에요.', act:'얇게 잘라 소량 주세요.'},
+  {n:'브로콜리', a:[], d:1, c:1, why:'익혀서 소량은 좋아요. 다량은 위장 자극이 될 수 있어요.', act:'살짝 데쳐서 조금만 주세요.'},
+  {n:'닭가슴살', a:['닭고기','치킨'], d:1, c:1, why:'완전히 익힌 무염 닭가슴살은 최고의 간식! (양념 치킨은 절대 안 돼요)', act:'간 안 된 것을 삶아서 주세요. 닭 알레르기가 있다면 제외.'},
+  {n:'소고기', a:['쇠고기','한우'], d:1, c:1, why:'익힌 무염 소고기는 좋은 단백질이에요.', act:'기름기 적은 부위를 익혀서, 간 없이 주세요.'},
+  {n:'돼지고기', a:['삼겹살','목살'], d:2, c:2, why:'완전히 익힌 살코기는 소량 가능하지만 지방이 많아 췌장염 위험이 있어요.', act:'삼겹살처럼 기름진 부위는 피하고, 익힌 살코기만 아주 조금.'},
+  {n:'계란', a:['달걀','생계란'], d:1, c:1, why:'익힌 계란은 좋은 단백질! 날계란은 살모넬라 위험이 있어요.', act:'완숙으로 익혀서 주세요.'},
+  {n:'우유', a:['牛乳','흰우유'], d:2, c:2, why:'유당을 소화 못 하는 아이가 많아 설사할 수 있어요.', act:'반려동물 전용 우유나 락토프리로 주세요.'},
+  {n:'치즈', a:[], d:2, c:2, why:'소량은 괜찮지만 염분·지방이 많아요.', act:'저염 치즈를 아주 조금만, 약 먹일 때 활용 정도로.'},
+  {n:'생선', a:['날생선','회','고등어','연어'], d:2, c:2, why:'익힌 생선은 좋지만 날생선은 기생충·티아민 분해 위험이 있어요 (특히 고양이).', act:'가시 발라내고 익혀서 주세요. 회는 주지 마세요.'},
+  {n:'새우', a:['오징어','문어','조개'], d:2, c:2, why:'익힌 것 소량은 가능하지만 소화가 어렵고, 날것은 위험해요.', act:'완전히 익혀 껍질·내장 제거 후 아주 소량만.'},
+  {n:'김', a:['미역','다시마'], d:1, c:1, why:'무염 김은 소량 괜찮아요. 조미김은 염분·기름이 많아요.', act:'무염 김을 조금만 주세요.'},
+  {n:'밥', a:['쌀밥','흰쌀밥'], d:1, c:1, why:'소량은 괜찮지만 주식이 되면 영양 불균형이 와요.', act:'배탈 회복기에 소량 정도만. 평소엔 사료가 기본!'},
+  {n:'빵', a:['식빵','케이크','도넛'], d:2, c:2, why:'버터·설탕·초코가 든 빵이 많아요. 자일리톨이 든 것도 있어요!', act:'성분 모르는 빵은 주지 마세요. 흰 식빵 소량 정도만.'},
+  {n:'햄', a:['소시지','베이컨','스팸'], d:2, c:2, why:'염분이 매우 많아 신장에 부담을 줘요. 습관이 되면 사료를 거부해요.', act:'주지 않는 게 좋아요. 먹었다면 물을 충분히 주세요.'},
+  {n:'땅콩버터', a:['피넛버터','땅콩'], d:2, c:2, why:'무설탕 제품에 자일리톨이 든 경우가 있어요 — 이건 치명적!', act:'성분표에 자일리톨이 없는지 꼭 확인하세요.'},
+  {n:'옥수수', a:['옥수수심','콘'], d:2, c:2, why:'알갱이는 괜찮지만 옥수수심(속대)을 삼키면 장폐색 — 수술이 필요할 수 있어요.', act:'심을 삼켰다면 즉시 병원으로. 알갱이만 소량 주세요.'},
+  {n:'견과류', a:['호두','아몬드','피스타치오','캐슈넛'], d:2, c:2, why:'지방이 많아 췌장염 위험, 통째로 삼키면 장폐색 위험이 있어요. 마카다미아는 특히 위험!', act:'주지 않는 게 좋아요. 마카다미아를 먹었다면 병원 문의.'},
+  {n:'망고', a:[], d:1, c:1, why:'과육은 괜찮은 간식이에요. 씨는 크고 위험!', act:'씨와 껍질 제거 후 소량만.'},
+  {n:'요거트', a:['요구르트','그릭요거트'], d:1, c:1, why:'무가당 플레인 요거트는 소량 괜찮아요.', act:'무가당·무자일리톨 확인 후 한두 숟갈만.'}
+];
+
+let _foodQuery = '';
+function openFoodDict(){
+  _foodQuery = '';
+  const inp = document.getElementById('foodSearchInput');
+  if(inp) inp.value = '';
+  renderFoodResults('');
+  openM('food');
+  setTimeout(()=>{ if(inp) inp.focus(); }, 300);
+}
+
+function foodLevelBadge(lv){
+  if(lv >= 3) return '<span style="background:rgba(255,77,109,0.15);color:var(--urgent);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🔴 위험</span>';
+  if(lv === 2) return '<span style="background:rgba(255,184,48,0.15);color:#FFB830;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🟡 주의</span>';
+  return '<span style="background:rgba(74,255,163,0.12);color:var(--g1);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🟢 괜찮음</span>';
+}
+
+function renderFoodResults(q){
+  const box = document.getElementById('foodResults');
+  if(!box) return;
+  q = (q||'').trim().toLowerCase();
+  let items;
+  if(q){
+    items = FOOD_DB.filter(f => f.n.toLowerCase().includes(q) || f.a.some(al => al.toLowerCase().includes(q) || q.includes(al.toLowerCase())));
+  } else {
+    items = FOOD_DB.filter(f => f.d >= 3 || f.c >= 3);   // 기본: 위험 음식 목록
+  }
+  if(!items.length){
+    box.innerHTML = `<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;line-height:1.8">'${escHtml(q)}' 검색 결과가 없어요.<br>확실하지 않은 음식은 주지 않는 것이 안전하고,<br>이미 먹었다면 AI 상담이나 병원에 문의하세요.</div>
+    <button onclick="closeM(null,'food');showPage('chat')" style="width:100%;padding:12px;background:rgba(0,201,255,0.1);color:var(--g2);border:1px solid rgba(0,201,255,0.3);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">💬 AI 상담에 물어보기</button>`;
+    return;
+  }
+  box.innerHTML = (q ? '' : '<div style="font-size:11px;color:var(--text3);margin-bottom:10px">🔴 절대 주면 안 되는 음식들이에요 — 검색해서 다른 음식도 확인해보세요</div>') +
+  items.map(f => {
+    const danger = f.d >= 3 || f.c >= 3;
+    return `<div style="background:var(--card-solid);border:1px solid ${danger?'rgba(255,77,109,0.25)':'var(--border2)'};border-radius:var(--r);padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <div style="font-size:15px;font-weight:800">${escHtml(f.n)}</div>
+        <div style="display:flex;gap:4px">🐶${foodLevelBadge(f.d)} 🐱${foodLevelBadge(f.c)}</div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:6px">${escHtml(f.why)}</div>
+      <div style="font-size:12px;color:${danger?'var(--urgent)':'var(--text)'};line-height:1.6;font-weight:${danger?'700':'500'}">👉 ${escHtml(f.act)}</div>
+      ${danger ? `<button onclick="closeM(null,'food');goEmergencyHospital()" style="width:100%;margin-top:10px;padding:11px;background:linear-gradient(135deg,#FF4D6D,#FF7A5C);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">🌙 지금 문 연 24시 병원 찾기</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
 // ── 🍚 식단·급여량 관리 ──
+function switchToFeedTab(){
+  showPage('care');
+  const t = [...document.querySelectorAll('.ctab')].find(b=>b.textContent.includes('식단'));
+  if(t) switchCare(t,'feed');
+}
+
 function getFeedCfg(){
   const p = PETS.length ? PETS[curPetIdx] : null;
   if(!p) return null;
@@ -4171,7 +4307,8 @@ function renderFeed(){
       <div id="feedPhotoStatus" style="display:none;text-align:center;font-size:12px;color:var(--g1);margin-bottom:12px">🔍 사진에서 정보를 읽고 있어요...</div>
       <div class="fg"><label class="fl">사료 이름</label><input type="text" id="fd-name" placeholder="예) 오리젠 스몰브리드" value="${escHtml(p.food||'')}"></div>
       <div class="fg"><label class="fl">대사에너지 (kcal/kg) <span class="req">*</span></label><input type="number" id="fd-kcal" placeholder="예) 3800 — 봉투 뒷면 성분표에 있어요"></div>
-      <div class="fg"><label class="fl">하루 급여 횟수</label><div class="radio-group" id="fd-meals"><button class="rb" onclick="selRB(this,'fd-meals')">1회</button><button class="rb on" onclick="selRB(this,'fd-meals')">2회</button><button class="rb" onclick="selRB(this,'fd-meals')">3회</button></div></div>
+      <div class="fg"><label class="fl">하루 급여 횟수</label><div class="radio-group" id="fd-meals"><button class="rb" onclick="selRB(this,'fd-meals')">1회</button><button class="rb on" onclick="selRB(this,'fd-meals')">2회</button><button class="rb" onclick="selRB(this,'fd-meals')">3회</button><button class="rb" onclick="selRB(this,'fd-meals')">4회</button></div></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:-6px;margin-bottom:14px;line-height:1.6">💡 어린 강아지·고양이(생후 6개월 미만)는 3~4회로 나눠 주는 게 좋아요</div>
       <button onclick="saveFeedSetup()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">저장하고 급여량 계산하기</button>
     </div>`;
     return;
