@@ -1211,8 +1211,8 @@ select option { background: #131929; }
     <div style="display:flex;gap:8px;margin-bottom:18px">
       <button id="transModeFree" onclick="setTransMode('free')" style="flex:1;padding:14px 10px;border-radius:var(--rs);cursor:pointer;font-family:inherit;border:2px solid var(--g1);background:rgba(74,255,163,0.1);text-align:center;transition:all .15s">
         <div style="font-size:18px;margin-bottom:4px">🎲</div>
-        <div style="font-size:13px;font-weight:700;color:var(--g1)">무료 번역</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:3px">재미로 즐기기</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g1)">재미 번역</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">무제한 무료</div>
       </button>
       <button id="transModeAI" onclick="setTransMode('ai')" style="flex:1;padding:14px 10px;border-radius:var(--rs);cursor:pointer;font-family:inherit;border:2px solid var(--border2);background:rgba(255,255,255,0.04);text-align:center;transition:all .15s">
         <div style="font-size:18px;margin-bottom:4px">🧠</div>
@@ -1449,6 +1449,7 @@ select option { background: #131929; }
     <button class="ctab on" onclick="switchCare(this,'symptom')">🤒 이상증상</button>
     <button class="ctab" onclick="switchCare(this,'hospital')">🏥 병원기록</button>
     <button class="ctab" onclick="switchCare(this,'vaccine')">💉 예방접종</button>
+    <button class="ctab" onclick="switchCare(this,'feed')">🍚 식단</button>
     <button class="ctab" onclick="switchCare(this,'weight')">⚖️ 체중</button>
     <button class="ctab" onclick="switchCare(this,'memo')">📝 메모</button>
   </div>
@@ -1475,6 +1476,10 @@ select option { background: #131929; }
     </div>
     <button class="add-btn" onclick="openM('vaccine')">＋ 예방접종 기록 추가</button>
     <div id="lst-vaccine"></div>
+  </div>
+  <div id="cp-feed" class="care-pg">
+    <div id="feedWrap"></div>
+    <input type="file" id="feedPhotoInput" accept="image/*" capture="environment" style="display:none">
   </div>
   <div id="cp-weight" class="care-pg">
     <!-- 체중 입력 -->
@@ -1689,14 +1694,14 @@ select option { background: #131929; }
   <div class="nav-item" id="nav1" onclick="showPage('care')" style="color:#FFB830">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav2" onclick="showPage('translator')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
-  </div>
   <div class="nav-item" id="nav3" onclick="showPage('analyze')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>AI 분석<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav4" onclick="showPage('chat')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>AI 상담<div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" id="nav2" onclick="showPage('translator')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>번역기<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav5" onclick="showPage('my')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>MY<div class="nav-dot"></div>
@@ -3841,6 +3846,7 @@ function switchCare(btn,id){
     renderWeightGraph();
     renderWeightList();
   }
+  if(id==='feed') renderFeed();
 }
 
 // ── 모달 ──
@@ -4098,6 +4104,236 @@ function findPlaces(query, chipEl){
   }
   searchNearby(_placeQuery, 'placeFindBtn', 'placeNearList');
 }
+
+// ── 🍚 식단·급여량 관리 ──
+function getFeedCfg(){
+  const p = PETS.length ? PETS[curPetIdx] : null;
+  if(!p) return null;
+  try{ return JSON.parse(localStorage.getItem('anibridge_feedcfg_'+p.id) || 'null'); }catch(e){ return null; }
+}
+function saveFeedCfg(cfg){
+  const p = PETS[curPetIdx];
+  localStorage.setItem('anibridge_feedcfg_'+p.id, JSON.stringify(cfg));
+}
+function getFeedLog(){
+  const p = PETS[curPetIdx];
+  try{ return JSON.parse(localStorage.getItem('anibridge_feedlog_'+p.id+'_'+today()) || '[]'); }catch(e){ return []; }
+}
+function saveFeedLog(log){
+  const p = PETS[curPetIdx];
+  localStorage.setItem('anibridge_feedlog_'+p.id+'_'+today(), JSON.stringify(log));
+}
+
+// 수의 영양학 표준 공식: RER = 70 × 체중^0.75, DER = RER × 계수
+function calcDER(p){
+  const w = parseFloat(p.weight);
+  if(!w || w <= 0) return null;
+  const rer = 70 * Math.pow(w, 0.75);
+  const species = getPetSpecies(p);
+  const stage = getLifeStage(p.birth);
+  const neutered = p.neuter === '완료';
+  let f;
+  if(species === '고양이'){
+    f = stage==='puppy' ? 2.5 : stage==='senior' ? 1.1 : (neutered ? 1.2 : 1.4);
+  } else {
+    f = stage==='puppy' ? 2.5 : stage==='senior' ? 1.4 : (neutered ? 1.6 : 1.8);
+  }
+  return { rer, der: Math.round(rer * f), factor: f };
+}
+
+function renderFeed(){
+  const wrap = document.getElementById('feedWrap');
+  if(!wrap) return;
+  const p = PETS.length ? PETS[curPetIdx] : null;
+  if(!p || !p.name){
+    wrap.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text3);font-size:13px">먼저 MY에서 반려동물을 등록해주세요 🐾</div>';
+    return;
+  }
+  if(!parseFloat(p.weight)){
+    wrap.innerHTML = `<div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:24px 20px;text-align:center">
+      <div style="font-size:32px;margin-bottom:10px">⚖️</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px">체중을 먼저 등록해주세요</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px">체중을 알아야 ${escHtml(p.name)}에게 딱 맞는<br>하루 급여량을 계산할 수 있어요</div>
+      <button onclick="showPage('my')" style="padding:12px 24px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">MY에서 체중 입력하기</button>
+    </div>`;
+    return;
+  }
+  const cfg = getFeedCfg();
+  const d = calcDER(p);
+
+  // ── 사료 미등록: 설정 화면 ──
+  if(!cfg || !cfg.kcalPerKg){
+    wrap.innerHTML = `
+    <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:20px">
+      <div style="font-size:15px;font-weight:800;margin-bottom:6px">🍚 사료 등록</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:16px">사료 봉투 뒷면의 <b style="color:var(--text)">대사에너지(kcal/kg)</b>를 입력하면<br>${escHtml(p.name)}의 하루 급여량을 계산해드려요</div>
+      <button onclick="document.getElementById('feedPhotoInput').click()" style="width:100%;padding:13px;background:rgba(0,201,255,0.1);color:var(--g2);border:1px solid rgba(0,201,255,0.3);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:14px">📷 사료 봉투 찍어서 자동 입력</button>
+      <div id="feedPhotoStatus" style="display:none;text-align:center;font-size:12px;color:var(--g1);margin-bottom:12px">🔍 사진에서 정보를 읽고 있어요...</div>
+      <div class="fg"><label class="fl">사료 이름</label><input type="text" id="fd-name" placeholder="예) 오리젠 스몰브리드" value="${escHtml(p.food||'')}"></div>
+      <div class="fg"><label class="fl">대사에너지 (kcal/kg) <span class="req">*</span></label><input type="number" id="fd-kcal" placeholder="예) 3800 — 봉투 뒷면 성분표에 있어요"></div>
+      <div class="fg"><label class="fl">하루 급여 횟수</label><div class="radio-group" id="fd-meals"><button class="rb" onclick="selRB(this,'fd-meals')">1회</button><button class="rb on" onclick="selRB(this,'fd-meals')">2회</button><button class="rb" onclick="selRB(this,'fd-meals')">3회</button></div></div>
+      <button onclick="saveFeedSetup()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">저장하고 급여량 계산하기</button>
+    </div>`;
+    return;
+  }
+
+  // ── 계산 결과 + 오늘 기록 ──
+  const kcalPerG = cfg.kcalPerKg / 1000;
+  const targetKcal = d.der;
+  const targetG = Math.round(targetKcal / kcalPerG);
+  const meals = cfg.meals || 2;
+  const perMealG = Math.round(targetG / meals);
+  const snackLimitKcal = Math.round(targetKcal * 0.1);
+  const log = getFeedLog();
+  const eatenKcal = Math.round(log.reduce((s,e)=>s+e.kcal, 0));
+  const snackKcal = Math.round(log.filter(e=>e.t==='snack').reduce((s,e)=>s+e.kcal, 0));
+  const pct = Math.min(130, Math.round(eatenKcal / targetKcal * 100));
+  let status, statusColor;
+  if(pct < 80){ status = '아직 부족해요'; statusColor = 'var(--caution)'; }
+  else if(pct <= 110){ status = '적정량이에요 ✅'; statusColor = 'var(--g1)'; }
+  else { status = '오늘은 과식이에요 ⚠️'; statusColor = 'var(--urgent)'; }
+  const snackOver = snackKcal > snackLimitKcal;
+
+  wrap.innerHTML = `
+  <div style="background:linear-gradient(135deg,rgba(74,255,163,0.08),rgba(0,201,255,0.05));border:1px solid rgba(74,255,163,0.25);border-radius:var(--r);padding:18px 20px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;color:var(--text2)">${escHtml(p.name)}의 하루 권장량 (${p.weight}kg 기준)</div>
+        <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:26px;margin-top:4px">${targetG}g <span style="font-size:13px;color:var(--text2);font-weight:500">= ${targetKcal}kcal</span></div>
+      </div>
+      <button onclick="editFeedCfg()" style="background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:var(--text2);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">사료 변경</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.8">
+      🍚 ${escHtml(cfg.name||'등록된 사료')} (${cfg.kcalPerKg}kcal/kg)<br>
+      ⏰ 하루 ${meals}회 × <b style="color:var(--text)">${perMealG}g</b>씩 · 간식은 ${snackLimitKcal}kcal 이내
+    </div>
+  </div>
+
+  <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700">오늘 먹은 양</div>
+      <div style="font-size:13px;font-weight:800;color:${statusColor}">${status}</div>
+    </div>
+    <div style="height:14px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;margin-bottom:8px">
+      <div style="height:100%;width:${Math.min(100,pct)}%;background:${pct>110?'var(--urgent)':pct>=80?'linear-gradient(90deg,var(--g1),var(--g2))':'var(--caution)'};border-radius:999px;transition:width .4s"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)">
+      <span>${eatenKcal} / ${targetKcal}kcal (${pct}%)</span>
+      <span style="${snackOver?'color:var(--urgent);font-weight:700':''}">간식 ${snackKcal}kcal${snackOver?' — 한도 초과!':''}</span>
+    </div>
+    ${snackOver ? '<div style="margin-top:10px;font-size:11px;color:var(--urgent);background:rgba(255,77,109,0.08);border-radius:var(--rs);padding:8px 12px;line-height:1.6">⚠️ 간식이 하루 권장 칼로리의 10%를 넘었어요. 간식만큼 사료를 줄이거나 내일은 간식을 쉬어주세요.</div>' : ''}
+  </div>
+
+  <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:12px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px">기록 추가</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+      <input type="number" id="fd-grams" placeholder="${perMealG}" style="flex:1;padding:12px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:var(--rs);font-size:16px;font-weight:700;color:var(--text);font-family:inherit;text-align:center">
+      <div style="font-size:13px;color:var(--text2);font-weight:700">g</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onclick="addFeed('meal')" style="flex:1;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🍚 식사 기록</button>
+      <button onclick="addFeed('snack')" style="flex:1;padding:13px;background:rgba(255,184,48,0.12);color:#FFB830;border:1px solid rgba(255,184,48,0.3);border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🦴 간식 기록</button>
+    </div>
+  </div>
+
+  <div id="feedLogList">${log.length ? log.map(e=>`
+    <div style="display:flex;align-items:center;gap:10px;background:var(--card-solid);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;margin-bottom:6px">
+      <div style="font-size:16px">${e.t==='snack'?'🦴':'🍚'}</div>
+      <div style="flex:1;font-size:13px">${e.t==='snack'?'간식':'식사'} <b>${e.g}g</b> <span style="color:var(--text3);font-size:11px">· ${Math.round(e.kcal)}kcal</span></div>
+      <div style="font-size:11px;color:var(--text3)">${escHtml(e.time||'')}</div>
+      <button onclick="delFeed(${e.id})" style="background:none;border:none;color:var(--text3);font-size:14px;cursor:pointer;padding:2px 6px">✕</button>
+    </div>`).join('') : '<div style="text-align:center;padding:16px;color:var(--text3);font-size:12px">오늘 기록이 아직 없어요</div>'}
+  </div>
+  <div style="font-size:10px;color:var(--text3);line-height:1.7;margin-top:10px;text-align:center">권장량은 수의 영양학 표준 공식(RER×활동계수) 기준 참고치입니다.<br>질환·임신·수유 중이라면 동물병원과 상담해 급여량을 정하세요.</div>`;
+}
+
+function saveFeedSetup(){
+  const kcal = parseFloat(document.getElementById('fd-kcal').value);
+  if(!kcal || kcal < 100 || kcal > 9000){ toast('kcal/kg 값을 확인해주세요 (보통 3,000~4,500)'); return; }
+  const name = document.getElementById('fd-name').value.trim();
+  const mealsBtn = document.querySelector('#fd-meals .rb.on');
+  const meals = mealsBtn ? parseInt(mealsBtn.textContent) : 2;
+  saveFeedCfg({ name, kcalPerKg: kcal, meals });
+  const p = PETS[curPetIdx];
+  if(name && !p.food){ p.food = name; savePets(); }   // 프로필 사료칸도 채움 (응급카드 연동)
+  toast('사료가 등록되었습니다 ✓');
+  renderFeed();
+}
+
+function editFeedCfg(){
+  const p = PETS[curPetIdx];
+  const old = getFeedCfg();
+  localStorage.removeItem('anibridge_feedcfg_'+p.id);
+  renderFeed();
+  // 기존 값 미리 채워서 수정하기 편하게
+  if(old){
+    const n = document.getElementById('fd-name'), k = document.getElementById('fd-kcal');
+    if(n && old.name) n.value = old.name;
+    if(k && old.kcalPerKg) k.value = old.kcalPerKg;
+  }
+}
+
+function addFeed(type){
+  const cfg = getFeedCfg();
+  if(!cfg) return;
+  const input = document.getElementById('fd-grams');
+  let g = parseFloat(input.value);
+  if(!g){ g = parseFloat(input.placeholder); }
+  if(!g || g <= 0 || g > 2000){ toast('급여량(g)을 입력해주세요'); return; }
+  const kcal = g * cfg.kcalPerKg / 1000;
+  const now = new Date();
+  const log = getFeedLog();
+  log.push({ id: Date.now(), t: type, g: Math.round(g), kcal, time: `${now.getHours()<12?'오전':'오후'} ${now.getHours()%12||12}:${String(now.getMinutes()).padStart(2,'0')}` });
+  saveFeedLog(log);
+  toast(type==='snack' ? '🦴 간식 기록 완료' : '🍚 식사 기록 완료');
+  renderFeed();
+}
+
+function delFeed(id){
+  saveFeedLog(getFeedLog().filter(e=>e.id !== id));
+  renderFeed();
+}
+
+// 사료 봉투 사진 → AI로 제품명/칼로리 자동 추출
+document.addEventListener('change', async function(ev){
+  if(ev.target && ev.target.id === 'feedPhotoInput'){
+    const file = ev.target.files[0];
+    if(!file) return;
+    const st = document.getElementById('feedPhotoStatus');
+    if(st) st.style.display = 'block';
+    try{
+      const b64 = await new Promise((res,rej)=>{
+        const r = new FileReader();
+        r.onload = ()=>res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      const mt = file.type || 'image/jpeg';
+      const resp = await fetch('https://anibridge-api.koreagwangju.workers.dev/groq-vision', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ max_tokens: 300, messages: [{ role:'user', content: [
+          { type:'image', source:{ type:'base64', media_type: mt, data: b64 } },
+          { type:'text', text: '이 사진은 반려동물 사료 포장입니다. 제품명과 대사에너지(kcal/kg)를 찾아 반드시 다음 JSON 형식으로만 답하세요: {"name":"제품명","kcal_per_kg":숫자}. kcal이 100g 기준이면 kg 기준으로 환산하세요. 찾을 수 없으면 null을 넣으세요.' }
+        ]}]})
+      });
+      const data = await resp.json();
+      const text = data.content?.[0]?.text || '';
+      const m = text.match(/\{[\s\S]*\}/);
+      if(m){
+        const j = JSON.parse(m[0]);
+        if(j.name && document.getElementById('fd-name')) document.getElementById('fd-name').value = j.name;
+        if(j.kcal_per_kg && document.getElementById('fd-kcal')) document.getElementById('fd-kcal').value = Math.round(j.kcal_per_kg);
+        toast(j.kcal_per_kg ? '📷 사진에서 정보를 찾았어요! 확인 후 저장하세요' : '제품명만 찾았어요 — kcal은 직접 입력해주세요');
+      } else {
+        toast('사진에서 정보를 찾지 못했어요 — 직접 입력해주세요');
+      }
+    }catch(e){
+      toast('사진 인식에 실패했어요 — 직접 입력해주세요');
+    }
+    if(st) st.style.display = 'none';
+    ev.target.value = '';
+  }
+});
 
 // ── 연령별 건강검진 체크리스트 ──
 const CHECKUP_DATA = {
@@ -4567,8 +4803,8 @@ function setTransMode(mode){
   }
 }
 
-// ── 번역기 AI 횟수 (하루 3회 무료) ──
-const MAX_TRANS_AI = 3; // 무료 3회/일
+// ── 번역기 AI 횟수 (하루 10회 무료) ──
+const MAX_TRANS_AI = 10; // 무료 10회/일
 function getTransAIKey(){ return 'trans_ai_' + today(); }
 function getTransAIUsed(){ return parseInt(localStorage.getItem(getTransAIKey())||'0'); }
 function addTransAIUsed(){ localStorage.setItem(getTransAIKey(), getTransAIUsed()+1); }
