@@ -2466,7 +2466,7 @@ function isCatMode(){
 }
 function actTarget(){ return isCatMode() ? PLAY_TARGET : WALK_TARGET; }
 function actName(){ return isCatMode() ? '놀이' : '산책'; }
-function actIcon(){ return isCatMode() ? '🪶' : '🐾'; }
+function actIcon(){ return isCatMode() ? '🧶' : '🐾'; }
 
 // 종에 따라 산책/놀이 문구 전체 교체
 function updateSpeciesUI(){
@@ -2474,21 +2474,21 @@ function updateSpeciesUI(){
   const set = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
   set('hTodayWalkLbl', cat ? '오늘 놀이' : '오늘 산책');
   set('homeWalkSecTitle', cat ? '오늘의 놀이' : '오늘의 산책');
-  set('homeWalkCardTitle', cat ? '🪶 놀이 현황' : '🐾 산책 현황');
-  set('homeWalkStartBtn', cat ? '🪶 놀이 시작하기' : '🐾 산책 시작하기');
-  set('whTitle', cat ? '🪶 오늘의 놀이' : '🐾 오늘의 산책');
+  set('homeWalkCardTitle', cat ? '🧶 놀이 현황' : '🐾 산책 현황');
+  set('homeWalkStartBtn', cat ? '🧶 놀이 시작하기' : '🐾 산책 시작하기');
+  set('whTitle', cat ? '🧶 오늘의 놀이' : '🐾 오늘의 산책');
   set('wstMinLbl', cat ? '놀이 시간' : '산책 시간');
   set('weeklyTitle', cat ? '📊 이번 주 놀이 기록' : '📊 이번 주 산책 기록');
   set('histTitle', cat ? '📝 최근 놀이 기록' : '📝 최근 산책 기록');
   const btn = document.getElementById('walkBtn');
-  if(btn && !walking) btn.innerHTML = cat ? '🪶 놀이 시작' : '🐾 산책 시작';
+  if(btn && !walking) btn.innerHTML = cat ? '🧶 놀이 시작' : '🐾 산책 시작';
   const sub = document.getElementById('walkSub');
   if(sub && !walking) sub.textContent = cat ? '낚싯대·레이저로 신나게 놀아주세요!' : `${getPetName()}에게 필요한 운동량을 채워주세요`;
   // 고양이: 권장 가이드 문구 + GPS 경로 섹션 숨김
   const guide = document.getElementById('walkGuideCard');
   if(guide){
     guide.innerHTML = cat
-      ? `<div class="guide-head">🪶 맞춤 놀이 가이드</div>
+      ? `<div class="guide-head">🧶 맞춤 놀이 가이드</div>
          <div class="guide-row"><span class="guide-k">권장 놀이 시간</span><span class="guide-v">하루 ${PLAY_TARGET}분</span></div>
          <div class="guide-row"><span class="guide-k">놀이 횟수</span><span class="guide-v">10~15분씩 2~3회</span></div>
          <div class="guide-row"><span class="guide-k">추천 장난감</span><span class="guide-v">낚싯대 · 레이저 · 사냥놀이</span></div>
@@ -2665,7 +2665,7 @@ function startWalkTimer(){
   const btn = document.getElementById('walkBtn');
   btn.innerHTML = `⏹️ ${actName()} 종료`;
   btn.className = 'walk-action wa-stop';
-  document.getElementById('walkSub').textContent = isCatMode() ? '신나게 노는 중이에요 🪶' : '산책 중이에요 🐾';
+  document.getElementById('walkSub').textContent = isCatMode() ? '신나게 노는 중이에요 🧶' : '산책 중이에요 🐾';
   walkTimer = setInterval(()=>{
     walkSec++;
     walkDist = parseFloat((walkSec / 3600 * 4).toFixed(3));
@@ -4309,7 +4309,7 @@ function openWeeklyReport(){
       <div style="font-size:12px;color:var(--text);margin-top:8px;line-height:1.7">${escHtml(r.verdict)}</div>
     </div>
     ${isCatMode()
-      ? row('🪶','놀이', `${r.wk.walkedDays}회 · 총 ${r.wk.min}분`, `목표 달성 ${r.wk.goalDays}일`)
+      ? row('🧶','놀이', `${r.wk.walkedDays}회 · 총 ${r.wk.min}분`, `목표 달성 ${r.wk.goalDays}일`)
       : row('🐾','산책', `${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분`,
         `목표 달성 ${r.wk.goalDays}일` + (r.kmDiff !== 0 ? ` · 지난주보다 <b style="color:${r.kmDiff>0?'var(--g1)':'var(--caution)'}">${r.kmDiff>0?'+':''}${r.kmDiff}km</b>` : ''))}
     ${row('⚖️','체중', escHtml(r.weightTxt),
@@ -4322,7 +4322,7 @@ function openWeeklyReport(){
   // 공유용 텍스트
   _reportText = `📊 이번 주 ${r.p.name} 리포트 (${r.range})\n━━━━━━━━━━━━━━\n`
     + (isCatMode()
-      ? `🪶 놀이: ${r.wk.walkedDays}회 · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일)\n`
+      ? `🧶 놀이: ${r.wk.walkedDays}회 · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일)\n`
       : `🐾 산책: ${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일${r.kmDiff!==0 ? `, 지난주 대비 ${r.kmDiff>0?'+':''}${r.kmDiff}km` : ''})\n`)
     + `⚖️ 체중: ${r.weightTxt}${r.weightDiff!==null&&r.weightDiff!==0 ? ` (${r.weightDiff>0?'+':''}${r.weightDiff}kg)` : ''}\n`
     + `🍚 식단: ${r.feedDays ? `기록 ${r.feedDays}일 · 적정 ${r.feedOkDays}일` : '기록 없음'}\n`
