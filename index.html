@@ -2136,13 +2136,13 @@ select option { background: #131929; }
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제5조 (이용자의 권리)</div>
     <p style="margin-bottom:14px">
       · 개인정보 열람, 수정, 삭제 요청 가능<br>
-      · 문의: koreagwangju@gmail.com
+      · 문의: anibridge@naver.com
     </p>
 
     <div style="font-weight:700;color:var(--text);margin-bottom:4px">제6조 (개인정보 보호책임자)</div>
     <p style="margin-bottom:14px">
       · 책임자: 정성욱<br>
-      · 이메일: koreagwangju@gmail.com
+      · 이메일: anibridge@naver.com
     </p>
 
     <div style="font-size:11px;color:var(--text3);margin-top:8px">
@@ -2504,6 +2504,7 @@ function updateSpeciesUI(){
   if(routeSec) routeSec.style.display = cat ? 'none' : '';
   const distBlock = document.getElementById('wstDistBlock');
   if(distBlock) distBlock.style.display = cat ? 'none' : '';
+  try{ updWalkHistory(); updWeeklyChart(); }catch(e){}
 }
 
 // ── 산책 UI 전체 업데이트 ──
@@ -2731,7 +2732,7 @@ function updWalkHistory(){
         const p = JSON.parse(raw);
         if(p.sec > 0){
           const min = Math.floor(p.sec/60);
-          const pct = Math.min(100,Math.round(min/WALK_TARGET*100));
+          const pct = Math.min(100,Math.round(min/actTarget()*100));
           const label = i===0?'오늘':i===1?'어제':i+'일 전';
           const icon = i===0?'🌅':i===1?'🌇':'🌤️';
           items.push({label, icon, min, dist:p.dist||0, cal:p.cal||0, pct});
@@ -2740,15 +2741,16 @@ function updWalkHistory(){
     }catch(e){}
   }
   if(items.length===0){
-    hist.innerHTML='<div style="text-align:center;padding:32px 20px;color:var(--text3);font-size:13px;line-height:1.7">아직 산책 기록이 없어요 🐾<br><span style="font-size:11px;opacity:0.7">위의 산책 시작 버튼을 눌러<br>첫 산책을 기록해보세요!</span></div>';
+    hist.innerHTML=`<div style="text-align:center;padding:32px 20px;color:var(--text3);font-size:13px;line-height:1.7">아직 ${actName()} 기록이 없어요 ${actIcon()}<br><span style="font-size:11px;opacity:0.7">위의 ${actName()} 시작 버튼을 눌러<br>첫 ${actName()}를 기록해보세요!</span></div>`;
     return;
   }
+  const cat = isCatMode();
   hist.innerHTML = items.map(it=>`
     <div class="hi-item">
       <div class="hi-ico">${it.icon}</div>
       <div class="hi-info">
         <div class="hi-date">${it.label}</div>
-        <div class="hi-detail">${it.min}분 · ${it.dist}km · ${it.cal}kcal</div>
+        <div class="hi-detail">${cat ? `${it.min}분 · ${it.cal}kcal` : `${it.min}분 · ${it.dist}km · ${it.cal}kcal`}</div>
       </div>
       <div class="hi-res ${it.pct>=100?'hi-ok':'hi-warn'}">${it.pct>=100?'달성 ✓':'부족'}</div>
     </div>`).join('');
@@ -4025,7 +4027,7 @@ const VET_TIPS = [
   {s:'all',a:'all',se:0,i:'👂',t:'일주일에 한 번 귀 냄새를 맡아보세요. 시큼한 냄새가 나면 외이염 신호예요.'},
   {s:'all',a:'all',se:0,i:'🦷',t:'양치는 최고의 건강 관리예요. 3살 이상 반려동물의 80%가 치주질환을 갖고 있어요.'},
   {s:'all',a:'all',se:0,i:'💩',t:'대변은 매일 보는 건강검진표예요. 색과 굳기의 변화를 케어수첩에 기록해두세요.'},
-  {s:'all',a:'all',se:0,i:'🫣',t:'숨는 시간이 많아지면 아픈 걸 숨기는 중일 수 있어요. 행동 변화를 메모해두세요.'},
+  {s:'all',a:'all',se:0,i:'🙈',t:'숨는 시간이 많아지면 아픈 걸 숨기는 중일 수 있어요. 행동 변화를 메모해두세요.'},
   {s:'dog',a:'all',se:0,i:'🐾',t:'산책 후 발바닥 사이를 확인해주세요. 풀씨나 이물질이 잘 박혀요.'},
   {s:'dog',a:'all',se:0,i:'💊',t:'심장사상충 예방약은 매달 같은 날! 모기 없는 계절에도 거르면 안 돼요.'},
   {s:'dog',a:'all',se:0,i:'👃',t:'마른 코가 꼭 아픈 건 아니에요. 식욕과 활력이 훨씬 정확한 지표예요.'},
@@ -4054,7 +4056,7 @@ const VET_TIPS = [
   {s:'dog',a:'all',se:2,i:'🦟',t:'모기가 많은 계절이에요. 심장사상충 예방을 절대 거르지 마세요.'},
   {s:'all',a:'all',se:1,i:'🕷️',t:'봄철 풀숲 산책 후엔 진드기 체크! 귀 뒤·겨드랑이·발가락 사이를 확인하세요.'},
   {s:'all',a:'all',se:1,i:'🌸',t:'반려동물도 꽃가루 알레르기가 있어요. 봄에 유난히 긁는다면 의심해보세요.'},
-  {s:'all',a:'all',se:1,i:'🪮',t:'봄은 털갈이 시즌! 빗질을 늘리면 헤어볼과 피부병을 함께 예방할 수 있어요.'},
+  {s:'all',a:'all',se:1,i:'✨',t:'봄은 털갈이 시즌! 빗질을 늘리면 헤어볼과 피부병을 함께 예방할 수 있어요.'},
   {s:'all',a:'all',se:3,i:'🍄',t:'가을 산책길 야생 버섯은 절대 못 먹게 해주세요. 소량도 중독될 수 있어요.'},
   {s:'all',a:'all',se:3,i:'🐟',t:'가을 털갈이 시기엔 오메가3가 피부와 털 건강에 도움이 돼요.'},
   {s:'all',a:'all',se:3,i:'🌡️',t:'일교차가 큰 환절기엔 기침·호흡 변화를 더 자주 살펴주세요. 노령 아이는 특히요.'},
@@ -4967,6 +4969,11 @@ function savePets(){
 
 let PETS = loadPets();
 let curPetIdx = 0;
+// 마지막으로 보던 반려동물 기억 — 앱을 다시 열어도 그대로
+try{
+  const savedIdx = parseInt(localStorage.getItem('anibridge_curpet'));
+  if(!isNaN(savedIdx) && savedIdx >= 0 && savedIdx < PETS.length) curPetIdx = savedIdx;
+}catch(e){}
 
 // 기존 단일 프로필을 다중으로 마이그레이션
 function migrateSingleProfile(){
@@ -5083,6 +5090,7 @@ function renderCurPet(){
 
 function switchPet(idx){
   curPetIdx = idx;
+  try{ localStorage.setItem('anibridge_curpet', idx); }catch(e){}
   renderPetTabs();
   renderCurPet();
   reloadDB(); // 반려동물별 케어수첩 전환
@@ -5094,6 +5102,7 @@ function addPet(){
   PETS.push(newPet);
   savePets();
   curPetIdx = PETS.length - 1;
+  try{ localStorage.setItem('anibridge_curpet', curPetIdx); }catch(e){}
   renderPetTabs();
   renderCurPet();
   // 바로 편집 모달 열기
@@ -5107,6 +5116,7 @@ function deleteCurPet(){
   PETS.splice(curPetIdx, 1);
   savePets();
   curPetIdx = Math.max(0, curPetIdx-1);
+  try{ localStorage.setItem('anibridge_curpet', curPetIdx); }catch(e){}
   renderPetTabs();
   renderCurPet();
   toast('삭제되었습니다');
