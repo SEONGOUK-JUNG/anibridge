@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniBridge 사용설명서</title>
+<meta name="description" content="AniBridge 반려동물 건강수첩 사용설명서 — 응급 카드, 케어수첩, 식단 관리, 산책 기록 사용법">
+<style>
+  body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; color: #333; line-height: 1.8; }
+  h1 { font-size: 28px; color: #0A0E1A; margin-bottom: 8px; }
+  .sub { color: #666; font-size: 14px; margin-bottom: 8px; }
+  .free-badge { display: inline-block; background: linear-gradient(135deg, #4AFFA3, #00C9FF); color: #0A0E1A; font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 999px; margin-bottom: 28px; }
+  h2 { font-size: 19px; color: #0A0E1A; margin-top: 40px; margin-bottom: 12px; border-left: 4px solid #4AFFA3; padding-left: 12px; }
+  h3 { font-size: 15px; color: #0A0E1A; margin-top: 22px; margin-bottom: 8px; }
+  p, li { font-size: 14px; color: #444; margin-bottom: 10px; }
+  ol, ul { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .card { background: #f5f7fa; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
+  .tip { background: rgba(74,255,163,0.12); border-left: 4px solid #00C08B; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
+  .warn { background: #fff3cd; border-left: 4px solid #ffa500; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
+  .danger { background: #ffe9ec; border-left: 4px solid #E53050; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
+  .brand { background: linear-gradient(135deg, #00A060, #0077BB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  th, td { border: 1px solid #e0e0e0; padding: 9px 12px; text-align: left; }
+  th { background: #f5f7fa; font-weight: 700; }
+  .toc { background: #f5f7fa; border-radius: 12px; padding: 18px 22px; margin-bottom: 10px; }
+  .toc a { color: #0077BB; text-decoration: none; font-size: 14px; }
+  .toc li { margin-bottom: 4px; }
+  .kbd { background: #eef1f5; border: 1px solid #d5dae2; border-radius: 6px; padding: 1px 8px; font-size: 12px; font-weight: 700; color: #333; white-space: nowrap; }
+  .date { font-size: 12px; color: #999; margin-top: 48px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🐾 <span class="brand">AniBridge</span> 사용설명서</h1>
+<div class="sub">반려동물 건강수첩 · AI 펫케어</div>
+<div class="free-badge">🎉 모든 기능이 무료입니다</div>
+
+<div class="toc">
+  <b>목차</b>
+  <ol>
+    <li><a href="#start">시작하기 — 우리 아이 등록</a></li>
+    <li><a href="#home">홈 화면 한눈에 보기</a></li>
+    <li><a href="#emergency">🆘 응급 카드 — 이 앱의 핵심</a></li>
+    <li><a href="#health">건강 지키기 도구들</a></li>
+    <li><a href="#care">📋 케어수첩 — 기록하기</a></li>
+    <li><a href="#feed">🍚 식단·급여량 관리</a></li>
+    <li><a href="#walk">🐾 산책과 발자국 지도</a></li>
+    <li><a href="#ai">AI 도우미 (분석·상담·번역)</a></li>
+    <li><a href="#report">📊 주간 리포트</a></li>
+    <li><a href="#backup">📦 데이터 백업 — 폰 바꿀 때 필수!</a></li>
+    <li><a href="#faq">자주 묻는 질문</a></li>
+  </ol>
+</div>
+
+<h2 id="start">1. 시작하기 — 우리 아이 등록</h2>
+<ol>
+  <li>하단 메뉴에서 <span class="kbd">MY</span> 탭을 누릅니다</li>
+  <li><b>＋ 추가</b>를 눌러 반려동물을 등록합니다 (최대 5마리)</li>
+  <li><b>✏️ 편집</b>에서 이름·품종·생년월일·체중·중성화 여부를 입력하세요</li>
+</ol>
+<div class="tip">
+  💡 <b>🆘 응급 정보를 꼭 채워주세요!</b> 편집 화면 아래쪽의 <b>알레르기·복용약·사료·기저질환</b>은 응급 상황에서 수의사 선생님이 가장 먼저 확인하는 정보입니다. 이걸 채워야 응급 카드가 완성돼요.
+</div>
+<p>생년월일을 입력하면 홈에 <b>"코코가 세상에 온 지 1,234일"</b> 카드가 생기고, 생일에는 자동으로 축하 카드가 나타납니다. 🎂</p>
+
+<h2 id="home">2. 홈 화면 한눈에 보기</h2>
+<table>
+  <tr><th>영역</th><th>내용</th></tr>
+  <tr><td>오늘 요약</td><td>오늘 산책 달성률 · 건강 상태 · 다음 접종 D-day</td></tr>
+  <tr><td>💚 함께한 시간</td><td>태어난 지 며칠째 + 생일 카운트다운</td></tr>
+  <tr><td>☑️ 오늘 챙기기</td><td>사료·약·산책 체크리스트 (자동 생성 — 아래 6번 참고)</td></tr>
+  <tr><td>🩺 오늘의 케어 팁</td><td>우리 아이의 종·나이·계절에 맞는 건강 팁이 매일 자정 교체</td></tr>
+  <tr><td>우리 아이 건강 지키기</td><td>응급 카드 · 건강 시그널 · 검진 체크리스트 · 내 주변 병원 · 먹어도 되나요? · 오늘 식단</td></tr>
+  <tr><td>📊 이번 주 리포트</td><td>한 주 건강 요약 + 카톡 공유</td></tr>
+  <tr><td>AI 도우미 / 재미</td><td>AI 건강 분석 · AI 상담 · 마음 번역기</td></tr>
+</table>
+
+<h2 id="emergency">3. 🆘 응급 카드 — 이 앱의 핵심</h2>
+<p>한밤중에 아이가 아파서 처음 가는 병원에 갔을 때, 수의사 선생님은 이런 걸 묻습니다: <i>"몇 살이에요? 접종은요? 먹는 약 있어요? 알레르기는요? 최근에 어땠어요?"</i> — 당황한 상태에선 기억이 잘 안 나죠.</p>
+<div class="card">
+  <b>응급 카드는 이 모든 걸 한 화면에 자동으로 정리해줍니다:</b><br>
+  품종·나이·체중·혈액형 → 알레르기·부작용 → 복용약 → 접종 이력 → 사료 → 기저질환 → 최근 진료 → 최근 30일 증상
+</div>
+<h3>사용법</h3>
+<ol>
+  <li>홈 → <b>🆘 응급 카드</b> (또는 케어수첩 맨 위, MY 메뉴)</li>
+  <li>병원에서 <b>화면을 그대로 보여주거나</b>, 카카오톡 공유 / 텍스트 복사로 전달</li>
+  <li>급할 땐 카드 안의 <b>🌙 지금 문 연 24시 병원 찾기</b> 버튼으로 바로 병원 검색</li>
+</ol>
+<div class="tip">💡 응급 카드는 프로필과 케어수첩 기록으로 <b>자동 작성</b>됩니다. 평소에 기록만 하면 준비 끝!</div>
+
+<h2 id="health">4. 건강 지키기 도구들</h2>
+<h3>🚨 건강 시그널</h3>
+<p>증상이 얼마나 급한지 3단계로 알려줍니다: <b>🔴 지금 즉시 병원</b>(호흡곤란·경련·소변 못 봄 등) / <b>🟡 24시간 내 진료</b> / <b>🟢 기록하며 관찰</b>. 🔴 항목에 해당되면 버튼 한 번으로 24시 병원 검색으로 넘어갑니다.</p>
+<h3>🩺 검진 체크리스트</h3>
+<p>우리 아이의 종(강아지/고양이)과 나이(어린이/성체/노령)에 맞는 건강검진 항목을 자동으로 보여줍니다. 항목을 탭해서 완료 체크하면 저장돼요.</p>
+<h3>🏥 내 주변 병원</h3>
+<p>펫플레이스 탭에서 <span class="kbd">📍 현재 위치로 찾기</span>를 누르면 가까운 동물병원이 거리순으로 나옵니다. <b>🌙 24시</b> 필터로 심야 병원만 골라 볼 수 있고, 📞 버튼으로 바로 전화, Ⓝ 버튼으로 네이버 리뷰 확인이 가능합니다. 동반 카페·식당·미용실 검색도 같은 방식이에요.</p>
+<h3>🍇 먹어도 되나요? (위험 음식 사전)</h3>
+<p>음식 이름을 검색하면 강아지/고양이별 위험도가 나옵니다: <b>🔴 위험 / 🟡 주의 / 🟢 괜찮음</b> + 대처법. "건포도", "초코파이"처럼 별칭으로 검색해도 찾아줍니다.</p>
+<div class="danger">⚠️ <b>포도·초콜릿·양파·자일리톨(무설탕 껌)은 소량도 위험!</b> 먹었다면 검색 결과의 병원 찾기 버튼으로 즉시 병원에 연락하세요.</div>
+
+<h2 id="care">5. 📋 케어수첩 — 기록하기</h2>
+<p>하단 <span class="kbd">케어수첩</span> 탭에 6가지 기록장이 있습니다:</p>
+<table>
+  <tr><th>탭</th><th>기록 내용</th></tr>
+  <tr><td>🤒 이상증상</td><td>구토·설사·기침 등 증상과 상세 내용 — 응급 카드·문진서에 자동 반영</td></tr>
+  <tr><td>🏥 병원기록</td><td>병원명·진단·비용</td></tr>
+  <tr><td>💉 예방접종</td><td>접종일과 다음 예정일 — 홈에 D-day 표시</td></tr>
+  <tr><td>🍚 식단</td><td>급여량 계산과 오늘 먹은 양 (아래 6번)</td></tr>
+  <tr><td>⚖️ 체중</td><td>체중 입력 → 변화 그래프 (7/30/90일)</td></tr>
+  <tr><td>📝 메모</td><td>자유 기록</td></tr>
+</table>
+<div class="tip">💡 <b>📋 사전 문진서</b>: 병원 예약 후 이상증상 탭의 "사전 문진서로 내보내기"를 누르면 진료에 필요한 정보가 정리됩니다. 진료 시간이 짧아져요!</div>
+
+<h2 id="feed">6. 🍚 식단·급여량 관리</h2>
+<ol>
+  <li>케어수첩 → 식단 탭에서 <b>사료를 등록</b>합니다 — 📷 사료 봉투를 찍으면 AI가 제품명과 칼로리를 자동으로 읽어줘요 (또는 봉투 뒷면의 kcal/kg 직접 입력)</li>
+  <li>체중·나이·중성화 여부로 <b>하루 권장량이 자동 계산</b>됩니다 (수의 영양학 표준 공식) — 예: "하루 71g, 2회 × 36g씩, 간식은 27kcal 이내"</li>
+  <li>먹일 때마다 g 입력 후 <span class="kbd">🍚 식사</span> 또는 <span class="kbd">🦴 간식</span> 버튼</li>
+  <li>게이지로 오늘 상태 확인: <b>적정 ✅ / 부족 / 과식 ⚠️</b> — 간식이 하루 칼로리의 10%를 넘으면 경고</li>
+</ol>
+<p>식사를 기록하면 홈의 <b>"오늘 챙기기"</b> 체크리스트에 자동으로 ✅ 표시됩니다. 복용약이 프로필에 있으면 💊 약 챙기기 항목도 자동 생성 — 탭해서 체크하세요.</p>
+
+<h2 id="walk">7. 🐾 산책과 발자국 지도</h2>
+<ol>
+  <li>홈 또는 산책 탭에서 <span class="kbd">🐾 산책 시작</span> — 위치 권한을 허용하면 GPS로 실제 거리를 측정합니다</li>
+  <li>걷는 동안 "경로 N개 기록 중"이 표시됩니다 (화면을 켠 채로 걸어주세요)</li>
+  <li><span class="kbd">⏹️ 산책 종료</span>를 누르면 저장 완료</li>
+</ol>
+<div class="card">
+  <b>🗺️ 발자국 지도</b>: 산책 탭에 최근 경로 지도가 바로 보입니다. 지도를 탭하면 크게 열리면서 — 로고의 <b>강아지와 고양이가 실제 걸은 길을 따라 걸어가며 빨간 발자국을 남기는 애니메이션</b>이 재생됩니다. 경로는 실제 도로에 맞춰 자동 보정돼요. <span class="kbd">▶ 산책 다시 보기</span>로 반복 재생!
+</div>
+<div class="warn">📍 경로가 저장되려면 실외에서 50m 이상·1분 이상 걸어야 합니다. 실내나 GPS 거부 시엔 시간만 기록됩니다.</div>
+
+<h2 id="ai">8. AI 도우미</h2>
+<div class="warn">⚠️ <b>AI는 수의사가 아닙니다.</b> AI 분석·상담은 참고 정보일 뿐 진단이 아니에요. 증상이 있다면 AI 결과와 관계없이 반드시 동물병원에서 진료받으세요.</div>
+<table>
+  <tr><th>기능</th><th>무료 한도</th><th>이렇게 쓰세요</th></tr>
+  <tr><td>📸 AI 건강 분석</td><td>하루 10회</td><td>피부·눈·귀 사진을 올리면 상태를 살펴봐줍니다 — 병원 가기 전 마음의 준비와 기록용</td></tr>
+  <tr><td>💬 AI 건강 상담</td><td>하루 10회</td><td>증상·식이·행동 질문 — 우리 아이의 나이·알레르기·복용약·최근 증상을 알고 맞춤 답변하며, 응급 신호가 보이면 즉시 병원을 안내합니다</td></tr>
+  <tr><td>🎙️ 마음 번역기</td><td>재미 번역 무제한<br>AI 번역 하루 10회</td><td>소리를 녹음하면 무슨 말인지 번역 — <b>재미로만</b> 즐겨주세요 😄</td></tr>
+</table>
+<p>무료 한도는 매일 자정에 자동 충전됩니다.</p>
+
+<h2 id="report">9. 📊 주간 리포트</h2>
+<p>홈의 <b>"이번 주 리포트"</b>를 누르면 최근 7일이 정리됩니다: 산책(지난주와 비교) · 체중 변화 · 식단 · 증상 · 병원/접종 + 한 줄 총평. <b>카카오톡 공유</b>로 가족에게 보내거나, 병원 진료 때 최근 상태를 보여주는 용도로 쓰세요.</p>
+
+<h2 id="backup">10. 📦 데이터 백업 — 폰 바꿀 때 필수!</h2>
+<div class="danger">⚠️ 모든 기록은 <b>휴대폰 안에만</b> 저장됩니다. 앱을 삭제하거나 폰을 바꾸면 기록이 사라져요. <b>백업을 습관화하세요!</b></div>
+<h3>백업하기</h3>
+<ol>
+  <li><span class="kbd">MY</span> → <b>📦 데이터 백업</b></li>
+  <li>공유 창에서 <b>"카카오톡 나에게 보내기"</b> 또는 Google 드라이브 선택 — 끝!</li>
+</ol>
+<h3>복원하기 (새 폰에서)</h3>
+<ol>
+  <li>새 폰에 AniBridge 설치 → <span class="kbd">MY</span> → <b>📥 데이터 복원</b></li>
+  <li>보관해둔 백업 파일(AniBridge_백업_날짜.json) 선택 → 확인</li>
+  <li>모든 기록이 그대로 돌아옵니다 ✅</li>
+</ol>
+
+<h2 id="faq">11. 자주 묻는 질문</h2>
+<div class="card"><b>Q. 정말 다 무료인가요?</b><br>네! 광고도 없고 결제도 없습니다. AI 기능만 안정적인 운영을 위해 하루 횟수(각 10회)가 있고, 매일 자정 충전됩니다.</div>
+<div class="card"><b>Q. 내 기록은 어디에 저장되나요?</b><br>모두 휴대폰 안에만 저장되며 서버로 전송되지 않습니다. 그래서 백업이 중요해요! (AI 분석 시 보낸 사진·질문만 AI 처리를 위해 일시적으로 전송됩니다)</div>
+<div class="card"><b>Q. AI 분석이 "괜찮다"고 했는데 병원에 안 가도 되나요?</b><br>아니요. AI는 사진만으로 판단하는 참고 도구라 놓치는 것이 있을 수 있습니다. 아이가 평소와 다르다면 AI 결과와 관계없이 병원에서 확인하세요.</div>
+<div class="card"><b>Q. 위치 권한은 왜 필요한가요?</b><br>산책 거리·경로 측정과 내 주변 병원 검색에만 사용됩니다. 위치 정보는 폰에만 저장돼요.</div>
+<div class="card"><b>Q. 여러 마리를 키워요.</b><br>MY에서 최대 5마리까지 등록할 수 있고, 탭으로 전환하면 기록·식단·응급 카드가 각각 관리됩니다.</div>
+<div class="card"><b>Q. 문의는 어디로 하나요?</b><br>MY → 고객센터에서 문의를 보내거나, koreagwangju@gmail.com 으로 연락주세요.</div>
+
+<div class="date">
+  AniBridge v3.0 · 반려동물 건강수첩<br>
+  Every Animal Deserves a Happy Life 🐾
+</div>
+
+</body>
+</html>
