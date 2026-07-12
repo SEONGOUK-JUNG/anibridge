@@ -129,6 +129,15 @@ body.light input, body.light select, body.light textarea {
   color: var(--text);
 }
 body.light select option { background: #FFFFFF; }
+body.light .my-hero {
+  background: linear-gradient(135deg, #FFFFFF, #EDF2FB);
+}
+body.light .my-edit { background: rgba(0,0,0,0.05); }
+body.light .info-item { background: rgba(0,0,0,0.045); }
+body.light .mi:active { background: rgba(0,0,0,0.04); }
+/* AI CTA 카드는 라이트 모드에서도 어두운 배경 유지 — 글자는 밝게 고정 */
+body.light .ai-cta .ai-cta-title { color: #FFFFFF; }
+body.light .ai-cta .ai-cta-sub { color: rgba(255,255,255,0.78); }
 
 /* 모드 전환 버튼 */
 .theme-btn {
