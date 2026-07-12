@@ -1073,6 +1073,9 @@ select option { background: #131929; }
   <!-- 함께한 시간 -->
   <div id="togetherCard"></div>
 
+  <!-- 오늘의 루틴 -->
+  <div id="routineCard"></div>
+
   <!-- 오늘의 케어 팁 -->
   <div class="section" id="tipSec" style="display:none">
     <div class="sec-head"><div class="sec-title">🩺 오늘의 케어 팁</div></div>
@@ -1135,6 +1138,14 @@ select option { background: #131929; }
       <div class="prog-track"><div class="prog-fill" id="hProgFill" style="width:0%;background:linear-gradient(90deg,var(--urgent),rgba(255,77,109,0.5))"></div></div>
       <div class="prog-info"><span id="hWalkDone">0분 / 30분 권장</span><span id="hWalkDist">0.0km</span></div>
       <button class="walk-start" onclick="showPage('walk')">🐾 산책 시작하기</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div onclick="openWeeklyReport()" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(0,201,255,0.08),rgba(74,255,163,0.05));border:1px solid rgba(0,201,255,0.25);border-radius:var(--r);padding:14px 18px;cursor:pointer">
+      <div style="font-size:22px">📊</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:800">이번 주 리포트</div><div style="font-size:11px;color:var(--text3)" id="reportPreview">한 주 건강 요약 · 카톡으로 가족과 공유</div></div>
+      <div style="color:var(--text3)">›</div>
     </div>
   </div>
 
@@ -1684,6 +1695,9 @@ select option { background: #131929; }
       <div class="mi" onclick="openM('signal')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🚨</div><div class="mi-text">건강 시그널</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openCheckup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">🩺</div><div class="mi-text">건강검진 체크리스트</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openFoodDict()"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">🍇</div><div class="mi-text">먹어도 되나요? (위험 음식)</div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="exportBackup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">📦</div><div class="mi-text">데이터 백업 <span style="font-size:10px;color:var(--text3)">— 폰 바꿀 때 필수!</span></div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="document.getElementById('backupFileInput').click()"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">📥</div><div class="mi-text">데이터 복원</div><div class="mi-arr">›</div></div>
+      <input type="file" id="backupFileInput" accept=".json,application/json" style="display:none">
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
@@ -1863,6 +1877,19 @@ select option { background: #131929; }
     <div id="walkMap" style="height:380px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border2);background:#f2f0ed"></div>
     <button onclick="replayWalkAnim()" style="width:100%;margin-top:10px;padding:11px;background:rgba(74,255,163,0.1);color:var(--g1);border:1px solid rgba(74,255,163,0.3);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">▶ 산책 다시 보기</button>
     <div style="font-size:11px;color:var(--text3);margin-top:8px;text-align:center">🐕🐈 우리 아이가 걸어간 길이에요</div>
+  </div>
+</div></div>
+
+<!-- 주간 건강 리포트 -->
+<div class="overlay" id="m-report" onclick="closeM(event,'report')">
+<div class="modal">
+  <div class="modal-hd"><span class="modal-title">📊 이번 주 리포트</span><button class="modal-close" onclick="closeM(null,'report')">✕</button></div>
+  <div class="modal-body">
+    <div id="reportBody"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin:14px 0 10px;letter-spacing:.04em">공유하기</div>
+    <button onclick="shareWeeklyReport()" class="kakao-btn"><svg width="20" height="20" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>카카오톡으로 공유하기</button>
+    <button onclick="copyWeeklyReport()" class="copy-btn">📋 텍스트 복사</button>
+    <button class="save-btn" style="background:rgba(255,255,255,0.08);color:var(--text2)" onclick="closeM(null,'report')">닫기</button>
   </div>
 </div></div>
 
@@ -2616,6 +2643,7 @@ function stopWalk(){
   document.getElementById('walkSub').textContent = `${petName}에게 필요한 운동량을 채워주세요`;
   updWeeklyChart();
   updWalkHistory();
+  renderRoutine();
   toast('산책 기록이 저장되었습니다 ✓');
 }
 
@@ -2976,6 +3004,7 @@ function showPage(k){
   try { history.pushState({page:k}, '', '#'+k); } catch(e){}
   // 산책 페이지 열릴 때 계절 팁 + 인라인 경로 지도 업데이트
   if(k === 'walk'){ updSeasonTip(); renderInlineRouteMap(); }
+  if(k === 'home') renderRoutine();
 }
 
 // 뒤로가기 버튼 처리
@@ -3982,6 +4011,7 @@ const VET_TIPS = [
 ];
 
 function renderVetHome(){
+  renderRoutine();
   const tipSec = document.getElementById('tipSec');
   const tipCard = document.getElementById('tipCard');
   const tgCard = document.getElementById('togetherCard');
@@ -4136,6 +4166,251 @@ function findPlaces(query, chipEl){
   }
   searchNearby(_placeQuery, 'placeFindBtn', 'placeNearList');
 }
+
+// ── 📊 주간 건강 리포트 ──
+let _reportText = '';
+function _weekDates(offset){  // offset 0=이번주(오늘 포함 7일), 7=지난주
+  const arr = [];
+  for(let i = 6 + offset; i >= offset; i--){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    arr.push(d.toISOString().split('T')[0]);
+  }
+  return arr;
+}
+function _sumWalk(dates){
+  const acc = { min:0, km:0, goalDays:0, walkedDays:0 };
+  dates.forEach(dt => {
+    try{
+      const r = JSON.parse(localStorage.getItem('walk_' + dt) || 'null');
+      if(r && r.date === dt && r.sec > 0){
+        const min = Math.floor(r.sec / 60);
+        acc.min += min; acc.km += (r.dist || 0); acc.walkedDays++;
+        if(min >= WALK_TARGET) acc.goalDays++;
+      }
+    }catch(e){}
+  });
+  acc.km = +acc.km.toFixed(1);
+  return acc;
+}
+
+function buildWeeklyReport(){
+  const p = PETS[curPetIdx];
+  const dates = _weekDates(0), prev = _weekDates(7);
+  const range = dates[0].slice(5).replace('-','.') + ' ~ ' + dates[6].slice(5).replace('-','.');
+  // 산책
+  const wk = _sumWalk(dates), wkPrev = _sumWalk(prev);
+  const kmDiff = +(wk.km - wkPrev.km).toFixed(1);
+  // 체중
+  const wd = loadWeightData().filter(d => d.date >= dates[0]);
+  let weightTxt = '기록 없음', weightDiff = null;
+  if(wd.length){
+    const last = wd[wd.length-1].weight;
+    weightTxt = last + 'kg';
+    if(wd.length >= 2){
+      weightDiff = +(last - wd[0].weight).toFixed(1);
+    }
+  }
+  // 식단
+  const cfg = getFeedCfg(); const der = calcDER(p);
+  let feedDays = 0, feedOkDays = 0;
+  if(cfg && cfg.kcalPerKg && der){
+    dates.forEach(dt => {
+      try{
+        const log = JSON.parse(localStorage.getItem('anibridge_feedlog_' + p.id + '_' + dt) || '[]');
+        if(log.length){
+          feedDays++;
+          const kcal = log.reduce((s,e)=>s+e.kcal, 0);
+          if(kcal >= der.der * 0.8 && kcal <= der.der * 1.1) feedOkDays++;
+        }
+      }catch(e){}
+    });
+  }
+  // 증상 (최근 7일)
+  const syms = (DB.symptom || []).filter(s => s.date >= dates[0] && s.date <= dates[6]);
+  // 병원·접종 (최근 7일)
+  const hosp = (DB.hospital || []).filter(h => h.date >= dates[0] && h.date <= dates[6]);
+  const vacc = (DB.vaccine || []).filter(v => v.date >= dates[0] && v.date <= dates[6] && !v.autoGen);
+  // 총평
+  let verdict;
+  if(syms.length === 0 && wk.goalDays >= 5) verdict = '산책도 열심히, 아픈 곳도 없이 — 최고의 한 주였어요! 🏆';
+  else if(syms.length === 0) verdict = '증상 없이 평온한 한 주를 보냈어요 😊';
+  else verdict = `증상 기록이 ${syms.length}건 있었어요. 증상이 반복되면 케어수첩 기록을 들고 병원에서 확인해보세요.`;
+  return { p, range, wk, kmDiff, weightTxt, weightDiff, feedDays, feedOkDays, syms, hosp, vacc, verdict };
+}
+
+function openWeeklyReport(){
+  if(!PETS.length || !PETS[curPetIdx]?.name){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  const r = buildWeeklyReport();
+  const nm = escHtml(r.p.name);
+  const row = (icon, title, val, sub) => `
+    <div style="display:flex;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,0.06);align-items:flex-start">
+      <div style="font-size:18px;flex-shrink:0">${icon}</div>
+      <div style="flex:1"><div style="font-size:11px;color:var(--text3);letter-spacing:.03em">${title}</div>
+      <div style="font-size:14px;font-weight:700;margin-top:2px">${val}</div>
+      ${sub ? `<div style="font-size:11px;color:var(--text2);margin-top:3px;line-height:1.6">${sub}</div>` : ''}</div>
+    </div>`;
+  document.getElementById('reportBody').innerHTML = `
+    <div style="background:linear-gradient(135deg,rgba(0,201,255,0.08),rgba(74,255,163,0.06));border:1px solid rgba(0,201,255,0.2);border-radius:var(--r);padding:16px 18px;margin-bottom:8px">
+      <div style="font-size:11px;color:var(--text3)">${r.range}</div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:18px;margin-top:2px">이번 주 ${nm} 리포트</div>
+      <div style="font-size:12px;color:var(--text);margin-top:8px;line-height:1.7">${escHtml(r.verdict)}</div>
+    </div>
+    ${row('🐾','산책', `${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분`,
+      `목표 달성 ${r.wk.goalDays}일` + (r.kmDiff !== 0 ? ` · 지난주보다 <b style="color:${r.kmDiff>0?'var(--g1)':'var(--caution)'}">${r.kmDiff>0?'+':''}${r.kmDiff}km</b>` : ''))}
+    ${row('⚖️','체중', escHtml(r.weightTxt),
+      r.weightDiff !== null ? (r.weightDiff === 0 ? '주간 변화 없음 — 안정적이에요' : `한 주 동안 <b style="color:${Math.abs(r.weightDiff)>=0.3?'var(--caution)':'var(--text)'}">${r.weightDiff>0?'+':''}${r.weightDiff}kg</b>${Math.abs(r.weightDiff)>=0.3?' — 변화가 커요, 급여량을 점검해보세요':''}`) : '이번 주 체중을 기록해보세요')}
+    ${row('🍚','식단', r.feedDays ? `기록 ${r.feedDays}일 · 적정 ${r.feedOkDays}일` : '기록 없음', r.feedDays ? '' : '케어수첩 → 식단에서 기록을 시작해보세요')}
+    ${row('🤒','증상', r.syms.length ? `${r.syms.length}건` : '없음 ✅',
+      r.syms.length ? r.syms.map(s=>escHtml((s.symptoms||[]).join('·')+' ('+s.date.slice(5).replace('-','.')+')')).join('<br>') : '')}
+    ${(r.hosp.length || r.vacc.length) ? row('🏥','병원·접종', `${r.hosp.length ? '병원 '+r.hosp.length+'건' : ''}${r.hosp.length&&r.vacc.length?' · ':''}${r.vacc.length ? '접종 '+r.vacc.length+'건' : ''}`, '') : ''}
+  `;
+  // 공유용 텍스트
+  _reportText = `📊 이번 주 ${r.p.name} 리포트 (${r.range})\n━━━━━━━━━━━━━━\n`
+    + `🐾 산책: ${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일${r.kmDiff!==0 ? `, 지난주 대비 ${r.kmDiff>0?'+':''}${r.kmDiff}km` : ''})\n`
+    + `⚖️ 체중: ${r.weightTxt}${r.weightDiff!==null&&r.weightDiff!==0 ? ` (${r.weightDiff>0?'+':''}${r.weightDiff}kg)` : ''}\n`
+    + `🍚 식단: ${r.feedDays ? `기록 ${r.feedDays}일 · 적정 ${r.feedOkDays}일` : '기록 없음'}\n`
+    + `🤒 증상: ${r.syms.length ? r.syms.length+'건' : '없음 ✅'}\n`
+    + `\n${r.verdict}\n━━━━━━━━━━━━━━\nAniBridge 반려동물 건강수첩`;
+  openM('report');
+}
+
+function shareWeeklyReport(){
+  shareKakaoMsg(_reportText, '📊 이번 주 건강 리포트', 'AniBridge 주간 리포트');
+}
+function copyWeeklyReport(){
+  if(navigator.clipboard){ navigator.clipboard.writeText(_reportText).then(()=>toast('📋 복사되었습니다! ✓')).catch(()=>fallbackCopy(_reportText)); }
+  else fallbackCopy(_reportText);
+}
+
+// ── ☑️ 오늘의 루틴 체크 ──
+function getRoutineState(){
+  const p = PETS[curPetIdx];
+  try{ return JSON.parse(localStorage.getItem('anibridge_routine_'+p.id+'_'+today()) || '{}'); }catch(e){ return {}; }
+}
+function saveRoutineState(s){
+  const p = PETS[curPetIdx];
+  localStorage.setItem('anibridge_routine_'+p.id+'_'+today(), JSON.stringify(s));
+}
+function toggleRoutineMed(){
+  const s = getRoutineState();
+  s.med = !s.med;
+  saveRoutineState(s);
+  if(s.med) toast('💊 복용 완료 체크!');
+  renderRoutine();
+}
+
+function renderRoutine(){
+  const card = document.getElementById('routineCard');
+  if(!card) return;
+  const p = PETS.length ? PETS[curPetIdx] : null;
+  if(!p || !p.name || p.name === '새 반려동물'){ card.innerHTML = ''; return; }
+  const items = [];
+
+  // 🍚 식사 — 식단 설정 기반, 식단 기록과 자동 연동
+  const cfg = getFeedCfg();
+  if(cfg && cfg.kcalPerKg){
+    const meals = cfg.meals || 2;
+    const labels = meals===1 ? ['사료'] : meals===2 ? ['아침 사료','저녁 사료'] : meals===3 ? ['아침','점심','저녁'] : ['아침','점심','저녁','밤'];
+    const mealCount = getFeedLog().filter(e=>e.t==='meal').length;
+    for(let i=0;i<meals;i++){
+      items.push({ icon:'🍚', label: labels[i], done: mealCount > i, act: 'switchToFeedTab()' });
+    }
+  } else {
+    items.push({ icon:'🍚', label:'식단 등록하기', done:false, act:'switchToFeedTab()' });
+  }
+
+  // 💊 복용약 — 프로필에 약이 있으면 표시 (수동 체크)
+  if(p.meds && p.meds.trim()){
+    items.push({ icon:'💊', label:'약 챙기기', done: !!getRoutineState().med, act:'toggleRoutineMed()' });
+  }
+
+  // 🐾 산책 — 산책 기록과 자동 연동
+  const walkMin = Math.floor((walkSec||0)/60);
+  const walkDone = walkMin >= WALK_TARGET;
+  items.push({ icon:'🐾', label: walkDone ? '산책 완료' : `산책 ${walkMin}/${WALK_TARGET}분`, done: walkDone, act:"showPage('walk')" });
+
+  const doneCount = items.filter(i=>i.done).length;
+  const allDone = doneCount === items.length;
+  card.innerHTML = `
+  <div class="section" style="margin-bottom:0">
+    <div style="background:var(--card-solid);border:1px solid ${allDone?'rgba(74,255,163,0.35)':'var(--border2)'};border-radius:var(--r);padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:800">오늘 ${escHtml(p.name)} 챙기기</div>
+        <div style="font-size:11px;font-weight:700;color:${allDone?'var(--g1)':'var(--text3)'}">${allDone ? '완료! 🎉' : doneCount+' / '+items.length}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${items.map(it=>`
+        <button onclick="${it.act}" style="display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:1px solid ${it.done?'rgba(74,255,163,0.35)':'var(--border2)'};background:${it.done?'rgba(74,255,163,0.1)':'rgba(255,255,255,0.04)'};color:${it.done?'var(--g1)':'var(--text2)'}">
+          <span>${it.done?'✅':it.icon}</span><span style="${it.done?'text-decoration:line-through;opacity:.8':''}">${escHtml(it.label)}</span>
+        </button>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── 📦 데이터 백업·복원 ──
+function exportBackup(){
+  const data = {};
+  for(let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && (k.startsWith('anibridge_') || k.startsWith('walk_'))) data[k] = localStorage.getItem(k);
+  }
+  if(!Object.keys(data).length){ toast('백업할 기록이 아직 없어요'); return; }
+  let petCount = 0;
+  try{ petCount = (JSON.parse(data['anibridge_pets']||'[]')).length; }catch(e){}
+  const payload = { app: 'AniBridge', backupVersion: 1, exportedAt: new Date().toISOString(), petCount, data };
+  const json = JSON.stringify(payload);
+  const fname = 'AniBridge_백업_' + today() + '.json';
+  // 모바일: 공유(카톡 나에게 보내기 등), PC: 파일 다운로드
+  try{
+    const file = new File([json], fname, { type: 'application/json' });
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      navigator.share({ files: [file], title: 'AniBridge 백업' })
+        .then(()=>toast('📦 백업 파일을 안전한 곳에 보관하세요!'))
+        .catch(()=>_downloadBackup(json, fname));
+      return;
+    }
+  }catch(e){}
+  _downloadBackup(json, fname);
+}
+function _downloadBackup(json, fname){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  toast('📦 백업 파일이 저장되었습니다. 안전한 곳에 보관하세요!');
+}
+
+document.addEventListener('change', function(ev){
+  if(ev.target && ev.target.id === 'backupFileInput'){
+    const file = ev.target.files[0];
+    ev.target.value = '';
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(){
+      try{
+        const payload = JSON.parse(reader.result);
+        if(payload.app !== 'AniBridge' || !payload.data || typeof payload.data !== 'object'){
+          toast('⚠️ AniBridge 백업 파일이 아니에요');
+          return;
+        }
+        const keys = Object.keys(payload.data).filter(k => k.startsWith('anibridge_') || k.startsWith('walk_'));
+        if(!keys.length){ toast('⚠️ 백업 파일에 복원할 데이터가 없어요'); return; }
+        const when = payload.exportedAt ? payload.exportedAt.split('T')[0] : '날짜 미상';
+        const pets = payload.petCount || '?';
+        if(!confirm(`${when}에 백업된 데이터(반려동물 ${pets}마리)를 복원할까요?\n\n⚠️ 지금 기기의 기록은 백업 내용으로 대체됩니다.`)) return;
+        keys.forEach(k => localStorage.setItem(k, payload.data[k]));
+        toast('✅ 복원 완료! 앱을 새로고침합니다');
+        setTimeout(()=>location.reload(), 1200);
+      }catch(e){
+        toast('⚠️ 파일을 읽지 못했어요 — 올바른 백업 파일인지 확인해주세요');
+      }
+    };
+    reader.readAsText(file);
+  }
+});
 
 // ── 🚫 위험 음식 사전 ──
 // d=강아지, c=고양이 · 3=위험(병원) 2=주의(소량·조건부) 1=괜찮음(소량)
@@ -4424,6 +4699,7 @@ function addFeed(type){
   saveFeedLog(log);
   toast(type==='snack' ? '🦴 간식 기록 완료' : '🍚 식사 기록 완료');
   renderFeed();
+  renderRoutine();
 }
 
 function delFeed(id){
