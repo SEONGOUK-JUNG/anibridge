@@ -1054,7 +1054,7 @@ select option { background: #131929; }
     <div class="today-item">
       <div class="today-icon">🚶</div>
       <div class="today-val amber" id="hWalkPct">0%</div>
-      <div class="today-lbl">오늘 산책</div>
+      <div class="today-lbl" id="hTodayWalkLbl">오늘 산책</div>
     </div>
     <div class="today-div"></div>
     <div class="today-item">
@@ -1127,17 +1127,17 @@ select option { background: #131929; }
 
   <div class="section">
     <div class="sec-head">
-      <div class="sec-title">오늘의 산책</div>
+      <div class="sec-title" id="homeWalkSecTitle">오늘의 산책</div>
       <div class="sec-more" onclick="showPage('walk')">더보기</div>
     </div>
     <div class="walk-card">
       <div class="walk-card-head">
-        <div class="walk-card-title">🐾 산책 현황</div>
+        <div class="walk-card-title" id="homeWalkCardTitle">🐾 산책 현황</div>
         <div class="walk-badge wb-warn" id="hWalkBadge">부족해요</div>
       </div>
       <div class="prog-track"><div class="prog-fill" id="hProgFill" style="width:0%;background:linear-gradient(90deg,var(--urgent),rgba(255,77,109,0.5))"></div></div>
       <div class="prog-info"><span id="hWalkDone">0분 / 30분 권장</span><span id="hWalkDist">0.0km</span></div>
-      <button class="walk-start" onclick="showPage('walk')">🐾 산책 시작하기</button>
+      <button class="walk-start" id="homeWalkStartBtn" onclick="showPage('walk')">🐾 산책 시작하기</button>
     </div>
   </div>
 
@@ -1397,7 +1397,7 @@ select option { background: #131929; }
   <div class="walk-hero">
     <div class="walk-hero-orb walk-hero-orb1"></div>
     <div class="walk-hero-orb walk-hero-orb2"></div>
-    <div class="wh-title">🐾 오늘의 산책</div>
+    <div class="wh-title" id="whTitle">🐾 오늘의 산책</div>
     <div class="wh-sub" id="walkSub">코코에게 필요한 운동량을 채워주세요</div>
   </div>
   <div style="padding:0 16px">
@@ -1419,15 +1419,15 @@ select option { background: #131929; }
         </div>
       </div>
       <div class="walk-stats">
-        <div class="wst"><div class="wst-val" id="walkMin">0<span class="wst-unit">분</span></div><div class="wst-lbl">산책 시간</div></div>
-        <div class="wst"><div class="wst-val" id="walkDist">0.0<span class="wst-unit">km</span></div><div class="wst-lbl">이동 거리</div></div>
+        <div class="wst"><div class="wst-val" id="walkMin">0<span class="wst-unit">분</span></div><div class="wst-lbl" id="wstMinLbl">산책 시간</div></div>
+        <div class="wst" id="wstDistBlock"><div class="wst-val" id="walkDist">0.0<span class="wst-unit">km</span></div><div class="wst-lbl">이동 거리</div></div>
         <div class="wst"><div class="wst-val" id="walkCal">0<span class="wst-unit">kcal</span></div><div class="wst-lbl">소모 칼로리</div></div>
       </div>
       <button class="walk-action wa-start" id="walkBtn" onclick="toggleWalk()">🐾 산책 시작</button>
     </div>
     <div class="walk-section">
       <div class="ws-title" id="walkGuideTitle">🎯 적정 운동량</div>
-      <div class="guide-card">
+      <div class="guide-card" id="walkGuideCard">
         <div class="guide-head">📋 맞춤 운동 가이드</div>
         <div class="guide-row"><span class="guide-k">권장 산책 시간</span><span class="guide-v">하루 30분</span></div>
         <div class="guide-row"><span class="guide-k">권장 거리</span><span class="guide-v">약 1.5km</span></div>
@@ -1436,7 +1436,7 @@ select option { background: #131929; }
       </div>
     </div>
     <div class="walk-section">
-      <div class="ws-title">📊 이번 주 산책 기록</div>
+      <div class="ws-title" id="weeklyTitle">📊 이번 주 산책 기록</div>
       <div class="chart-card">
         <div class="chart-title">주간 달성률</div>
         <div class="chart-bars" id="weeklyChartBars">
@@ -1448,7 +1448,7 @@ select option { background: #131929; }
         </div>
       </div>
     </div>
-    <div class="walk-section">
+    <div class="walk-section" id="routeSection">
       <div class="ws-title">🗺️ 산책 경로</div>
       <div id="routeMapInline" style="display:none;position:relative;z-index:0;isolation:isolate;height:210px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border2);margin-bottom:10px;background:#f2f0ed">
         <div id="routeMapCanvas" style="position:absolute;inset:0"></div>
@@ -1460,7 +1460,7 @@ select option { background: #131929; }
       </div>
     </div>
     <div class="walk-section">
-      <div class="ws-title">📝 최근 산책 기록</div>
+      <div class="ws-title" id="histTitle">📝 최근 산책 기록</div>
       <div class="hist-card" id="histList"></div>
     </div>
   </div>
@@ -2459,10 +2459,57 @@ const _todayWalk = getTodayWalkSec();
 let walkSec = _todayWalk.sec;
 let walkDist = _todayWalk.dist;
 
+// ── 강아지=산책 / 고양이=놀이 모드 ──
+const PLAY_TARGET = 20;   // 고양이 하루 권장 놀이 시간(분) — 10분씩 2회
+function isCatMode(){
+  try{ const p = PETS.length ? PETS[curPetIdx] : null; return !!(p && p.emoji === '🐱'); }catch(e){ return false; }
+}
+function actTarget(){ return isCatMode() ? PLAY_TARGET : WALK_TARGET; }
+function actName(){ return isCatMode() ? '놀이' : '산책'; }
+function actIcon(){ return isCatMode() ? '🪶' : '🐾'; }
+
+// 종에 따라 산책/놀이 문구 전체 교체
+function updateSpeciesUI(){
+  const cat = isCatMode();
+  const set = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+  set('hTodayWalkLbl', cat ? '오늘 놀이' : '오늘 산책');
+  set('homeWalkSecTitle', cat ? '오늘의 놀이' : '오늘의 산책');
+  set('homeWalkCardTitle', cat ? '🪶 놀이 현황' : '🐾 산책 현황');
+  set('homeWalkStartBtn', cat ? '🪶 놀이 시작하기' : '🐾 산책 시작하기');
+  set('whTitle', cat ? '🪶 오늘의 놀이' : '🐾 오늘의 산책');
+  set('wstMinLbl', cat ? '놀이 시간' : '산책 시간');
+  set('weeklyTitle', cat ? '📊 이번 주 놀이 기록' : '📊 이번 주 산책 기록');
+  set('histTitle', cat ? '📝 최근 놀이 기록' : '📝 최근 산책 기록');
+  const btn = document.getElementById('walkBtn');
+  if(btn && !walking) btn.innerHTML = cat ? '🪶 놀이 시작' : '🐾 산책 시작';
+  const sub = document.getElementById('walkSub');
+  if(sub && !walking) sub.textContent = cat ? '낚싯대·레이저로 신나게 놀아주세요!' : `${getPetName()}에게 필요한 운동량을 채워주세요`;
+  // 고양이: 권장 가이드 문구 + GPS 경로 섹션 숨김
+  const guide = document.getElementById('walkGuideCard');
+  if(guide){
+    guide.innerHTML = cat
+      ? `<div class="guide-head">🪶 맞춤 놀이 가이드</div>
+         <div class="guide-row"><span class="guide-k">권장 놀이 시간</span><span class="guide-v">하루 ${PLAY_TARGET}분</span></div>
+         <div class="guide-row"><span class="guide-k">놀이 횟수</span><span class="guide-v">10~15분씩 2~3회</span></div>
+         <div class="guide-row"><span class="guide-k">추천 장난감</span><span class="guide-v">낚싯대 · 레이저 · 사냥놀이</span></div>
+         <div class="guide-row"><span class="guide-k">주의사항</span><span class="guide-v">놀이 후엔 간식으로 사냥 마무리</span></div>`
+      : `<div class="guide-head">📋 맞춤 운동 가이드</div>
+         <div class="guide-row"><span class="guide-k">권장 산책 시간</span><span class="guide-v">하루 30분</span></div>
+         <div class="guide-row"><span class="guide-k">권장 거리</span><span class="guide-v">약 1.5km</span></div>
+         <div class="guide-row"><span class="guide-k">산책 횟수</span><span class="guide-v">하루 2회</span></div>
+         <div class="guide-row"><span class="guide-k">주의사항</span><span class="guide-v" id="walkSeasonTip">—</span></div>`;
+    if(!cat && typeof updSeasonTip === 'function') updSeasonTip();
+  }
+  const routeSec = document.getElementById('routeSection');
+  if(routeSec) routeSec.style.display = cat ? 'none' : '';
+  const distBlock = document.getElementById('wstDistBlock');
+  if(distBlock) distBlock.style.display = cat ? 'none' : '';
+}
+
 // ── 산책 UI 전체 업데이트 ──
 function updWalk(){
   const min = Math.floor(walkSec / 60);
-  const pct = Math.min(100, Math.round(min / WALK_TARGET * 100));
+  const pct = Math.min(100, Math.round(min / actTarget() * 100));
   // GPS 거리 우선, 없으면 추정값
   const dist = walkDist > 0 ? walkDist.toFixed(2) : (walkSec/3600*4).toFixed(2);
   const cal = Math.round(walkSec / 60 * 4);
@@ -2491,7 +2538,7 @@ function updWalk(){
   const hProg = document.getElementById('hProgFill');
   const hBadge = document.getElementById('hWalkBadge');
   if(hPct){ hPct.textContent = pct + '%'; hPct.className = 'today-val ' + (pct>=100?'green':pct>=60?'amber':'red'); }
-  if(hDone) hDone.textContent = min + '분 / ' + WALK_TARGET + '분 권장';
+  if(hDone) hDone.textContent = min + '분 / ' + actTarget() + '분 권장';
   if(hDist) hDist.textContent = dist + 'km';
   if(hProg){
     hProg.style.width = pct + '%';
@@ -2532,6 +2579,11 @@ function toggleWalk(){
   const btn = document.getElementById('walkBtn');
   if(!walking){
     if(_gpsRequesting) return; // GPS 확인 중 중복 시작 방지
+    // 고양이: 실내 놀이 — GPS 없이 타이머로 바로 시작
+    if(isCatMode()){
+      startWalkTimer();
+      return;
+    }
     // GPS 권한 요청
     if(!navigator.geolocation){
       toast('⚠️ 이 기기는 GPS를 지원하지 않습니다');
@@ -2575,9 +2627,9 @@ function startWalkGPS(){
     walkSec++;
     saveTodayWalkSec(walkSec, walkDist);
     updWalk();
-    if(Math.floor(walkSec/60) >= WALK_TARGET && walking && !window._walkGoalToasted){
+    if(Math.floor(walkSec/60) >= actTarget() && walking && !window._walkGoalToasted){
       window._walkGoalToasted = true;
-      toast('🎉 오늘 목표 달성! 코코 최고! 산책을 계속하셔도 됩니다');
+      toast(`🎉 오늘 목표 달성! ${getPetName()} 최고! ${actName()}을 계속하셔도 됩니다`);
     }
   }, 1000);
 
@@ -2611,17 +2663,17 @@ function startWalkTimer(){
   if(walkTimer) clearInterval(walkTimer); // 남아있는 타이머 제거
   walking = true;
   const btn = document.getElementById('walkBtn');
-  btn.innerHTML = '⏹️ 산책 종료';
+  btn.innerHTML = `⏹️ ${actName()} 종료`;
   btn.className = 'walk-action wa-stop';
-  document.getElementById('walkSub').textContent = '산책 중이에요 🐾';
+  document.getElementById('walkSub').textContent = isCatMode() ? '신나게 노는 중이에요 🪶' : '산책 중이에요 🐾';
   walkTimer = setInterval(()=>{
     walkSec++;
     walkDist = parseFloat((walkSec / 3600 * 4).toFixed(3));
     saveTodayWalkSec(walkSec, walkDist);
     updWalk();
-    if(Math.floor(walkSec/60) >= WALK_TARGET && walking && !window._walkGoalToasted){
+    if(Math.floor(walkSec/60) >= actTarget() && walking && !window._walkGoalToasted){
       window._walkGoalToasted = true;
-      toast('🎉 오늘 목표 달성! 산책을 계속하셔도 됩니다 🐾');
+      toast(`🎉 오늘 목표 달성! ${actName()}를 계속하셔도 됩니다 ${actIcon()}`);
     }
   }, 1000);
 }
@@ -2639,13 +2691,13 @@ function stopWalk(){
   saveTodayWalkSec(walkSec, walkDist);
   saveWalkRoute();
   const btn = document.getElementById('walkBtn');
-  if(btn){ btn.innerHTML = '🐾 산책 시작'; btn.className = 'walk-action wa-start'; }
+  if(btn){ btn.innerHTML = `${actIcon()} ${actName()} 시작`; btn.className = 'walk-action wa-start'; }
   const petName = getPetName();
-  document.getElementById('walkSub').textContent = `${petName}에게 필요한 운동량을 채워주세요`;
+  document.getElementById('walkSub').textContent = isCatMode() ? '낚싯대·레이저로 신나게 놀아주세요!' : `${petName}에게 필요한 운동량을 채워주세요`;
   updWeeklyChart();
   updWalkHistory();
   renderRoutine();
-  toast('산책 기록이 저장되었습니다 ✓');
+  toast(`${actName()} 기록이 저장되었습니다 ✓`);
 }
 
 // ── 주간 차트 ──
@@ -4186,7 +4238,7 @@ function _sumWalk(dates){
       if(r && r.date === dt && r.sec > 0){
         const min = Math.floor(r.sec / 60);
         acc.min += min; acc.km += (r.dist || 0); acc.walkedDays++;
-        if(min >= WALK_TARGET) acc.goalDays++;
+        if(min >= actTarget()) acc.goalDays++;
       }
     }catch(e){}
   });
@@ -4233,7 +4285,7 @@ function buildWeeklyReport(){
   const vacc = (DB.vaccine || []).filter(v => v.date >= dates[0] && v.date <= dates[6] && !v.autoGen);
   // 총평
   let verdict;
-  if(syms.length === 0 && wk.goalDays >= 5) verdict = '산책도 열심히, 아픈 곳도 없이 — 최고의 한 주였어요! 🏆';
+  if(syms.length === 0 && wk.goalDays >= 5) verdict = `${actName()}도 열심히, 아픈 곳도 없이 — 최고의 한 주였어요! 🏆`;
   else if(syms.length === 0) verdict = '증상 없이 평온한 한 주를 보냈어요 😊';
   else verdict = `증상 기록이 ${syms.length}건 있었어요. 증상이 반복되면 케어수첩 기록을 들고 병원에서 확인해보세요.`;
   return { p, range, wk, kmDiff, weightTxt, weightDiff, feedDays, feedOkDays, syms, hosp, vacc, verdict };
@@ -4256,8 +4308,10 @@ function openWeeklyReport(){
       <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:18px;margin-top:2px">이번 주 ${nm} 리포트</div>
       <div style="font-size:12px;color:var(--text);margin-top:8px;line-height:1.7">${escHtml(r.verdict)}</div>
     </div>
-    ${row('🐾','산책', `${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분`,
-      `목표 달성 ${r.wk.goalDays}일` + (r.kmDiff !== 0 ? ` · 지난주보다 <b style="color:${r.kmDiff>0?'var(--g1)':'var(--caution)'}">${r.kmDiff>0?'+':''}${r.kmDiff}km</b>` : ''))}
+    ${isCatMode()
+      ? row('🪶','놀이', `${r.wk.walkedDays}회 · 총 ${r.wk.min}분`, `목표 달성 ${r.wk.goalDays}일`)
+      : row('🐾','산책', `${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분`,
+        `목표 달성 ${r.wk.goalDays}일` + (r.kmDiff !== 0 ? ` · 지난주보다 <b style="color:${r.kmDiff>0?'var(--g1)':'var(--caution)'}">${r.kmDiff>0?'+':''}${r.kmDiff}km</b>` : ''))}
     ${row('⚖️','체중', escHtml(r.weightTxt),
       r.weightDiff !== null ? (r.weightDiff === 0 ? '주간 변화 없음 — 안정적이에요' : `한 주 동안 <b style="color:${Math.abs(r.weightDiff)>=0.3?'var(--caution)':'var(--text)'}">${r.weightDiff>0?'+':''}${r.weightDiff}kg</b>${Math.abs(r.weightDiff)>=0.3?' — 변화가 커요, 급여량을 점검해보세요':''}`) : '이번 주 체중을 기록해보세요')}
     ${row('🍚','식단', r.feedDays ? `기록 ${r.feedDays}일 · 적정 ${r.feedOkDays}일` : '기록 없음', r.feedDays ? '' : '케어수첩 → 식단에서 기록을 시작해보세요')}
@@ -4267,7 +4321,9 @@ function openWeeklyReport(){
   `;
   // 공유용 텍스트
   _reportText = `📊 이번 주 ${r.p.name} 리포트 (${r.range})\n━━━━━━━━━━━━━━\n`
-    + `🐾 산책: ${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일${r.kmDiff!==0 ? `, 지난주 대비 ${r.kmDiff>0?'+':''}${r.kmDiff}km` : ''})\n`
+    + (isCatMode()
+      ? `🪶 놀이: ${r.wk.walkedDays}회 · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일)\n`
+      : `🐾 산책: ${r.wk.walkedDays}회 · ${r.wk.km}km · 총 ${r.wk.min}분 (목표 달성 ${r.wk.goalDays}일${r.kmDiff!==0 ? `, 지난주 대비 ${r.kmDiff>0?'+':''}${r.kmDiff}km` : ''})\n`)
     + `⚖️ 체중: ${r.weightTxt}${r.weightDiff!==null&&r.weightDiff!==0 ? ` (${r.weightDiff>0?'+':''}${r.weightDiff}kg)` : ''}\n`
     + `🍚 식단: ${r.feedDays ? `기록 ${r.feedDays}일 · 적정 ${r.feedOkDays}일` : '기록 없음'}\n`
     + `🤒 증상: ${r.syms.length ? r.syms.length+'건' : '없음 ✅'}\n`
@@ -4327,8 +4383,8 @@ function renderRoutine(){
 
   // 🐾 산책 — 산책 기록과 자동 연동
   const walkMin = Math.floor((walkSec||0)/60);
-  const walkDone = walkMin >= WALK_TARGET;
-  items.push({ icon:'🐾', label: walkDone ? '산책 완료' : `산책 ${walkMin}/${WALK_TARGET}분`, done: walkDone, act:"showPage('walk')" });
+  const walkDone = walkMin >= actTarget();
+  items.push({ icon: actIcon(), label: walkDone ? actName()+' 완료' : `${actName()} ${walkMin}/${actTarget()}분`, done: walkDone, act:"showPage('walk')" });
 
   const doneCount = items.filter(i=>i.done).length;
   const allDone = doneCount === items.length;
@@ -4966,6 +5022,8 @@ function renderPetTabs(){
 
 function renderCurPet(){
   renderVetHome();
+  updateSpeciesUI();
+  updWalk();
   const heroTitle = document.getElementById('heroTitle');
   const heroLabel = document.getElementById('heroLabel');
   const heroSub   = document.getElementById('heroSub');
