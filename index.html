@@ -1258,6 +1258,8 @@ select option { background: #131929; }
       <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:4px">🧠 AI가 실제 소리를 분석합니다</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">강아지/고양이 소리를 구분하고<br>음성 패턴 기반으로 감정을 분석해요</div>
       <div id="transAICount" style="font-size:11px;font-weight:700;color:var(--g2);margin-top:8px"></div>
+      <button onclick="document.getElementById('transAudioInput').click()" style="width:100%;margin-top:10px;padding:11px;background:rgba(0,201,255,0.1);color:var(--g2);border:1px solid rgba(0,201,255,0.3);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎵 저장된 녹음 파일로 번역하기</button>
+      <input type="file" id="transAudioInput" accept="audio/*" style="display:none">
       <div style="font-size:10px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.1);line-height:1.5">⚠️ 동물 음성 분석은 학술 연구 단계로<br>실제 의미와 다를 수 있습니다 (참고용)</div>
     </div>
 
@@ -1351,7 +1353,7 @@ select option { background: #131929; }
       <b style="color:var(--text)">증상이 있거나 평소와 다르다면, 분석 결과와 관계없이 반드시 동물병원에서 진료받으세요.</b> 분석 결과는 병원 방문 전 마음의 준비와 기록용으로만 활용해주세요.
     </div>
     <div class="upload-zone" id="uploadZone" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{document.getElementById('fileInput').click();}">
-      <input type="file" id="fileInput" accept="image/*" capture="environment">
+      <input type="file" id="fileInput" accept="image/*">
       <div id="upPh">
         <div class="uz-icon">📷</div>
         <div class="uz-title">반려동물 사진 올리기</div>
@@ -1511,7 +1513,7 @@ select option { background: #131929; }
   </div>
   <div id="cp-feed" class="care-pg">
     <div id="feedWrap"></div>
-    <input type="file" id="feedPhotoInput" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="feedPhotoInput" accept="image/*" style="display:none">
   </div>
   <div id="cp-weight" class="care-pg">
     <!-- 체중 입력 -->
@@ -1874,6 +1876,19 @@ select option { background: #131929; }
     <div class="fg"><label class="fl">🍚 사료 · 식이</label><input type="text" id="pe-food" placeholder="예) 오리젠 스몰브리드, 하루 2회"></div>
     <div class="fg"><label class="fl">🏥 기저질환 · 수술 이력</label><input type="text" id="pe-disease" placeholder="예) 슬개골 탈구 1기, 중성화 수술(2024)"></div>
     <div class="fg"><label class="fl">특이사항</label><textarea id="pe-note" placeholder="예) 낯가림 심함, 목 만지는 것 싫어함"></textarea></div>
+    <hr class="divider">
+    <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:12px;letter-spacing:.04em">📋 병원 문진 정보 <span style="font-weight:500;color:var(--text3)">— 진료실에서 항상 묻는 것들</span></div>
+    <div class="fg"><label class="fl">🏠 주거 형태</label><select id="pe-housing"><option value="">선택 안 함</option><option>실내</option><option>실내외</option><option>실외</option></select></div>
+    <div class="fg"><label class="fl">🐕🐈 동거견 · 동거묘</label><input type="text" id="pe-mates" placeholder="예) 없음 / 고양이 1마리와 함께"></div>
+    <div class="fg"><label class="fl">💧 1일 음수량 (ml)</label><input type="text" id="pe-water" placeholder="예) 300ml / 잘 모름"></div>
+    <div class="fg"><label class="fl">🚽 하루 배뇨 횟수</label><input type="text" id="pe-pee" placeholder="예) 3-4회"></div>
+    <div class="fg"><label class="fl">💩 하루 배변 횟수</label><input type="text" id="pe-poo" placeholder="예) 1-2회"></div>
+    <div class="fg"><label class="fl">😊 현재 컨디션</label><input type="text" id="pe-cond" placeholder="예) 식욕·기력이 평소와 비슷함"></div>
+    <div class="fg"><label class="fl">💉 기초 예방 접종</label><select id="pe-vaxb"><option value="">선택 안 함</option><option>완료</option><option>진행 중</option><option>미접종</option><option>모름</option></select></div>
+    <div class="fg"><label class="fl">💉 추가 접종</label><select id="pe-vaxa"><option value="">선택 안 함</option><option>접종</option><option>미접종</option><option>모름</option></select></div>
+    <div class="fg"><label class="fl">🦟 심장사상충 예방</label><select id="pe-hw"><option value="">선택 안 함</option><option>매월</option><option>간헐적(계절마다)</option><option>안 함</option><option>모름</option></select></div>
+    <div class="fg"><label class="fl">🕷️ 외부기생충 예방</label><select id="pe-ecto"><option value="">선택 안 함</option><option>매월</option><option>간헐적(계절마다)</option><option>안 함</option><option>모름</option></select></div>
+    <div class="fg"><label class="fl">🔬 3개월 내 검사자료</label><select id="pe-labs"><option value="">선택 안 함</option><option>예</option><option>아니오</option></select></div>
     <button class="save-btn" onclick="savePetProfile()">저장하기</button>
   </div>
 </div></div>
@@ -4894,12 +4909,26 @@ function buildEmergencyData(){
     .map(s=>`${s.symptoms.map(x=>x.replace(/[^\w가-힣\s]/g,'').trim()).join('·')||'증상'} (${s.date})${s.detail?' — '+s.detail:''}`);
   // 최근 병원 기록 1건
   const hosp = [...DB.hospital].sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
-  return { p, sig, vac, sym, hosp };
+  // 병원 문진 정보 (프로필에서 입력)
+  const life = [
+    p.housing ? '주거: '+p.housing : '',
+    p.mates ? '동거견/묘: '+p.mates : '',
+    p.waterMl ? '1일 음수량: '+p.waterMl : '',
+    p.pee ? '배뇨: '+p.pee : '',
+    p.poo ? '배변: '+p.poo : ''
+  ].filter(Boolean);
+  const prev = [
+    p.vaxB ? '기초 접종: '+p.vaxB : '',
+    p.vaxA ? '추가 접종: '+p.vaxA : '',
+    p.hw ? '심장사상충: '+p.hw : '',
+    p.ecto ? '외부기생충: '+p.ecto : ''
+  ].filter(Boolean);
+  return { p, sig, vac, sym, hosp, life, prev };
 }
 
 function openEmergencyCard(){
   if(!PETS.length || !PETS[curPetIdx]?.name){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
-  const { p, sig, vac, sym, hosp } = buildEmergencyData();
+  const { p, sig, vac, sym, hosp, life, prev } = buildEmergencyData();
   const e = escHtml;
   let html = `<div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:20px;margin-bottom:4px">🆘 ${e(p.name||'')}</div>`;
   html += `<div style="font-size:13px;color:var(--text2);margin-bottom:14px">${e(sig)}</div>`;
@@ -4909,6 +4938,10 @@ function openEmergencyCard(){
   html += row('💉','접종 이력', vac.length?vac.map(v=>e(v)).join('<br>'):'<span style="opacity:.5">기록 없음</span>');
   html += row('🍚','사료 · 식이', p.food?e(p.food):'<span style="opacity:.5">등록된 정보 없음</span>');
   html += row('🏥','기저질환 · 수술 이력', p.disease?e(p.disease):'<span style="opacity:.5">없음</span>');
+  if(life.length) html += row('🏠','생활 정보', life.map(x=>e(x)).join('<br>'));
+  if(p.cond) html += row('😊','현재 컨디션', e(p.cond));
+  if(prev.length) html += row('🛡️','예방 현황', prev.map(x=>e(x)).join('<br>'));
+  if(p.labs) html += row('🔬','3개월 내 검사자료', e(p.labs));
   if(hosp) html += row('📋','최근 진료', `${e(hosp.date||'')} ${e(hosp.name||'')}${hosp.diag?' — '+e(hosp.diag):''}`);
   html += row('🤒','최근 30일 증상', sym.length?sym.map(s=>e(s)).join('<br>'):'<span style="opacity:.5">없음</span>', sym.length>0);
   if(p.note) html += row('📝','특이사항', e(p.note));
@@ -4917,13 +4950,17 @@ function openEmergencyCard(){
 }
 
 function getEmergencyText(){
-  const { p, sig, vac, sym, hosp } = buildEmergencyData();
+  const { p, sig, vac, sym, hosp, life, prev } = buildEmergencyData();
   let t = `🆘 ${p.name||''} 응급 카드\n━━━━━━━━━━━━━━\n${sig}\n\n`;
   t += `⚠️ 알레르기·약물 부작용: ${p.allergy||'등록된 정보 없음'}\n`;
   t += `💊 현재 복용 약물: ${p.meds||'없음'}\n`;
   t += `💉 접종 이력:\n${vac.length?vac.map(v=>'  · '+v).join('\n'):'  · 기록 없음'}\n`;
   t += `🍚 사료·식이: ${p.food||'등록된 정보 없음'}\n`;
   t += `🏥 기저질환·수술 이력: ${p.disease||'없음'}\n`;
+  if(life.length) t += `🏠 생활 정보:\n${life.map(x=>'  · '+x).join('\n')}\n`;
+  if(p.cond) t += `😊 현재 컨디션: ${p.cond}\n`;
+  if(prev.length) t += `🛡️ 예방 현황:\n${prev.map(x=>'  · '+x).join('\n')}\n`;
+  if(p.labs) t += `🔬 3개월 내 검사자료: ${p.labs}\n`;
   if(hosp) t += `📋 최근 진료: ${hosp.date||''} ${hosp.name||''}${hosp.diag?' — '+hosp.diag:''}\n`;
   t += `🤒 최근 30일 증상:\n${sym.length?sym.map(s=>'  · '+s).join('\n'):'  · 없음'}\n`;
   if(p.note) t += `📝 특이사항: ${p.note}\n`;
@@ -5095,6 +5132,10 @@ function renderCurPet(){
   const peFd = document.getElementById('pe-food'); if(peFd) peFd.value = p.food||'';
   const peDs = document.getElementById('pe-disease'); if(peDs) peDs.value = p.disease||'';
   const peNt = document.getElementById('pe-note'); if(peNt) peNt.value = p.note||'';
+  // 병원 문진 정보
+  [['pe-housing','housing'],['pe-mates','mates'],['pe-water','waterMl'],['pe-pee','pee'],['pe-poo','poo'],['pe-cond','cond'],['pe-vaxb','vaxB'],['pe-vaxa','vaxA'],['pe-hw','hw'],['pe-ecto','ecto'],['pe-labs','labs']].forEach(([id,key])=>{
+    const el = document.getElementById(id); if(el) el.value = p[key]||'';
+  });
 }
 
 function switchPet(idx){
@@ -5148,6 +5189,10 @@ function savePetProfile(){
   p.food = document.getElementById('pe-food').value||'';
   p.disease = document.getElementById('pe-disease').value||'';
   p.note = document.getElementById('pe-note').value||'';
+  // 병원 문진 정보
+  [['pe-housing','housing'],['pe-mates','mates'],['pe-water','waterMl'],['pe-pee','pee'],['pe-poo','poo'],['pe-cond','cond'],['pe-vaxb','vaxB'],['pe-vaxa','vaxA'],['pe-hw','hw'],['pe-ecto','ecto'],['pe-labs','labs']].forEach(([id,key])=>{
+    const el = document.getElementById(id); if(el) p[key] = el.value||'';
+  });
   // 이모지/사진
   const emojiEl = document.getElementById('prof-av-emoji');
   if(emojiEl) p.emoji = emojiEl.textContent;
@@ -5608,6 +5653,41 @@ JSON으로만 응답하세요 (다른 설명 없이):
     toast('AI 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
   }
 }
+
+// ── 🎵 저장된 녹음 파일로 AI 번역 ──
+document.addEventListener('change', async function(ev){
+  if(ev.target && ev.target.id === 'transAudioInput'){
+    const file = ev.target.files[0];
+    ev.target.value = '';
+    if(!file) return;
+    if(transMode !== 'ai') setTransMode('ai');
+    if(getTransAIRemaining() <= 0){ showUpgradeModal('trans'); return; }
+    try{
+      const buf = await file.arrayBuffer();
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const audio = await ctx.decodeAudioData(buf);
+      // 녹음 분석과 동일한 지표 추출: 길이 + 최대 음량
+      const ch = audio.getChannelData(0);
+      let peak = 0;
+      const step = Math.max(1, Math.floor(ch.length / 20000));
+      for(let i = 0; i < ch.length; i += step){ const a = Math.abs(ch[i]); if(a > peak) peak = a; }
+      ctx.close();
+      transSec = Math.max(1, Math.min(60, Math.round(audio.duration)));
+      transMaxVolume = Math.min(255, Math.round(peak * 255));
+      if(transMaxVolume < SILENCE_THRESHOLD){
+        toast('⚠️ 파일에서 소리를 감지하지 못했어요 — 다른 파일을 선택해주세요');
+        return;
+      }
+      const load = document.getElementById('transLoading');
+      if(load) load.style.display = 'block';
+      const resBox = document.getElementById('transResult');
+      if(resBox) resBox.style.display = 'none';
+      doTransAI();
+    }catch(e){
+      toast('⚠️ 이 파일은 읽을 수 없어요 — 폰 녹음기의 m4a·mp3·wav 파일을 선택해주세요');
+    }
+  }
+});
 
 function showTransResult(result){
   document.getElementById('transLoading').style.display = 'none';
