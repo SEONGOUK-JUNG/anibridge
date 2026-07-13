@@ -1267,6 +1267,7 @@ select option { background: #131929; }
     <div id="transFreeInfo" style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
       <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🎲 재미로 즐기는 번역</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">행동 패턴 기반의 가벼운 추측 번역입니다<br>정확한 분석은 AI 분석 번역을 이용해 주세요</div>
+      <button onclick="document.getElementById('transAudioInput').click()" style="width:100%;margin-top:10px;padding:11px;background:rgba(74,255,163,0.1);color:var(--g1);border:1px solid rgba(74,255,163,0.3);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎵 저장된 녹음 파일로 번역하기</button>
     </div>
 
     <!-- 녹음 버튼 -->
@@ -5649,14 +5650,13 @@ JSON으로만 응답하세요 (다른 설명 없이):
   }
 }
 
-// ── 🎵 저장된 녹음 파일로 AI 번역 ──
+// ── 🎵 저장된 녹음 파일로 번역 (재미 번역 + AI 번역 공용) ──
 document.addEventListener('change', async function(ev){
   if(ev.target && ev.target.id === 'transAudioInput'){
     const file = ev.target.files[0];
     ev.target.value = '';
     if(!file) return;
-    if(transMode !== 'ai') setTransMode('ai');
-    if(getTransAIRemaining() <= 0){ showUpgradeModal('trans'); return; }
+    if(transMode === 'ai' && getTransAIRemaining() <= 0){ showUpgradeModal('trans'); return; }
     try{
       const buf = await file.arrayBuffer();
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -5677,7 +5677,16 @@ document.addEventListener('change', async function(ev){
       if(load) load.style.display = 'block';
       const resBox = document.getElementById('transResult');
       if(resBox) resBox.style.display = 'none';
-      doTransAI();
+      document.getElementById('transTimer').textContent = `${transSec}초 파일 분석! 번역 중...`;
+      if(transMode === 'ai'){
+        doTransAI();
+      }else{
+        // 재미 번역 — 파일도 랜덤 문구로
+        setTimeout(()=>{
+          document.getElementById('transLoading').style.display = 'none';
+          showTransResult(getRandomTransResult());
+        }, 1200 + Math.random()*800);
+      }
     }catch(e){
       toast('⚠️ 이 파일은 읽을 수 없어요 — 폰 녹음기의 m4a·mp3·wav 파일을 선택해주세요');
     }
