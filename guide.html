@@ -5,62 +5,157 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AniBridge 사용설명서</title>
 <meta name="description" content="AniBridge 반려동물 건강수첩 사용설명서 — 응급 카드, 케어수첩, 식단 관리, 산책 기록 사용법">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; color: #333; line-height: 1.8; }
-  h1 { font-size: 28px; color: #0A0E1A; margin-bottom: 8px; }
-  .sub { color: #666; font-size: 14px; margin-bottom: 8px; }
-  .free-badge { display: inline-block; background: linear-gradient(135deg, #4AFFA3, #00C9FF); color: #0A0E1A; font-size: 13px; font-weight: 700; padding: 6px 16px; border-radius: 999px; margin-bottom: 28px; }
-  h2 { font-size: 19px; color: #0A0E1A; margin-top: 40px; margin-bottom: 12px; border-left: 4px solid #4AFFA3; padding-left: 12px; }
-  h3 { font-size: 15px; color: #0A0E1A; margin-top: 22px; margin-bottom: 8px; }
-  p, li { font-size: 14px; color: #444; margin-bottom: 10px; }
-  ol, ul { padding-left: 22px; }
-  li { margin-bottom: 6px; }
-  .card { background: #f5f7fa; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
-  .tip { background: rgba(74,255,163,0.12); border-left: 4px solid #00C08B; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
-  .warn { background: #fff3cd; border-left: 4px solid #ffa500; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
-  .danger { background: #ffe9ec; border-left: 4px solid #E53050; padding: 12px 16px; margin: 14px 0; font-size: 13px; border-radius: 8px; }
-  .brand { background: linear-gradient(135deg, #00A060, #0077BB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
-  th, td { border: 1px solid #e0e0e0; padding: 9px 12px; text-align: left; }
-  th { background: #f5f7fa; font-weight: 700; }
-  .toc { background: #f5f7fa; border-radius: 12px; padding: 18px 22px; margin-bottom: 10px; }
-  .toc a { color: #0077BB; text-decoration: none; font-size: 14px; }
-  .toc li { margin-bottom: 4px; }
-  .kbd { background: #eef1f5; border: 1px solid #d5dae2; border-radius: 6px; padding: 1px 8px; font-size: 12px; font-weight: 700; color: #333; white-space: nowrap; }
-  .date { font-size: 12px; color: #999; margin-top: 48px; text-align: center; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Noto Sans KR','Pretendard',sans-serif; background:#F2F6FB; color:#2A3242; line-height:1.8; -webkit-font-smoothing:antialiased; }
+
+  /* ── 히어로 ── */
+  .hero { position:relative; background:#0A0E1A; overflow:hidden; text-align:center; padding:56px 24px 96px; }
+  .hero::before { content:''; position:absolute; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(74,255,163,0.16),transparent 65%); top:-160px; left:-120px; }
+  .hero::after { content:''; position:absolute; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle,rgba(0,201,255,0.14),transparent 65%); bottom:-120px; right:-100px; }
+  .hero > * { position:relative; z-index:1; }
+  .hero svg.logo { width:96px; height:96px; filter:drop-shadow(0 10px 30px rgba(74,255,163,0.25)); animation:float 3.2s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .wordmark { font-family:'Outfit',sans-serif; font-weight:900; font-size:clamp(34px,9vw,46px); letter-spacing:.04em; color:#FFF; margin-top:14px; }
+  .wordmark .grad { background:linear-gradient(90deg,#4AFFA3,#00C9FF); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero-title { color:#E8EDF5; font-size:17px; font-weight:700; margin-top:10px; }
+  .hero-sub { color:#8B95B0; font-size:12.5px; letter-spacing:.24em; margin-top:6px; }
+  .free-badge { display:inline-block; background:linear-gradient(135deg,#4AFFA3,#00C9FF); color:#0A0E1A; font-size:13px; font-weight:900; padding:9px 22px; border-radius:999px; margin-top:20px; box-shadow:0 8px 24px rgba(74,255,163,0.35); }
+  .hero-paws { display:flex; justify-content:center; gap:10px; margin-top:22px; }
+  .hero-paws span { font-size:15px; opacity:.5; animation:pawBlink 1.6s ease infinite; }
+  .hero-paws span:nth-child(2){ animation-delay:.25s } .hero-paws span:nth-child(3){ animation-delay:.5s }
+  @keyframes pawBlink { 0%,100%{opacity:.25; transform:translateY(0)} 50%{opacity:.9; transform:translateY(-4px)} }
+  .wave { display:block; width:100%; margin-top:-1px; background:#0A0E1A; }
+  .wave svg { display:block; width:100%; height:44px; }
+
+  /* ── 본문 ── */
+  .wrap { max-width:780px; margin:0 auto; padding:8px 18px 40px; }
+
+  /* 목차 */
+  .toc-label { text-align:center; font-size:12px; font-weight:900; letter-spacing:.28em; color:#8B95B0; margin:26px 0 14px; }
+  .toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .toc-chip { display:flex; align-items:center; gap:10px; background:#FFF; border:1.5px solid #E3EAF4; border-radius:16px; padding:13px 14px; text-decoration:none; color:#2A3242; font-size:13px; font-weight:700; line-height:1.35; transition:all .15s; box-shadow:0 2px 8px rgba(23,42,79,0.04); }
+  .toc-chip:active, .toc-chip:hover { border-color:#4AFFA3; box-shadow:0 6px 18px rgba(74,255,163,0.18); transform:translateY(-1px); }
+  .toc-chip .ico { flex-shrink:0; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; }
+
+  /* 섹션 */
+  .panel { background:#FFF; border:1.5px solid #E3EAF4; border-radius:22px; padding:24px 22px; margin-top:22px; box-shadow:0 4px 16px rgba(23,42,79,0.05); }
+  h2 { display:flex; align-items:center; gap:12px; font-size:18px; color:#0A0E1A; font-weight:900; margin-bottom:16px; scroll-margin-top:16px; }
+  h2 .num { flex-shrink:0; width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg,#4AFFA3,#00C9FF); color:#0A0E1A; font-family:'Outfit',sans-serif; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(74,255,163,0.3); }
+  h3 { font-size:14.5px; color:#0A0E1A; font-weight:900; margin:20px 0 8px; padding-left:10px; border-left:3.5px solid #4AFFA3; }
+  p, li { font-size:14px; color:#3D485C; margin-bottom:9px; }
+  b { color:#1A2233; }
+  ol, ul { padding-left:20px; }
+  li { margin-bottom:6px; }
+  li::marker { color:#00A56B; font-weight:900; }
+  .kbd { background:#EEF3FA; border:1px solid #D8E1EE; border-radius:7px; padding:1px 9px; font-size:12px; font-weight:800; color:#33415C; white-space:nowrap; }
+
+  /* 카드/표 */
+  .card { background:#F5F8FC; border:1px solid #E7EDF6; border-radius:14px; padding:16px 18px; margin:12px 0; font-size:13.5px; }
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:14px 0; font-size:13px; border:1.5px solid #E3EAF4; border-radius:14px; overflow:hidden; }
+  th, td { padding:10px 12px; text-align:left; border-bottom:1px solid #EBF0F7; }
+  tr:last-child td { border-bottom:none; }
+  th { background:linear-gradient(135deg,rgba(74,255,163,0.16),rgba(0,201,255,0.12)); font-weight:900; color:#0A0E1A; font-size:12.5px; }
+  tr:nth-child(even) td { background:#FAFCFE; }
+
+  /* 캐릭터 말풍선 */
+  .bubble { display:flex; gap:12px; align-items:flex-start; margin:16px 0; }
+  .bubble .avatar { flex-shrink:0; width:46px; height:46px; border-radius:50%; background:#0A0E1A; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(10,14,26,0.25); }
+  .bubble .avatar svg { width:32px; height:32px; }
+  .bubble .say { position:relative; border-radius:16px; padding:12px 15px; font-size:13px; line-height:1.7; flex:1; }
+  .bubble .say::before { content:''; position:absolute; left:-7px; top:16px; width:14px; height:14px; transform:rotate(45deg); border-radius:3px; }
+  .bubble.tip .say { background:#E7FBF1; border:1.5px solid #B8F0D4; color:#0E5C3B; }
+  .bubble.tip .say::before { background:#E7FBF1; border-left:1.5px solid #B8F0D4; border-bottom:1.5px solid #B8F0D4; }
+  .bubble.warn .say { background:#FFF6E0; border:1.5px solid #FFE1A0; color:#7A5200; }
+  .bubble.warn .say::before { background:#FFF6E0; border-left:1.5px solid #FFE1A0; border-bottom:1.5px solid #FFE1A0; }
+  .bubble.danger .say { background:#FFE9EE; border:1.5px solid #FFC2CF; color:#8E1230; }
+  .bubble.danger .say::before { background:#FFE9EE; border-left:1.5px solid #FFC2CF; border-bottom:1.5px solid #FFC2CF; }
+  .bubble .who { display:block; font-size:10.5px; font-weight:900; letter-spacing:.06em; margin-bottom:3px; opacity:.65; }
+
+  /* FAQ */
+  .faq { background:#FFF; border:1.5px solid #E3EAF4; border-radius:16px; padding:15px 17px; margin:10px 0; font-size:13.5px; box-shadow:0 2px 8px rgba(23,42,79,0.04); }
+  .faq .q { display:flex; gap:9px; align-items:flex-start; font-weight:900; color:#0A0E1A; margin-bottom:6px; }
+  .faq .q .qb { flex-shrink:0; width:22px; height:22px; border-radius:8px; background:linear-gradient(135deg,#4AFFA3,#00C9FF); color:#0A0E1A; font-family:'Outfit',sans-serif; font-weight:900; font-size:12px; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .faq .a { color:#3D485C; }
+
+  /* 푸터 */
+  .footer { background:#0A0E1A; text-align:center; padding:44px 24px 52px; margin-top:44px; position:relative; overflow:hidden; }
+  .footer::before { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle,rgba(74,255,163,0.1),transparent 65%); top:-100px; right:-80px; }
+  .footer svg { width:56px; height:56px; opacity:.95; position:relative; }
+  .footer .f1 { color:#E8EDF5; font-size:13px; font-weight:700; margin-top:12px; position:relative; }
+  .footer .f2 { color:#8B95B0; font-size:12px; font-style:italic; margin-top:5px; position:relative; }
+  .wave-bot svg { display:block; width:100%; height:44px; margin-bottom:-1px; }
+
+  @media (max-width:420px){ .toc-grid{ gap:8px } .toc-chip{ padding:11px 11px; font-size:12px } .panel{ padding:20px 16px } }
 </style>
 </head>
 <body>
 
-<h1>🐾 <span class="brand">AniBridge</span> 사용설명서</h1>
-<div class="sub">반려동물 건강수첩 · AI 펫케어</div>
-<div class="free-badge">🎉 모든 기능이 무료입니다</div>
+<!-- ═══ 히어로 ═══ -->
+<div class="hero">
+  <svg class="logo" viewBox="0 0 120 120" fill="none">
+    <defs>
+      <linearGradient id="gA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3FE8B0"/><stop offset="100%" stop-color="#2B5FC7"/></linearGradient>
+      <linearGradient id="gB" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5FB2F7"/><stop offset="100%" stop-color="#2E6BD6"/></linearGradient>
+    </defs>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M60 26 Q49.5 26 45.5 36 L18.5 86 Q13 100 26 100 L94 100 Q107 100 101.5 86 L74.5 36 Q70.5 26 60 26 Z M60 49 Q57 49 55.8 52 L42.2 81 Q38 91 34 100 L86 100 Q82 91 77.8 81 L64.2 52 Q63 49 60 49 Z" fill="url(#gA)"/>
+    <g fill="#FFC15E">
+      <path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/>
+      <circle cx="58" cy="49" r="6.2"/>
+      <ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/>
+      <ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/>
+      <path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/>
+    </g>
+    <g fill="#E8EDF5">
+      <path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/>
+      <circle cx="73" cy="51" r="5.2"/>
+      <path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/>
+      <path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/>
+      <path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/>
+    </g>
+    <path d="M10 87 Q60 60 110 87" fill="none" stroke="url(#gB)" stroke-width="10" stroke-linecap="round"/>
+  </svg>
+  <div class="wordmark">ANI<span class="grad">BRIDGE</span></div>
+  <div class="hero-title">사용설명서</div>
+  <div class="hero-sub">반려동물 건강수첩 · AI 펫케어</div>
+  <div><span class="free-badge">🎉 모든 기능이 무료입니다</span></div>
+  <div class="hero-paws"><span>🐾</span><span>🐾</span><span>🐾</span></div>
+</div>
+<div class="wave"><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,44 L0,20 Q360,0 720,20 T1440,20 L1440,44 Z" fill="#F2F6FB"/></svg></div>
 
-<div class="toc">
-  <b>목차</b>
-  <ol>
-    <li><a href="#start">시작하기 — 우리 아이 등록</a></li>
-    <li><a href="#home">홈 화면 한눈에 보기</a></li>
-    <li><a href="#emergency">🆘 응급 카드 — 이 앱의 핵심</a></li>
-    <li><a href="#health">건강 지키기 도구들</a></li>
-    <li><a href="#care">📋 케어수첩 — 기록하기</a></li>
-    <li><a href="#feed">🍚 식단·급여량 관리</a></li>
-    <li><a href="#walk">🐾 산책(강아지) · 🧶 놀이(고양이)</a></li>
-    <li><a href="#ai">AI 도우미 (분석·상담·번역)</a></li>
-    <li><a href="#report">📊 주간 리포트</a></li>
-    <li><a href="#backup">📦 데이터 백업 — 폰 바꿀 때 필수!</a></li>
-    <li><a href="#faq">자주 묻는 질문</a></li>
-  </ol>
+<div class="wrap">
+
+<!-- ═══ 목차 ═══ -->
+<div class="toc-label">📖 목 차</div>
+<div class="toc-grid">
+  <a class="toc-chip" href="#start"><span class="ico" style="background:#E7FBF1">🐶</span>시작하기 — 우리 아이 등록</a>
+  <a class="toc-chip" href="#home"><span class="ico" style="background:#E4F5FF">🏠</span>홈 화면 한눈에 보기</a>
+  <a class="toc-chip" href="#emergency"><span class="ico" style="background:#FFE9EE">🆘</span>응급 카드 — 이 앱의 핵심</a>
+  <a class="toc-chip" href="#health"><span class="ico" style="background:#FFF6E0">🩺</span>건강 지키기 도구들</a>
+  <a class="toc-chip" href="#care"><span class="ico" style="background:#F0EDFF">📋</span>케어수첩 — 기록하기</a>
+  <a class="toc-chip" href="#feed"><span class="ico" style="background:#FFF0E4">🍚</span>식단·급여량 관리</a>
+  <a class="toc-chip" href="#walk"><span class="ico" style="background:#E7FBF1">🐾</span>산책(강아지) · 놀이(고양이)</a>
+  <a class="toc-chip" href="#ai"><span class="ico" style="background:#E4F5FF">🤖</span>AI 도우미 (분석·상담·번역)</a>
+  <a class="toc-chip" href="#report"><span class="ico" style="background:#F0EDFF">📊</span>주간 리포트</a>
+  <a class="toc-chip" href="#backup"><span class="ico" style="background:#FFF6E0">📦</span>데이터 백업 — 폰 바꿀 때 필수</a>
+  <a class="toc-chip" href="#faq"><span class="ico" style="background:#FFE9EE">❓</span>자주 묻는 질문</a>
 </div>
 
-<h2 id="start">1. 시작하기 — 우리 아이 등록</h2>
+<!-- ═══ 1. 시작하기 ═══ -->
+<div class="panel">
+<h2 id="start"><span class="num">1</span>🐶 시작하기 — 우리 아이 등록</h2>
 <ol>
   <li>하단 메뉴에서 <span class="kbd">MY</span> 탭을 누릅니다</li>
   <li><b>＋ 추가</b>를 눌러 반려동물을 등록합니다 (최대 5마리)</li>
   <li><b>✏️ 편집</b>에서 이름·품종·생년월일·체중·중성화 여부를 입력하세요</li>
 </ol>
-<div class="tip">
-  💡 <b>📋 병원 문진 정보를 꼭 채워주세요!</b> 홈 → <b>응급 카드</b> → <b>✏️ 문진 정보 작성</b>에서 식이·병력·복용 약물·접종·기생충 예방 등을 입력할 수 있어요. 응급 상황에서 수의사 선생님이 가장 먼저 확인하는 정보입니다.
+<div class="bubble tip">
+  <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
+  <div class="say"><span class="who">아니의 꿀팁</span><b>📋 병원 문진 정보를 꼭 채워주세요!</b> 홈 → <b>응급 카드</b> → <b>✏️ 문진 정보 작성</b>에서 식이·병력·복용 약물·접종·기생충 예방 등을 입력할 수 있어요. 응급 상황에서 수의사 선생님이 가장 먼저 확인하는 정보예요.</div>
 </div>
 <p>생년월일을 입력하면 홈에 <b>"코코가 세상에 온 지 1,234일"</b> 카드가 생기고, 생일에는 자동으로 축하 카드가 나타납니다. 🎂</p>
 
@@ -70,26 +165,35 @@
   <li><b>내 반려동물</b>에서 아이를 탭하면 전환 완료 — 홈·케어수첩·식단·응급 카드가 모두 그 아이의 것으로 바뀝니다</li>
   <li>마지막으로 보던 아이를 앱이 기억하므로, 다시 열어도 그 아이가 그대로 보여요</li>
 </ol>
-<div class="tip">💡 강아지는 <b>산책</b>, 고양이는 <b>놀이 시간</b>으로 화면이 자동으로 바뀝니다. 아이를 전환하면 목표와 기록 방식도 함께 전환돼요.</div>
+<div class="bubble tip">
+  <div class="avatar"><svg viewBox="63 38 30 38"><g fill="#E8EDF5"><path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/></g></svg></div>
+  <div class="say"><span class="who">브리의 한마디</span>강아지는 <b>산책</b>, 고양이는 <b>놀이 시간</b>으로 화면이 자동으로 바뀌어요. 아이를 전환하면 목표와 기록 방식도 함께 전환됩니다.</div>
+</div>
 
 <h3>🌙 화면 밝게/어둡게 바꾸기</h3>
 <p>화면 <b>오른쪽 위의 달 모양(🌙) 버튼</b>을 누르면 밝은 화면 ↔ 어두운 화면이 전환됩니다. 밝은 곳에서 잘 안 보이거나 눈이 편한 쪽으로 언제든 바꿔보세요. 선택은 저장되어 다음에도 유지됩니다.</p>
+</div>
 
-<h2 id="home">2. 홈 화면 한눈에 보기</h2>
+<!-- ═══ 2. 홈 화면 ═══ -->
+<div class="panel">
+<h2 id="home"><span class="num">2</span>🏠 홈 화면 한눈에 보기</h2>
 <table>
   <tr><th>영역</th><th>내용</th></tr>
   <tr><td>상단 🌙 버튼</td><td>밝은 화면 ↔ 어두운 화면 전환</td></tr>
   <tr><td>상단 반려동물 얼굴</td><td>탭하면 MY로 이동 — 여러 마리면 여기서 아이 전환</td></tr>
   <tr><td>오늘 요약</td><td>오늘 산책(고양이는 놀이) 달성률 · 건강 상태 · 다음 접종 D-day</td></tr>
   <tr><td>💚 함께한 시간</td><td>태어난 지 며칠째 + 생일 카운트다운</td></tr>
-  <tr><td>☑️ 오늘 챙기기</td><td>사료·약·산책 체크리스트 (자동 생성 — 아래 6번 참고)</td></tr>
+  <tr><td>☑️ 오늘 챙기기</td><td>사료·약·산책 체크리스트 (자동 생성 — 6번 참고)</td></tr>
   <tr><td>🩺 오늘의 케어 팁</td><td>우리 아이의 종·나이·계절에 맞는 건강 팁이 매일 자정 교체</td></tr>
   <tr><td>우리 아이 건강 지키기</td><td>응급 카드 · 건강 시그널 · 검진 체크리스트 · 내 주변 병원 · 먹어도 되나요? · 오늘 식단</td></tr>
   <tr><td>📊 이번 주 리포트</td><td>한 주 건강 요약 + 카톡 공유</td></tr>
   <tr><td>AI 도우미 / 재미</td><td>AI 건강 분석 · AI 상담 · 마음 번역기</td></tr>
 </table>
+</div>
 
-<h2 id="emergency">3. 🆘 응급 카드 — 이 앱의 핵심</h2>
+<!-- ═══ 3. 응급 카드 ═══ -->
+<div class="panel">
+<h2 id="emergency"><span class="num">3</span>🆘 응급 카드 — 이 앱의 핵심</h2>
 <p>한밤중에 아이가 아파서 처음 가는 병원에 갔을 때, 수의사 선생님은 이런 걸 묻습니다: <i>"몇 살이에요? 접종은요? 먹는 약 있어요? 알레르기는요? 최근에 어땠어요?"</i> — 당황한 상태에선 기억이 잘 안 나죠.</p>
 <div class="card">
   <b>응급 카드는 병원 문진표와 같은 순서로 정리되어 있습니다:</b><br>
@@ -102,9 +206,15 @@
   <li>병원에서 <b>화면을 그대로 보여주거나</b>, 카카오톡 공유 / 텍스트 복사로 전달</li>
   <li>급할 땐 카드 안의 <b>🌙 지금 문 연 24시 병원 찾기</b> 버튼으로 바로 병원 검색</li>
 </ol>
-<div class="tip">💡 접종 기록·최근 진료·최근 증상은 케어수첩 기록으로 <b>자동 작성</b>됩니다. 평소에 기록만 하면 준비 끝!</div>
+<div class="bubble tip">
+  <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
+  <div class="say"><span class="who">아니의 꿀팁</span>접종 기록·최근 진료·최근 증상은 케어수첩 기록으로 <b>자동 작성</b>돼요. 평소에 기록만 하면 준비 끝!</div>
+</div>
+</div>
 
-<h2 id="health">4. 건강 지키기 도구들</h2>
+<!-- ═══ 4. 건강 도구 ═══ -->
+<div class="panel">
+<h2 id="health"><span class="num">4</span>🩺 건강 지키기 도구들</h2>
 <h3>🚨 건강 시그널</h3>
 <p>증상이 얼마나 급한지 3단계로 알려줍니다: <b>🔴 지금 즉시 병원</b>(호흡곤란·경련·소변 못 봄 등) / <b>🟡 24시간 내 진료</b> / <b>🟢 기록하며 관찰</b>. 🔴 항목에 해당되면 버튼 한 번으로 24시 병원 검색으로 넘어갑니다.</p>
 <h3>🩺 검진 체크리스트</h3>
@@ -113,22 +223,34 @@
 <p>펫플레이스 탭에서 <span class="kbd">📍 현재 위치로 찾기</span>를 누르면 가까운 동물병원이 거리순으로 나옵니다. <b>🌙 24시</b> 필터로 심야 병원만 골라 볼 수 있고, 📞 버튼으로 바로 전화, Ⓝ 버튼으로 네이버 리뷰 확인이 가능합니다. 동반 카페·식당·미용실 검색도 같은 방식이에요.</p>
 <h3>🍇 먹어도 되나요? (위험 음식 사전)</h3>
 <p>음식 이름을 검색하면 강아지/고양이별 위험도가 나옵니다: <b>🔴 위험 / 🟡 주의 / 🟢 괜찮음</b> + 대처법. "건포도", "초코파이"처럼 별칭으로 검색해도 찾아줍니다.</p>
-<div class="danger">⚠️ <b>포도·초콜릿·양파·자일리톨(무설탕 껌)은 소량도 위험!</b> 먹었다면 검색 결과의 병원 찾기 버튼으로 즉시 병원에 연락하세요.</div>
+<div class="bubble danger">
+  <div class="avatar"><svg viewBox="63 38 30 38"><g fill="#E8EDF5"><path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/></g></svg></div>
+  <div class="say"><span class="who">브리의 경고</span>⚠️ <b>포도·초콜릿·양파·자일리톨(무설탕 껌)은 소량도 위험!</b> 먹었다면 검색 결과의 병원 찾기 버튼으로 즉시 병원에 연락하세요.</div>
+</div>
+</div>
 
-<h2 id="care">5. 📋 케어수첩 — 기록하기</h2>
+<!-- ═══ 5. 케어수첩 ═══ -->
+<div class="panel">
+<h2 id="care"><span class="num">5</span>📋 케어수첩 — 기록하기</h2>
 <p>하단 <span class="kbd">케어수첩</span> 탭에 6가지 기록장이 있습니다:</p>
 <table>
   <tr><th>탭</th><th>기록 내용</th></tr>
   <tr><td>🤒 이상증상</td><td>구토·설사·기침 등 증상과 상세 내용 — 응급 카드·문진서에 자동 반영</td></tr>
   <tr><td>🏥 병원기록</td><td>병원명·진단·비용</td></tr>
   <tr><td>💉 예방접종</td><td>접종일과 다음 예정일 — 홈에 D-day 표시</td></tr>
-  <tr><td>🍚 식단</td><td>급여량 계산과 오늘 먹은 양 (아래 6번)</td></tr>
+  <tr><td>🍚 식단</td><td>급여량 계산과 오늘 먹은 양 (6번)</td></tr>
   <tr><td>⚖️ 체중</td><td>체중 입력 → 변화 그래프 (7/30/90일)</td></tr>
   <tr><td>📝 메모</td><td>자유 기록</td></tr>
 </table>
-<div class="tip">💡 <b>📋 사전 문진서</b>: 병원 예약 후 이상증상 탭의 "사전 문진서로 내보내기"를 누르면 진료에 필요한 정보가 정리됩니다. 진료 시간이 짧아져요!</div>
+<div class="bubble tip">
+  <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
+  <div class="say"><span class="who">아니의 꿀팁</span><b>📋 사전 문진서</b>: 병원 예약 후 이상증상 탭의 "사전 문진서로 내보내기"를 누르면 진료에 필요한 정보가 정리돼요. 진료 시간이 짧아져요!</div>
+</div>
+</div>
 
-<h2 id="feed">6. 🍚 식단·급여량 관리</h2>
+<!-- ═══ 6. 식단 ═══ -->
+<div class="panel">
+<h2 id="feed"><span class="num">6</span>🍚 식단·급여량 관리</h2>
 <ol>
   <li>케어수첩 → 식단 탭에서 <b>사료를 등록</b>합니다 — 📷 사료 봉투를 찍으면 AI가 제품명과 칼로리를 자동으로 읽어줘요 (또는 봉투 뒷면의 kcal/kg 직접 입력)</li>
   <li>체중·나이·중성화 여부로 <b>하루 권장량이 자동 계산</b>됩니다 (수의 영양학 표준 공식) — 예: "하루 71g, 2회 × 36g씩, 간식은 27kcal 이내"</li>
@@ -136,8 +258,11 @@
   <li>게이지로 오늘 상태 확인: <b>적정 ✅ / 부족 / 과식 ⚠️</b> — 간식이 하루 칼로리의 10%를 넘으면 경고</li>
 </ol>
 <p>식사를 기록하면 홈의 <b>"오늘 챙기기"</b> 체크리스트에 자동으로 ✅ 표시됩니다. 복용약이 프로필에 있으면 💊 약 챙기기 항목도 자동 생성 — 탭해서 체크하세요.</p>
+</div>
 
-<h2 id="walk">7. 🐾 산책(강아지) · 🧶 놀이(고양이)</h2>
+<!-- ═══ 7. 산책·놀이 ═══ -->
+<div class="panel">
+<h2 id="walk"><span class="num">7</span>🐾 산책(강아지) · 🧶 놀이(고양이)</h2>
 <p>수의학적으로 <b>강아지에게는 산책</b>이, <b>고양이에게는 실내 놀이</b>가 필요합니다. AniBridge는 등록된 아이의 종에 따라 화면이 자동으로 바뀝니다.</p>
 
 <h3>🐶 강아지로 등록했다면 — 산책 모드</h3>
@@ -149,7 +274,10 @@
 <div class="card">
   <b>🗺️ 발자국 지도</b> (강아지 전용): 산책 탭에 최근 경로 지도가 바로 보입니다. 지도를 탭하면 크게 열리면서 — 로고의 <b>강아지와 고양이가 실제 걸은 길을 따라 걸어가며 빨간 발자국을 남기는 애니메이션</b>이 재생됩니다. 경로는 실제 도로에 맞춰 자동 보정돼요. <span class="kbd">▶ 산책 다시 보기</span>로 반복 재생!
 </div>
-<div class="warn">📍 경로가 저장되려면 실외에서 50m 이상·1분 이상 걸어야 합니다. 실내나 GPS 거부 시엔 시간만 기록됩니다.</div>
+<div class="bubble warn">
+  <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
+  <div class="say"><span class="who">아니의 안내</span>📍 경로가 저장되려면 실외에서 50m 이상·1분 이상 걸어야 해요. 실내나 GPS 거부 시엔 시간만 기록됩니다.</div>
+</div>
 
 <h3>🐱 고양이로 등록했다면 — 놀이 모드</h3>
 <ol>
@@ -160,10 +288,19 @@
 <div class="card">
   <b>🧶 놀이 가이드</b>: 이동 거리·경로 지도 대신 놀이에 맞는 화면이 나옵니다 — 권장 놀이 시간, 추천 장난감, 그리고 <b>"놀이 후엔 간식으로 사냥을 마무리해주세요"</b> 같은 고양이 맞춤 팁까지. 주간 기록·리포트·오늘의 루틴도 모두 놀이 기준으로 계산됩니다.
 </div>
-<div class="tip">💡 여러 마리를 키운다면 아이를 전환할 때마다 산책 ↔ 놀이 화면이 자동으로 바뀝니다.</div>
+<div class="bubble tip">
+  <div class="avatar"><svg viewBox="63 38 30 38"><g fill="#E8EDF5"><path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/></g></svg></div>
+  <div class="say"><span class="who">브리의 한마디</span>여러 마리를 키운다면 아이를 전환할 때마다 산책 ↔ 놀이 화면이 자동으로 바뀌어요.</div>
+</div>
+</div>
 
-<h2 id="ai">8. AI 도우미</h2>
-<div class="warn">⚠️ <b>AI는 수의사가 아닙니다.</b> AI 분석·상담은 참고 정보일 뿐 진단이 아니에요. 증상이 있다면 AI 결과와 관계없이 반드시 동물병원에서 진료받으세요.</div>
+<!-- ═══ 8. AI ═══ -->
+<div class="panel">
+<h2 id="ai"><span class="num">8</span>🤖 AI 도우미</h2>
+<div class="bubble warn">
+  <div class="avatar"><svg viewBox="63 38 30 38"><g fill="#E8EDF5"><path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/></g></svg></div>
+  <div class="say"><span class="who">브리의 당부</span>⚠️ <b>AI는 수의사가 아니에요.</b> AI 분석·상담은 참고 정보일 뿐 진단이 아닙니다. 증상이 있다면 AI 결과와 관계없이 반드시 동물병원에서 진료받으세요.</div>
+</div>
 <table>
   <tr><th>기능</th><th>무료 한도</th><th>이렇게 쓰세요</th></tr>
   <tr><td>📸 AI 건강 분석</td><td>하루 10회</td><td>피부·눈·귀 사진을 올리면 상태를 살펴봐줍니다 — 병원 가기 전 마음의 준비와 기록용</td></tr>
@@ -171,12 +308,21 @@
   <tr><td>🎙️ 마음 번역기</td><td>재미 번역 무제한<br>AI 번역 하루 10회</td><td>소리를 녹음하면 무슨 말인지 번역 — <b>재미로만</b> 즐겨주세요 😄</td></tr>
 </table>
 <p>무료 한도는 매일 자정에 자동 충전됩니다.</p>
+</div>
 
-<h2 id="report">9. 📊 주간 리포트</h2>
+<!-- ═══ 9. 리포트 ═══ -->
+<div class="panel">
+<h2 id="report"><span class="num">9</span>📊 주간 리포트</h2>
 <p>홈의 <b>"이번 주 리포트"</b>를 누르면 최근 7일이 정리됩니다: 산책(지난주와 비교) · 체중 변화 · 식단 · 증상 · 병원/접종 + 한 줄 총평. <b>카카오톡 공유</b>로 가족에게 보내거나, 병원 진료 때 최근 상태를 보여주는 용도로 쓰세요.</p>
+</div>
 
-<h2 id="backup">10. 📦 데이터 백업 — 폰 바꿀 때 필수!</h2>
-<div class="danger">⚠️ 모든 기록은 <b>휴대폰 안에만</b> 저장됩니다. 앱을 삭제하거나 폰을 바꾸면 기록이 사라져요. <b>백업을 습관화하세요!</b></div>
+<!-- ═══ 10. 백업 ═══ -->
+<div class="panel">
+<h2 id="backup"><span class="num">10</span>📦 데이터 백업 — 폰 바꿀 때 필수!</h2>
+<div class="bubble danger">
+  <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
+  <div class="say"><span class="who">아니의 경고</span>⚠️ 모든 기록은 <b>휴대폰 안에만</b> 저장돼요. 앱을 삭제하거나 폰을 바꾸면 기록이 사라져요. <b>백업을 습관화하세요!</b></div>
+</div>
 <h3>백업하기</h3>
 <ol>
   <li><span class="kbd">MY</span> → <b>📦 데이터 백업</b></li>
@@ -188,18 +334,32 @@
   <li>보관해둔 백업 파일(AniBridge_백업_날짜.json) 선택 → 확인</li>
   <li>모든 기록이 그대로 돌아옵니다 ✅</li>
 </ol>
+</div>
 
-<h2 id="faq">11. 자주 묻는 질문</h2>
-<div class="card"><b>Q. 정말 다 무료인가요?</b><br>네! 광고도 없고 결제도 없습니다. AI 기능만 안정적인 운영을 위해 하루 횟수(각 10회)가 있고, 매일 자정 충전됩니다.</div>
-<div class="card"><b>Q. 내 기록은 어디에 저장되나요?</b><br>모두 휴대폰 안에만 저장되며 서버로 전송되지 않습니다. 그래서 백업이 중요해요! (AI 분석 시 보낸 사진·질문만 AI 처리를 위해 일시적으로 전송됩니다)</div>
-<div class="card"><b>Q. AI 분석이 "괜찮다"고 했는데 병원에 안 가도 되나요?</b><br>아니요. AI는 사진만으로 판단하는 참고 도구라 놓치는 것이 있을 수 있습니다. 아이가 평소와 다르다면 AI 결과와 관계없이 병원에서 확인하세요.</div>
-<div class="card"><b>Q. 위치 권한은 왜 필요한가요?</b><br>산책 거리·경로 측정과 내 주변 병원 검색에만 사용됩니다. 위치 정보는 폰에만 저장돼요.</div>
-<div class="card"><b>Q. 여러 마리를 키워요.</b><br>MY에서 최대 5마리까지 등록할 수 있고, 탭으로 전환하면 기록·식단·응급 카드가 각각 관리됩니다.</div>
-<div class="card"><b>Q. 문의는 어디로 하나요?</b><br>MY → 고객센터에서 문의를 보내거나, anibridge@naver.com 으로 연락주세요.</div>
+<!-- ═══ 11. FAQ ═══ -->
+<div class="panel">
+<h2 id="faq"><span class="num">11</span>❓ 자주 묻는 질문</h2>
+<div class="faq"><div class="q"><span class="qb">Q</span>정말 다 무료인가요?</div><div class="a">네! 광고도 없고 결제도 없습니다. AI 기능만 안정적인 운영을 위해 하루 횟수(각 10회)가 있고, 매일 자정 충전됩니다.</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>내 기록은 어디에 저장되나요?</div><div class="a">모두 휴대폰 안에만 저장되며 서버로 전송되지 않습니다. 그래서 백업이 중요해요! (AI 분석 시 보낸 사진·질문만 AI 처리를 위해 일시적으로 전송됩니다)</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>AI 분석이 "괜찮다"고 했는데 병원에 안 가도 되나요?</div><div class="a">아니요. AI는 사진만으로 판단하는 참고 도구라 놓치는 것이 있을 수 있습니다. 아이가 평소와 다르다면 AI 결과와 관계없이 병원에서 확인하세요.</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>위치 권한은 왜 필요한가요?</div><div class="a">산책 거리·경로 측정과 내 주변 병원 검색에만 사용됩니다. 위치 정보는 폰에만 저장돼요.</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>여러 마리를 키워요.</div><div class="a">MY에서 최대 5마리까지 등록할 수 있고, 탭으로 전환하면 기록·식단·응급 카드가 각각 관리됩니다.</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>문의는 어디로 하나요?</div><div class="a">MY → 고객센터에서 문의를 보내거나, anibridge@naver.com 으로 연락주세요.</div></div>
+</div>
 
-<div class="date">
-  AniBridge v3.0 · 반려동물 건강수첩<br>
-  Every Animal Deserves a Happy Life 🐾
+</div><!-- /wrap -->
+
+<!-- ═══ 푸터 ═══ -->
+<div class="wave-bot"><svg viewBox="0 0 1440 44" preserveAspectRatio="none"><path d="M0,44 L0,20 Q360,0 720,20 T1440,20 L1440,44 Z" fill="#0A0E1A" transform="rotate(180 720 22)"/></svg></div>
+<div class="footer">
+  <svg viewBox="0 0 120 120" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M60 26 Q49.5 26 45.5 36 L18.5 86 Q13 100 26 100 L94 100 Q107 100 101.5 86 L74.5 36 Q70.5 26 60 26 Z M60 49 Q57 49 55.8 52 L42.2 81 Q38 91 34 100 L86 100 Q82 91 77.8 81 L64.2 52 Q63 49 60 49 Z" fill="url(#gA)"/>
+    <g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g>
+    <g fill="#E8EDF5"><path d="M66.5 72 Q66.5 59 74 56.5 Q80.5 54.6 81 63 L81 72 Z"/><circle cx="73" cy="51" r="5.2"/><path d="M69.5 48 L68.4 41.5 L73.2 45.8 Z"/><path d="M74.5 45.6 L78.6 41 L78.9 47.6 Z"/><path d="M81 70 Q86.8 66.2 85.2 58.5 Q84.8 56.5 86.6 57.1 Q88.2 57.9 88.4 60 Q89 67.2 82 71.6 Z"/></g>
+    <path d="M10 87 Q60 60 110 87" fill="none" stroke="url(#gB)" stroke-width="10" stroke-linecap="round"/>
+  </svg>
+  <div class="f1">AniBridge v3.0 · 반려동물 건강수첩</div>
+  <div class="f2">Every Animal Deserves a Happy Life 🐾</div>
 </div>
 
 </body>
