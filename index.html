@@ -1608,7 +1608,7 @@ select option { background: #131929; }
         <input type="number" id="w-input" placeholder="0.0" step="0.1" min="0" max="100"
           style="flex:1;padding:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:var(--rs);font-size:22px;font-weight:700;color:var(--text);font-family:inherit;text-align:center">
         <div style="font-size:16px;font-weight:700;color:var(--text2)">kg</div>
-        <button onclick="saveWeight()" style="padding:14px 20px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">저장</button>
+        <button id="w-save-btn" onclick="saveWeight()" style="padding:14px 20px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">저장</button>
       </div>
       <div id="w-today-info" style="margin-top:10px;font-size:12px;color:var(--text2);text-align:center"></div>
     </div>
@@ -4124,22 +4124,14 @@ function saveWeight(){
 function updWeightTodayInfo(){
   const data = loadWeightData();
   const el = document.getElementById('w-today-info');
+  const inp = document.getElementById('w-input');
+  const btn = document.getElementById('w-save-btn');
   if(!el) return;
   const todayRec = data.find(d=>d.date===today());
-  const sorted = [...data].sort((a,b)=>a.date.localeCompare(b.date));
-  if(todayRec){
-    const prev = sorted[sorted.length-2];
-    if(prev){
-      const diff = (todayRec.weight - prev.weight).toFixed(1);
-      const arrow = diff>0?'▲':diff<0?'▼':'→';
-      const col = diff>0?'var(--urgent)':diff<0?'var(--g1)':'var(--text2)';
-      el.innerHTML = `오늘: <b style="color:var(--text)">${todayRec.weight}kg</b> &nbsp; <span style="color:${col}">${arrow} ${Math.abs(diff)}kg</span> (전일 대비)`;
-    } else {
-      el.innerHTML = `오늘: <b style="color:var(--text)">${todayRec.weight}kg</b>`;
-    }
-  } else {
-    el.innerHTML = sorted.length ? `최근: <b style="color:var(--text)">${sorted[sorted.length-1].weight}kg</b> (${sorted[sorted.length-1].date})` : '';
-  }
+  // 오늘의 기록에서 저장한 체중을 입력칸에 자동 표시 — 여기서는 수정만
+  if(inp) inp.value = todayRec ? todayRec.weight : '';
+  if(btn) btn.textContent = todayRec ? '수정' : '저장';
+  el.innerHTML = '✏️ <b style="color:var(--text)">오늘의 기록</b>에서 입력하면 자동으로 저장됩니다' + (todayRec ? ' — 잘못 입력했다면 위에서 고치고 수정을 눌러주세요' : '');
 }
 
 function selWeightPeriod(btn, days){
@@ -4170,6 +4162,11 @@ function renderWeightGraph(){
   svg.innerHTML='';
   if(data.length < 2){
     emptyEl.style.display='flex';
+    emptyEl.innerHTML = data.length===1
+      ? `✓ ${escHtml(String(data[0].weight))}kg 기록됨<br>기록이 2개 이상 쌓이면 변화 그래프가 그려져요`
+      : '아직 체중 기록이 없어요';
+    emptyEl.style.textAlign='center';
+    emptyEl.style.lineHeight='1.7';
     statsEl.innerHTML='';
     return;
   }
@@ -4370,13 +4367,13 @@ function renderCareDashboard(){const el=document.getElementById('careDashboard')
     <div style="font-size:16px;font-weight:900">✏️ 오늘의 기록${todayCnt>0?`<span style="float:right;font-size:11px;background:rgba(10,14,26,.16);padding:3px 10px;border-radius:999px">오늘 ${todayCnt}건 ✓</span>`:''}</div>
     <div style="font-size:11.5px;margin-top:4px;opacity:.78;font-weight:600">컨디션 · 체중 · 식사 · 메모를 한 번에 기록해요</div>
   </button>
-  <button onclick="openCareTab('profile')" style="width:100%;padding:14px 18px;border:1px solid var(--border2);border-radius:var(--r);background:var(--card-solid);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;margin-bottom:16px">
-    <div style="font-size:13.5px;font-weight:800">🏡 기본 생활·건강 정보<span style="float:right;font-size:10px;color:var(--g1);background:rgba(74,255,163,.1);padding:3px 9px;border-radius:999px">최초 1회</span></div>
-    <div style="font-size:11px;margin-top:3px;color:var(--text2)">주거 · 식이 · 병력 · 예방 · 검사자료 — 문진서의 기본이 됩니다</div>
-  </button>
   <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">기록 보기</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">${cards.map(c=>`<button style="min-height:66px;border:1px solid var(--border2);background:var(--card-solid);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer" onclick="openCareTab('${c[2]}')"><div style="font-size:20px">${c[0]}</div><div style="font-size:11px;margin-top:3px">${c[1]}</div></button>`).join('')}</div>
   <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">병원 제출용</div>
+  <button onclick="openCareTab('profile')" style="width:100%;padding:14px 18px;border:1px solid rgba(74,255,163,.3);border-radius:var(--rs);background:rgba(74,255,163,.06);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;margin-bottom:8px">
+    <div style="font-size:13.5px;font-weight:800">🏡 기본 생활·건강 정보<span style="float:right;font-size:10px;color:var(--g1);background:rgba(74,255,163,.12);padding:3px 9px;border-radius:999px">최초 1회 입력</span></div>
+    <div style="font-size:11px;margin-top:3px;color:var(--text2)">주거 · 식이 · 병력 · 예방 · 검사자료 — 응급카드·문진서의 기본이 됩니다</div>
+  </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
     <button style="min-height:54px;border:1px solid rgba(255,77,109,.35);background:rgba(255,77,109,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openEmergencyCard()">🆘 응급카드</button>
     <button style="min-height:54px;border:1px solid rgba(0,201,255,.35);background:rgba(0,201,255,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openNewIntake()">📋 문진서</button>
