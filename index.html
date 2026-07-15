@@ -307,7 +307,7 @@ body.light .wm-ani { -webkit-text-fill-color: #16233D; }
 /* ════════════════ 홈 ════════════════ */
 .home-hero {
   position: relative; overflow: hidden;
-  min-height: 228.625px; box-sizing: border-box;
+  min-height: 190px; box-sizing: border-box;
   padding: 8px 20px 34px;
   background: linear-gradient(160deg, #E8F0FF 0%, #EDF4FF 60%, #F4F6FA 100%); color: #132238;
 }
@@ -859,7 +859,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 }
 .my-name { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 .my-breed { font-size: 12px; color: var(--text2); margin-top: 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-.my-summary{display:flex;align-items:center;gap:12px;min-height:58px}.my-summary-copy{flex:1;min-width:0}.my-toggle{width:44px;height:44px;border-radius:50%;border:1px solid var(--border2);background:var(--card);color:var(--text2);font-size:20px;transition:transform .2s}.my-hero.expanded .my-toggle{transform:rotate(180deg)}.my-details{display:none;border-top:1px solid var(--border);margin-top:14px;padding-top:14px}.my-hero.expanded .my-details{display:block}.my-detail-row{display:flex;justify-content:space-between;gap:12px;padding:10px 2px;font-size:13px}.my-detail-row span:first-child{color:var(--text2)}
+.my-summary{display:flex;align-items:center;gap:12px;min-height:58px}.my-summary-copy{flex:1;min-width:0}.my-details{display:block;border-top:1px solid var(--border);margin-top:14px;padding-top:14px}.my-detail-row{display:flex;justify-content:space-between;gap:12px;padding:10px 2px;font-size:13px}.my-detail-row span:first-child{color:var(--text2)}
 .my-edit {
   margin-top: 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border2);
   color: var(--text2); border-radius: 999px; padding: 7px 18px;
@@ -932,8 +932,12 @@ body.light .my-hero,body.light .my-details{background:#fff;color:#16233D;border-
 .modal-body { padding: 18px 22px; }
 .fg { margin-bottom: 16px; }
 .fl { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 7px; display: block; letter-spacing: .03em; }
+/* 케어 프로필 폼: 라벨/입력칸이 .fg 래퍼 없이 나열돼 있어 라벨 위 여백으로 그룹을 분리 */
+#cp-profile .rec-card .fl { margin-top: 15px; }
+#cp-profile .rec-card > .rec-title + .rec-date + .fl,
+#cp-profile .rec-card > .fl:first-of-type { margin-top: 4px; }
 .req { color: var(--urgent); }
-input[type=text],input[type=date],input[type=number],input[type=email],select,textarea {
+input[type=text],input:not([type]),input[type=date],input[type=number],input[type=email],input[type=tel],select,textarea {
   width: 100%; padding: 13px 15px;
   background: rgba(255,255,255,0.05); border: 1px solid var(--border2);
   border-radius: var(--rs); font-size: 13px; font-family: inherit; color: var(--text);
@@ -1169,7 +1173,7 @@ select option { background: #131929; }
       <div class="quick-item" onclick="showPage('care')">
         <div class="qi-title">📒 케어수첩</div>
         <div class="qi-sub" id="homeCareSummary">건강기록 · 오늘 기록 없음</div>
-        <button type="button" class="walk-start" onclick="event.stopPropagation();showPage('care')">기록하기</button>
+        <button type="button" class="walk-start" onclick="event.stopPropagation();showPage('care');openDailyRecord()">기록하기</button>
       </div>
       <div class="quick-item" onclick="showPage('walk')">
         <div class="qi-title" id="homeActivityTitle">🚶 오늘 산책</div>
@@ -1328,6 +1332,8 @@ select option { background: #131929; }
       <div style="font-size:12px;font-weight:700;color:var(--g2);margin-bottom:4px">🧠 AI가 실제 소리를 분석합니다</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">강아지/고양이 소리를 구분하고<br>음성 패턴 기반으로 감정을 분석해요</div>
       <div id="transAICount" style="font-size:11px;font-weight:700;color:var(--g2);margin-top:8px"></div>
+      <button onclick="document.getElementById('transAudioInput').click()" style="width:100%;margin-top:10px;padding:11px;background:rgba(0,201,255,0.1);color:var(--g2);border:1px solid rgba(0,201,255,0.3);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎵 저장된 녹음 파일로 번역하기</button>
+      <input type="file" id="transAudioInput" accept="audio/*" style="display:none">
       <div style="font-size:10px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.1);line-height:1.5">⚠️ 동물 음성 분석은 학술 연구 단계로<br>실제 의미와 다를 수 있습니다 (참고용)</div>
     </div>
 
@@ -1335,6 +1341,7 @@ select option { background: #131929; }
     <div id="transFreeInfo" style="background:rgba(74,255,163,0.05);border:1px solid rgba(74,255,163,0.15);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;text-align:center">
       <div style="font-size:12px;font-weight:700;color:var(--g1);margin-bottom:4px">🎲 재미로 즐기는 번역</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">행동 패턴 기반의 가벼운 추측 번역입니다<br>정확한 분석은 AI 분석 번역을 이용해 주세요</div>
+      <button onclick="document.getElementById('transAudioInput').click()" style="width:100%;margin-top:10px;padding:11px;background:rgba(74,255,163,0.1);color:var(--g1);border:1px solid rgba(74,255,163,0.3);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎵 저장된 녹음 파일로 번역하기</button>
     </div>
 
     <!-- 녹음 버튼 -->
@@ -1421,7 +1428,7 @@ select option { background: #131929; }
       <b style="color:var(--text)">증상이 있거나 평소와 다르다면, 분석 결과와 관계없이 반드시 동물병원에서 진료받으세요.</b> 분석 결과는 병원 방문 전 마음의 준비와 기록용으로만 활용해주세요.
     </div>
     <div class="upload-zone" id="uploadZone" onclick="if(getRemainingCount()<=0){showUpgradeModal();}else{document.getElementById('fileInput').click();}">
-      <input type="file" id="fileInput" accept="image/*" capture="environment">
+      <input type="file" id="fileInput" accept="image/*">
       <div id="upPh">
         <div class="uz-icon">📷</div>
         <div class="uz-title">반려동물 사진 올리기</div>
@@ -1582,11 +1589,16 @@ select option { background: #131929; }
       <div style="color:var(--text3)">›</div>
     </div>
     <button class="add-btn" onclick="openM('vaccine')">＋ 접종·구충 기록 추가</button>
+    <div onclick="openOnboarding()" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--card-solid);border:1px dashed rgba(74,255,163,0.35);border-radius:var(--r);margin-bottom:10px;cursor:pointer">
+      <div style="font-size:18px">🐾</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">건강 스케줄 자동 생성</div><div style="font-size:11px;color:var(--text3)">종·최근 접종일만 알려주면 기본 접종·구충 일정을 자동 등록해요</div></div>
+      <div style="color:var(--g1)">›</div>
+    </div>
     <div id="lst-vaccine"></div>
   </div>
   <div id="cp-feed" class="care-pg">
     <div id="feedWrap"></div>
-    <input type="file" id="feedPhotoInput" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="feedPhotoInput" accept="image/*" style="display:none">
   </div>
   <div id="cp-weight" class="care-pg">
     <!-- 체중 입력 -->
@@ -1696,7 +1708,36 @@ select option { background: #131929; }
   <input type="hidden" id="med-id"><div class="fg"><label class="fl">약 이름 *</label><input id="med-name"></div><div class="fg"><label class="fl">용량</label><input id="med-dose" placeholder="예) 5mg"></div><div class="fg"><label class="fl">횟수</label><input id="med-frequency" placeholder="예) 하루 2회"></div><div class="fg"><label class="fl">목적</label><input id="med-purpose"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="fg"><label class="fl">시작일</label><input id="med-start" type="date"></div><div class="fg"><label class="fl">종료일</label><input id="med-end" type="date"></div></div><div class="fg"><label class="fl">메모</label><textarea id="med-memo"></textarea></div><label style="display:flex;gap:8px;align-items:center;min-height:44px"><input id="med-active" type="checkbox" checked> 현재 복용 중</label><button class="save-btn" onclick="saveMedication()">저장하기</button>
 </div></div></div>
 
-<div class="overlay" id="m-new-intake" onclick="closeM(event,'new-intake')"><div class="modal"><div class="modal-hd"><span class="modal-title">📋 신규 병원 문진서</span><button class="modal-close" onclick="closeM(null,'new-intake')">✕</button></div><div class="modal-body"><div style="display:flex;gap:8px;margin-bottom:12px"><button class="rb on" id="intake-owner-btn" onclick="renderNewIntake('owner')">보호자 보기용</button><button class="rb" id="intake-hospital-btn" onclick="renderNewIntake('hospital')">병원 제출용</button></div><pre id="new-intake-content" style="white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.7;background:var(--card);padding:14px;border-radius:var(--rs)"></pre><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px"><button class="save-btn" onclick="copyNewIntake()">복사</button><button class="save-btn" onclick="printNewIntake()">인쇄</button><button class="save-btn" onclick="printNewIntake()">PDF 저장</button></div></div></div></div>
+<div class="overlay" id="m-new-intake" onclick="closeM(event,'new-intake')"><div class="modal"><div class="modal-hd"><span class="modal-title">📋 신규 병원 문진서</span><button class="modal-close" onclick="closeM(null,'new-intake')">✕</button></div><div class="modal-body"><div style="display:flex;gap:8px;margin-bottom:12px"><button class="rb on" id="intake-owner-btn" onclick="renderNewIntake('owner')">보호자 보기용</button><button class="rb" id="intake-hospital-btn" onclick="renderNewIntake('hospital')">병원 제출용</button></div><pre id="new-intake-content" style="white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;line-height:1.7;background:var(--card);padding:14px;border-radius:var(--rs)"></pre><button onclick="shareNewIntake()" class="kakao-btn" style="margin-top:12px"><svg width="20" height="20" viewBox="0 0 40 40" fill="#3C1E1E"><path d="M20 4C10.6 4 3 10.3 3 18c0 5 3 9.4 7.6 12l-1.9 7 8.5-5.5c.9.1 1.8.2 2.8.2 9.4 0 17-6.3 17-14S29.4 4 20 4z"/></svg>카카오톡으로 병원에 보내기</button><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px"><button class="save-btn" onclick="copyNewIntake()">📋 복사</button><button class="save-btn" onclick="printNewIntake()">📄 인쇄 · PDF 저장</button></div></div></div></div>
+
+<!-- 오늘의 기록 — 컨디션·체중·식사·메모를 한 창에서 -->
+<div class="overlay" id="m-daily" onclick="closeM(event,'daily')"><div class="modal">
+<div class="modal-hd"><span class="modal-title">✏️ 오늘의 기록</span><button class="modal-close" onclick="closeM(null,'daily')">✕</button></div>
+<div class="modal-body">
+  <div id="dailyDateLbl" style="font-size:12px;color:var(--text2);margin-bottom:14px"></div>
+  <div class="fg"><label class="fl">😊 오늘 컨디션 (복수 선택)</label>
+    <div id="daily-conditions" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button type="button" class="sym-btn" data-v="식욕이 평소와 비슷함" onclick="toggleSym(this)">식욕이 평소와 비슷함</button>
+      <button type="button" class="sym-btn" data-v="기력이 평소와 비슷함" onclick="toggleSym(this)">기력이 평소와 비슷함</button>
+      <button type="button" class="sym-btn" data-v="식욕 감소" onclick="toggleSym(this)">식욕 감소</button>
+      <button type="button" class="sym-btn" data-v="기력 저하" onclick="toggleSym(this)">기력 저하</button>
+      <button type="button" class="sym-btn" data-v="구토" onclick="toggleSym(this)">구토</button>
+      <button type="button" class="sym-btn" data-v="설사" onclick="toggleSym(this)">설사</button>
+      <button type="button" class="sym-btn" data-v="기침" onclick="toggleSym(this)">기침</button>
+      <button type="button" class="sym-btn" data-v="배뇨 변화" onclick="toggleSym(this)">배뇨 변화</button>
+      <button type="button" class="sym-btn" data-v="기타" onclick="toggleSym(this)">기타</button>
+    </div>
+    <div style="font-size:10.5px;color:var(--text3);margin-top:6px">✓ 선택한 컨디션은 기본 생활·건강 정보에 자동 반영됩니다</div>
+  </div>
+  <div class="fg"><label class="fl">증상 상세 (이상이 있을 때만)</label><textarea id="daily-detail" placeholder="예) 아침에 노란 액체 구토 1회" style="height:60px"></textarea></div>
+  <div class="fg"><label class="fl">⚖️ 오늘 체중 (kg)</label><input type="number" id="daily-weight" step="0.1" min="0" placeholder="예) 3.2"></div>
+  <div class="fg"><label class="fl">🍚 식사 (g)</label>
+    <div style="display:flex;gap:8px;align-items:center"><input type="number" id="daily-feed-g" min="0" placeholder="g" style="flex:1"><div class="radio-group" id="rg-dailyfeed" style="flex-wrap:nowrap"><button class="rb on" data-v="식사" onclick="selRB(this,'rg-dailyfeed')">식사</button><button class="rb" data-v="간식" onclick="selRB(this,'rg-dailyfeed')">간식</button></div></div>
+    <div id="daily-feed-hint" style="display:none;font-size:10.5px;color:var(--text3);margin-top:6px">💡 식단 탭에서 사료를 등록하면 칼로리가 자동 계산돼요</div>
+  </div>
+  <div class="fg"><label class="fl">📝 메모 (선택)</label><textarea id="daily-memo" placeholder="오늘 특이사항을 자유롭게" style="height:60px"></textarea></div>
+  <button class="save-btn" onclick="saveDailyRecord()">오늘의 기록 저장</button>
+</div></div></div>
 
 <!-- ══ AI 상담 ══ -->
 <div id="pg-chat" class="page">
@@ -1841,8 +1882,8 @@ select option { background: #131929; }
     </div>
 
     <!-- 현재 반려동물 카드 -->
-    <div class="my-hero" id="myHero" onclick="toggleMyProfile()" role="button" tabindex="0" aria-expanded="false" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleMyProfile()}">
-      <div class="my-summary"><div class="my-av" id="myAv">🐶</div><div class="my-summary-copy"><div class="my-name" id="myName">코코</div><div class="my-breed" id="myBreed">말티즈 · 암컷</div></div><button type="button" class="my-toggle" aria-label="상세보기" onclick="event.stopPropagation();toggleMyProfile()">⌄</button></div>
+    <div class="my-hero" id="myHero">
+      <div class="my-summary"><div class="my-av" id="myAv">🐶</div><div class="my-summary-copy"><div class="my-name" id="myName">코코</div><div class="my-breed" id="myBreed">말티즈 · 암컷</div></div></div>
       <div class="info-grid">
         <div class="info-item"><div class="info-lbl">나이</div><div class="info-val" id="myAge">—</div></div>
         <div class="info-item"><div class="info-lbl">체중</div><div class="info-val" id="myWeight">—</div></div>
@@ -1857,15 +1898,15 @@ select option { background: #131929; }
       <div class="mi" onclick="openM('signal')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🚨</div><div class="mi-text">건강 시그널</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openCheckup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">🩺</div><div class="mi-text">건강검진 체크리스트</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openFoodDict()"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">🍇</div><div class="mi-text">먹어도 되나요? (위험 음식)</div><div class="mi-arr">›</div></div>
-      <div class="mi" onclick="window.open('guide.html','_blank')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">📖</div><div class="mi-text">사용설명서</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="exportBackup()"><div class="mi-ico" style="background:rgba(74,255,163,0.1)">📦</div><div class="mi-text">데이터 백업 <span style="font-size:10px;color:var(--text3)">— 폰 바꿀 때 필수!</span></div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="document.getElementById('backupFileInput').click()"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">📥</div><div class="mi-text">데이터 복원</div><div class="mi-arr">›</div></div>
       <input type="file" id="backupFileInput" accept=".json,application/json" style="display:none">
-      <div class="rec-card" style="margin-top:12px"><div class="rec-title">💾 저장공간 상태</div><div id="storageStatus" class="rec-body">계산 중…</div><button class="rec-act" style="min-height:44px;margin-top:8px" onclick="renderStorageStatus()">다시 계산</button></div>
+      <div class="rec-card" style="margin:12px;padding:14px 16px"><div class="rec-title" style="margin-bottom:6px">💾 저장공간</div><div id="storageStatus" style="font-size:12px;color:var(--text2);line-height:1.7">계산 중…</div></div>
       <div class="mi" onclick="showPage('place')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">📍</div><div class="mi-text">펫 플레이스</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="showPage('walk')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">🚶</div><div class="mi-text">산책 기록</div><div class="mi-arr">›</div></div>
-      <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성</div><div class="mi-arr" style="color:var(--g1)">›</div></div>
+      <div class="mi" onclick="openOnboarding()"><div class="mi-ico" style="background:linear-gradient(135deg,rgba(74,255,163,0.2),rgba(0,201,255,0.2))">🐾</div><div class="mi-text" style="font-weight:700">건강 스케줄 자동 생성 <span style="font-size:10px;color:var(--text3)">— 접종·구충 일정을 케어수첩에</span></div><div class="mi-arr" style="color:var(--g1)">›</div></div>
       <div class="mi" onclick="openM('alarm')"><div class="mi-ico" style="background:rgba(255,184,48,0.1)">🔔</div><div class="mi-text">알림 설정</div><div class="mi-arr">›</div></div>
+      <div class="mi" onclick="window.open('guide.html','_blank')"><div class="mi-ico" style="background:rgba(0,201,255,0.1)">📖</div><div class="mi-text">사용설명서</div><div class="mi-arr">›</div></div>
       <div class="mi" onclick="openM('cs')"><div class="mi-ico" style="background:rgba(255,107,157,0.1)">❓</div><div class="mi-text">고객센터</div><div class="mi-arr">›</div></div>
     </div>
     <div class="ver-txt">AniBridge v2.5.1<br><span style="font-style:italic;color:var(--text3)">Every Animal Deserves a Happy Life</span></div>
@@ -2443,7 +2484,7 @@ select option { background: #131929; }
   <div id="ob-step4" class="ob-step" style="display:none">
     <div style="padding:40px 24px">
       <div style="font-size:11px;color:var(--text3);margin-bottom:8px;letter-spacing:.1em">STEP 3 / 3</div>
-      <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:24px;margin-bottom:6px">마지막 접종일을 알고 있나요?</div>
+      <div id="ob-step4-title" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:24px;margin-bottom:6px">마지막 접종일을 알고 있나요?</div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:28px">모르셔도 괜찮아요. 건너뛰기 가능합니다</div>
 
       <div style="display:flex;flex-direction:column;gap:14px">
@@ -2549,7 +2590,7 @@ function storageFail(e){if(isQuotaError(e))toast('저장 공간이 부족해요.
 function saveDB(){try{localStorage.setItem(getPetDBKey(),JSON.stringify(DB));renderStorageStatus();updateHomeCareSummary();updateNextScheduleSummary();return true;}catch(e){storageFail(e);return false;}}
 function getAniStorageInfo(){let chars=0,photos=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||(!k.startsWith('anibridge_')&&!k.startsWith('walk_')))continue;const v=localStorage.getItem(k)||'';chars+=k.length+v.length;photos+=(v.match(/data:image\//g)||[]).length;}return{bytes:chars*2,photos};}
 function formatBytes(n){if(n<1024)return n+' B';if(n<1048576)return(n/1024).toFixed(1)+' KB';return(n/1048576).toFixed(2)+' MB';}
-function renderStorageStatus(){const el=document.getElementById('storageStatus');if(!el)return;const s=getAniStorageInfo();el.innerHTML=`사용 중인 AniBridge 데이터: <b>${formatBytes(s.bytes)}</b><br>사진 포함: <b>${s.photos?'예 ('+s.photos+'장)':'아니오'}</b><br><span style="color:var(--text3)">브라우저 전체 한도가 아닌 현재 앱 데이터의 대략적인 크기입니다. 공간이 부족하면 오래된 사진이나 기록을 정리해주세요.</span>`;}
+function renderStorageStatus(){const el=document.getElementById('storageStatus');if(!el)return;const s=getAniStorageInfo();const LIMIT=5*1024*1024;const pct=Math.min(100,Math.round(s.bytes/LIMIT*100));const mb=s.bytes/1048576;const size=mb>=0.1?mb.toFixed(1)+'MB':'0.1MB 미만';const status=pct>=80?'<span style="color:var(--caution)">⚠️ 공간이 얼마 안 남았어요 — 오래된 병원 사진을 정리해주세요</span>':pct>=50?'🙂 아직 여유가 있어요':'<span style="color:var(--g1)">✅ 여유 충분해요</span>';el.innerHTML=`앱 데이터 <b style="color:var(--text)">${size}</b> 사용 중 · 사진 ${s.photos?'<b style="color:var(--text)">'+s.photos+'장</b> 포함':'없음'}<br>${status}`;}
 
 function reloadDB(){
   // 반려동물 전환 시 DB 다시 로드
@@ -3362,7 +3403,7 @@ function finishSplash(){
   splashFinishScheduled = true;
   const splash = document.getElementById('splash');
   if(!splash) return;
-  const remaining = Math.max(0, 700 - (performance.now() - splashStartedAt));
+  const remaining = Math.max(0, 2600 - (performance.now() - splashStartedAt));
   setTimeout(()=>{
     splash.classList.add('hide');
     setTimeout(()=>{
@@ -3675,22 +3716,27 @@ function dateFromBirth(birthStr){
 
 // ── 온보딩 단계 이동 ──
 function openOnboarding(){
-  // 현재 반려동물 정보 자동 입력
   const p = PETS.length ? PETS[curPetIdx] : null;
   if(p && p.name){
-    const nameEl = document.getElementById('ob-name');
-    const breedEl = document.getElementById('ob-breed');
-    const birthEl = document.getElementById('ob-birth');
-    if(nameEl) nameEl.value = p.name;
-    if(breedEl) breedEl.value = p.breed||'';
-    if(birthEl) birthEl.value = p.birth||'';
-    // 동물 타입 자동 선택
-    if(p.emoji){
-      obData.type = p.breed ? '강아지' : '강아지';
-      obData.emoji = p.emoji;
-    }
+    // 등록된 아이가 있으면 프로필 정보를 그대로 사용 — 다시 묻지 않고 접종일 단계로 바로
+    obData.name = p.name;
+    obData.breed = p.breed||'';
+    obData.birth = p.birth||today();
+    obData.type = (p.emoji==='🐱') ? '고양이' : '강아지';
+    obData.emoji = p.emoji||'🐶';
+    obData.sex = p.sex||'';
+    obData.neuter = p.neuter||'';
+    const nameEl = document.getElementById('ob-name'); if(nameEl) nameEl.value = p.name;
+    const breedEl = document.getElementById('ob-breed'); if(breedEl) breedEl.value = p.breed||'';
+    const birthEl = document.getElementById('ob-birth'); if(birthEl) birthEl.value = p.birth||'';
+    const t4 = document.getElementById('ob-step4-title'); if(t4) t4.textContent = `${p.name}의 마지막 접종일을 알고 있나요?`;
+    document.querySelectorAll('.ob-step').forEach(s=>s.style.display='none');
+    document.getElementById('ob-step4').style.display='block';
+    document.getElementById('onboarding').scrollTop=0;
+    openM('onboarding');
+    return;
   }
-  // 스텝1부터 시작
+  // 미등록 상태 — 처음부터 (위저드가 정보 수집)
   document.querySelectorAll('.ob-step').forEach(s=>s.style.display='none');
   document.getElementById('ob-step1').style.display='block';
   openM('onboarding');
@@ -3739,6 +3785,10 @@ function completeOnboarding(skip=false){
   const type = obData.type || '강아지';
   const schedules = BASE_SCHEDULE[type] || BASE_SCHEDULE['강아지'];
   const generated = [];
+
+  // 재실행 시 이전 자동 생성분은 갱신(중복 방지) — 직접 입력한 기록은 그대로 유지
+  DB.vaccine = DB.vaccine.filter(v=>!v.autoGen);
+  DB.memo = DB.memo.filter(m=>!m.autoGen);
 
   schedules.forEach(s=>{
     const lastDate = (!skip && s.key) ? document.getElementById(s.key)?.value : null;
@@ -3803,17 +3853,20 @@ function completeOnboarding(skip=false){
 
   obNext(5);
 
-  // 프로필도 저장
-  try{
-    localStorage.setItem('anibridge_profile', JSON.stringify({
-      name: obData.name,
-      breed: obData.breed,
-      sex: obData.sex,
-      neuter: obData.neuter,
-      emoji: obData.emoji,
-      photoSrc: ''
-    }));
-  }catch(e){}
+  // 프로필 저장 — 미등록 상태에서 위저드로 입력한 경우에만 (등록된 아이가 있으면 MY 프로필이 원본)
+  if(!PETS.length){
+    try{
+      localStorage.setItem('anibridge_profile', JSON.stringify({
+        name: obData.name,
+        breed: obData.breed,
+        sex: obData.sex,
+        neuter: obData.neuter,
+        emoji: obData.emoji,
+        photoSrc: ''
+      }));
+      migrateSingleProfile();
+    }catch(e){}
+  }
 }
 
 function finishOnboarding(){
@@ -3824,6 +3877,7 @@ function finishOnboarding(){
   renderCurPet();
   ['symptom','hospital','vaccine','memo'].forEach(renderList);
   updateNextScheduleSummary();
+  try{ renderCareDashboard(); updDdayBadge(); }catch(e){}
   toast('🎉 AniBridge에 오신걸 환영합니다!');
 }
 
@@ -4302,7 +4356,111 @@ function nextMonthlyDate(ds){if(!ds)return'';const d=new Date(ds);d.setDate(d.ge
 function getNextCareSchedule(){const p=DB.careProfile||{};const items=[];DB.vaccine.forEach(v=>{if(v.nextDate)items.push({name:v.name,date:v.nextDate});});if(p['heartworm-date'])items.push({name:'심장사상충',date:nextMonthlyDate(p['heartworm-date'])});if(p['ecto-date'])items.push({name:'외부기생충',date:nextMonthlyDate(p['ecto-date'])});return items.filter(x=>x.date).map(x=>({...x,dd:getDday(x.date)})).sort((a,b)=>a.dd-b.dd)[0]||null;}
 function scheduleBadge(item){if(!item)return'기록 없음';const c=item.dd<0?'var(--urgent)':item.dd<=7?'var(--urgent)':item.dd<=30?'var(--caution)':'var(--g1)';return `<b style="color:${c}">${escHtml(item.name)} ${ddTxt(item.dd)}</b><br><span style="font-size:11px;color:var(--text3)">${escHtml(item.date)}</span>`;}
 function renderPreventionSchedule(){const el=document.getElementById('preventionSchedule');if(!el)return;const p=DB.careProfile||{};const items=[];DB.vaccine.forEach(v=>v.nextDate&&items.push({name:v.name,date:v.nextDate,dd:getDday(v.nextDate)}));if(p['heartworm-date']){const d=nextMonthlyDate(p['heartworm-date']);items.push({name:'심장사상충 '+(p['heartworm-product']||''),date:d,dd:getDday(d)});}if(p['ecto-date']){const d=nextMonthlyDate(p['ecto-date']);items.push({name:'외부기생충 '+(p['ecto-product']||''),date:d,dd:getDday(d)});}items.sort((a,b)=>a.dd-b.dd);el.innerHTML=items.length?`<div class="rec-card" style="margin-bottom:12px"><div class="rec-title">📅 예방 일정</div><div class="rec-body">${items.map(x=>`<div style="padding:7px 0;border-bottom:1px solid var(--border)">${scheduleBadge(x)}</div>`).join('')}</div></div>`:'';}
-function renderCareDashboard(){const el=document.getElementById('careDashboard');if(!el)return;const w=loadWeightData().slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];const h=DB.hospital[0];const re=DB.hospital.filter(x=>x.nextDate).map(x=>({...x,dd:getDday(x.nextDate)})).sort((a,b)=>a.dd-b.dd)[0];const next=getNextCareSchedule();const cards=[['🏡','기본정보','profile'],['🤒','오늘기록','symptom'],['🏥','병원기록','hospital'],['🧪','검사자료','profile'],['💉','예방','vaccine'],['⚖️','체중','weight'],['💊','약물','medication'],['🆘','응급카드','emergency'],['📋','문진서','intake']];el.innerHTML=`<div style="font-size:20px;font-weight:900;margin-bottom:4px">Care Notebook 2.0</div><div style="font-size:12px;color:var(--text2);margin-bottom:14px">우리 아이의 건강 정보를 한눈에 확인하세요</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">${cards.map(c=>`<button style="min-height:72px;border:1px solid var(--border2);background:var(--card-solid);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:700" onclick="${c[2]==='emergency'?'openEmergencyCard()':c[2]==='intake'?'openNewIntake()':`openCareTab('${c[2]}')`}"><div style="font-size:22px">${c[0]}</div><div style="font-size:11px;margin-top:4px">${c[1]}</div></button>`).join('')}</div><div class="rec-card"><div class="rec-title">최근 변경사항</div><div class="rec-body"><div>⚖️ 최근 체중: ${w?escHtml(String(w.weight))+'kg · '+escHtml(w.date):'기록 없음'}</div><div>🏥 최근 병원: ${h?escHtml(h.name)+' · '+escHtml(h.date):'기록 없음'}</div><div>💉 다음 예방: ${scheduleBadge(next)}</div><div>📅 다음 재진: ${re?scheduleBadge({name:re.name||'재진',date:re.nextDate,dd:re.dd}):'기록 없음'}</div></div></div>`;}
+function renderCareDashboard(){const el=document.getElementById('careDashboard');if(!el)return;
+  const w=loadWeightData().slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  const h=DB.hospital[0];
+  const re=DB.hospital.filter(x=>x.nextDate).map(x=>({...x,dd:getDday(x.nextDate)})).sort((a,b)=>a.dd-b.dd)[0];
+  const next=getNextCareSchedule();
+  const todayCnt=getTodayCareRecordCount();
+  const cards=[['🤒','이상증상','symptom'],['🏥','병원기록','hospital'],['💉','접종·구충','vaccine'],['🍚','식단','feed'],['⚖️','체중','weight'],['💊','복용약','medication']];
+  el.innerHTML=`
+  <div style="font-size:20px;font-weight:900;margin-bottom:4px">Care Notebook 2.0</div>
+  <div style="font-size:12px;color:var(--text2);margin-bottom:14px">오늘의 기록이 더 정확한 진료를 만듭니다</div>
+  <button onclick="openDailyRecord()" style="width:100%;padding:17px 18px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;font-family:inherit;text-align:left;cursor:pointer;margin-bottom:8px;box-shadow:0 8px 24px rgba(0,201,255,.22)">
+    <div style="font-size:16px;font-weight:900">✏️ 오늘의 기록${todayCnt>0?`<span style="float:right;font-size:11px;background:rgba(10,14,26,.16);padding:3px 10px;border-radius:999px">오늘 ${todayCnt}건 ✓</span>`:''}</div>
+    <div style="font-size:11.5px;margin-top:4px;opacity:.78;font-weight:600">컨디션 · 체중 · 식사 · 메모를 한 번에 기록해요</div>
+  </button>
+  <button onclick="openCareTab('profile')" style="width:100%;padding:14px 18px;border:1px solid var(--border2);border-radius:var(--r);background:var(--card-solid);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;margin-bottom:16px">
+    <div style="font-size:13.5px;font-weight:800">🏡 기본 생활·건강 정보<span style="float:right;font-size:10px;color:var(--g1);background:rgba(74,255,163,.1);padding:3px 9px;border-radius:999px">최초 1회</span></div>
+    <div style="font-size:11px;margin-top:3px;color:var(--text2)">주거 · 식이 · 병력 · 예방 · 검사자료 — 문진서의 기본이 됩니다</div>
+  </button>
+  <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">기록 보기</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">${cards.map(c=>`<button style="min-height:66px;border:1px solid var(--border2);background:var(--card-solid);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer" onclick="openCareTab('${c[2]}')"><div style="font-size:20px">${c[0]}</div><div style="font-size:11px;margin-top:3px">${c[1]}</div></button>`).join('')}</div>
+  <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">병원 제출용</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+    <button style="min-height:54px;border:1px solid rgba(255,77,109,.35);background:rgba(255,77,109,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openEmergencyCard()">🆘 응급카드</button>
+    <button style="min-height:54px;border:1px solid rgba(0,201,255,.35);background:rgba(0,201,255,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openNewIntake()">📋 문진서</button>
+  </div>
+  <div class="rec-card" style="padding:16px 18px"><div class="rec-title" style="margin-bottom:8px">최근 변경사항</div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div>⚖️ 최근 체중: ${w?escHtml(String(w.weight))+'kg · '+escHtml(w.date):'기록 없음'}</div><div>🏥 최근 병원: ${h?escHtml(h.name)+' · '+escHtml(h.date):'기록 없음'}</div><div>💉 다음 예방: ${scheduleBadge(next)}</div><div>📅 다음 재진: ${re?scheduleBadge({name:re.name||'재진',date:re.nextDate,dd:re.dd}):'기록 없음'}</div></div></div>`;}
+
+// ── 오늘의 기록 — 컨디션·체중·식사·메모를 한 창에서 (기존 저장 구조 재사용) ──
+const DAILY_SYM_CHIPS=['식욕 감소','기력 저하','구토','설사','기침','배뇨 변화','기타'];
+function openDailyRecord(){
+  if(!PETS.length){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  const cp=DB.careProfile||{};
+  document.getElementById('dailyDateLbl').textContent=`${today()} · ${PETS[curPetIdx].name||''}의 하루를 30초 만에 기록해요`;
+  // 컨디션: 기본 생활·건강 정보의 현재 컨디션으로 프리필
+  document.querySelectorAll('#daily-conditions .sym-btn').forEach(b=>b.classList.toggle('on',(cp.conditions||[]).includes(b.dataset.v)));
+  document.getElementById('daily-detail').value='';
+  document.getElementById('daily-memo').value='';
+  // 체중: 오늘 기록 있으면 채우고, 없으면 최근 체중을 힌트로
+  const wd=loadWeightData();
+  const tw=wd.find(d=>d.date===today());
+  const wEl=document.getElementById('daily-weight');
+  wEl.value=tw?tw.weight:'';
+  const last=wd.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  wEl.placeholder=last?`최근 ${last.weight}kg`:'예) 3.2';
+  // 식사: 사료 미등록이면 안내
+  const cfg=getFeedCfg();
+  document.getElementById('daily-feed-g').value='';
+  document.getElementById('daily-feed-hint').style.display=cfg?'none':'block';
+  openM('daily');
+}
+
+function saveDailyRecord(){
+  if(!PETS.length) return;
+  const conds=[...document.querySelectorAll('#daily-conditions .sym-btn.on')].map(b=>b.dataset.v);
+  const detail=document.getElementById('daily-detail').value.trim();
+  const wVal=parseFloat(document.getElementById('daily-weight').value);
+  const g=parseFloat(document.getElementById('daily-feed-g').value);
+  const memoTxt=document.getElementById('daily-memo').value.trim();
+  const saved=[];
+  // DB 저장분(컨디션→기본정보 자동 반영, 증상, 메모)은 한 번에 — 실패 시 원복
+  const bakSym=DB.symptom.slice(),bakMemo=DB.memo.slice(),bakCp=Object.assign({},DB.careProfile);
+  let dbTouched=false;
+  if(conds.length){ DB.careProfile=Object.assign({},DB.careProfile,{conditions:conds}); dbTouched=true; saved.push('컨디션'); }
+  const syms=conds.filter(c=>DAILY_SYM_CHIPS.includes(c));
+  if(syms.length||detail){
+    DB.symptom.unshift({id:Date.now(),date:today(),symptoms:syms,detail:detail,since:'',freq:'',testDone:'',testDetail:'',medDone:'',medDetail:'',medChange:'',level:'관찰중'});
+    dbTouched=true;
+    if(!saved.includes('컨디션')) saved.push('증상');
+  }
+  if(memoTxt){ DB.memo.unshift({id:Date.now()+1,date:today(),title:'오늘의 기록',cat:'기타',cont:memoTxt}); dbTouched=true; saved.push('메모'); }
+  if(dbTouched&&!saveDB()){ DB.symptom=bakSym;DB.memo=bakMemo;DB.careProfile=bakCp; return; }
+  // 체중 (saveWeight와 동일한 저장 방식)
+  if(wVal>0&&wVal<=200){
+    const data=loadWeightData();
+    const i=data.findIndex(d=>d.date===today());
+    if(i>=0){ data[i].weight=wVal; } else { data.push({date:today(),weight:wVal,ts:Date.now()}); }
+    data.sort((a,b)=>a.date.localeCompare(b.date));
+    if(saveWeightData(data)){ PETS[curPetIdx].weight=wVal+''; savePets(); saved.push('체중'); }
+  }
+  // 식사 (addFeed와 동일한 저장 방식 — 사료 등록 시에만 칼로리 계산 가능)
+  if(g>0&&g<=2000){
+    const cfg=getFeedCfg();
+    if(cfg){
+      const now=new Date();
+      const log=getFeedLog();
+      log.push({id:Date.now()+2,t:(getRB('rg-dailyfeed')==='간식'?'snack':'meal'),g:Math.round(g),kcal:g*cfg.kcalPerKg/1000,time:`${now.getHours()<12?'오전':'오후'} ${now.getHours()%12||12}:${String(now.getMinutes()).padStart(2,'0')}`});
+      saveFeedLog(log);
+      saved.push('식사');
+    } else {
+      toast('🍚 식단 탭에서 사료를 먼저 등록해주세요 — 식사는 저장되지 않았어요');
+    }
+  }
+  if(!saved.length){ toast('기록할 내용을 입력해주세요'); return; }
+  closeM(null,'daily');
+  try{
+    renderCareDashboard();
+    renderList('symptom'); renderList('memo');
+    if(typeof renderCareProfile==='function') renderCareProfile();
+    if(typeof renderFeed==='function') renderFeed();
+    if(typeof renderRoutine==='function') renderRoutine();
+    if(typeof renderWeightGraph==='function'){ renderWeightGraph(); renderWeightList(); updWeightTodayInfo(); }
+    if(typeof renderCurPet==='function') renderCurPet();
+  }catch(e){}
+  toast(`✓ ${saved.join(' · ')} 저장 완료`);
+}
 
 function openMedicationForm(){['med-id','med-name','med-dose','med-frequency','med-purpose','med-start','med-end','med-memo'].forEach(id=>pfSet(id,''));document.getElementById('med-active').checked=true;openM('medication');}
 function editMedication(id){const m=DB.medications.find(x=>x.id===id);if(!m)return;pfSet('med-id',m.id);pfSet('med-name',m.name);pfSet('med-dose',m.dose);pfSet('med-frequency',m.frequency);pfSet('med-purpose',m.purpose);pfSet('med-start',m.start);pfSet('med-end',m.end);pfSet('med-memo',m.memo);document.getElementById('med-active').checked=!!m.active;openM('medication');}
@@ -5547,7 +5705,7 @@ function openEmergencyCard(){
   html += row('🍚','사료 · 식이', p.food?e(p.food):'<span style="opacity:.5">등록된 정보 없음</span>');
   html += row('🏥','기저질환 · 수술 이력', p.disease?e(p.disease):'<span style="opacity:.5">없음</span>');
   if(cp['medical-history']||cp['surgery-history']) html += row('📚','과거병력 · 수술',e([cp['medical-history'],cp['surgery-history']].filter(Boolean).join(' / ')));
-  if(activeMeds.length) html += row('💊','Care Notebook 복용약',activeMeds.map(m=>e(`${m.name} ${m.dose||''} ${m.frequency||''}`)).join('<br>'));
+  if(activeMeds.length) html += row('💊','복용약 목록',activeMeds.map(m=>e(`${m.name} ${m.dose||''} ${m.frequency||''}`)).join('<br>'));
   const allergyText=[cp['drug-allergy'],cp['vaccine-allergy'],cp['food-allergy'],cp['env-allergy']].filter(Boolean).join(' / ');if(allergyText)html+=row('🚨','상세 알레르기',e(allergyText),true);
   html += row('🛡️','예방정보',e(`기초접종 ${cp['primary-vax']||'미입력'} · 심장사상충 ${cp.heartworm||'미입력'} · 외부기생충 ${cp.ecto||'미입력'}`));
   if(cp['lab-hospital'])html+=row('🏥','주치 병원',e(cp['lab-hospital']));
@@ -5568,7 +5726,7 @@ function getEmergencyText(){
   t += `🍚 사료·식이: ${p.food||'등록된 정보 없음'}\n`;
   t += `🏥 기저질환·수술 이력: ${p.disease||'없음'}\n`;
   t += `📚 과거병력·수술: ${[cp['medical-history'],cp['surgery-history']].filter(Boolean).join(' / ')||'없음'}\n`;
-  t += `💊 Care Notebook 복용약: ${activeMeds.map(m=>m.name+' '+(m.dose||'')+' '+(m.frequency||'')).join(', ')||'없음'}\n`;
+  t += `💊 복용약 목록: ${activeMeds.map(m=>m.name+' '+(m.dose||'')+' '+(m.frequency||'')).join(', ')||'없음'}\n`;
   t += `🚨 상세 알레르기: ${[cp['drug-allergy'],cp['vaccine-allergy'],cp['food-allergy'],cp['env-allergy']].filter(Boolean).join(' / ')||'없음'}\n`;
   t += `🛡️ 예방정보: 기초접종 ${cp['primary-vax']||'미입력'}, 심장사상충 ${cp.heartworm||'미입력'}, 외부기생충 ${cp.ecto||'미입력'}\n`;
   if(cp['lab-hospital'])t += `🏥 주치 병원: ${cp['lab-hospital']}\n`;
@@ -5617,6 +5775,7 @@ function buildNewIntakeText(mode='owner'){
 function openNewIntake(){if(!PETS.length){toast('먼저 반려동물을 등록해주세요');return;}renderNewIntake('owner');openM('new-intake');}
 function renderNewIntake(mode){document.getElementById('new-intake-content').textContent=buildNewIntakeText(mode);document.getElementById('intake-owner-btn').classList.toggle('on',mode==='owner');document.getElementById('intake-hospital-btn').classList.toggle('on',mode==='hospital');}
 function copyNewIntake(){const t=document.getElementById('new-intake-content').textContent||'';if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('문진서를 복사했어요 ✓')).catch(()=>fallbackCopy(t));else fallbackCopy(t);}
+function shareNewIntake(){const t=document.getElementById('new-intake-content').textContent||'';if(!t){toast('문진서 내용이 없어요');return;}shareKakaoMsg(t,'AniBridge 신규 병원 문진서','병원에 제출할 문진 정보입니다 🐾');}
 function printNewIntake(){const t=document.getElementById('new-intake-content').textContent||'';const w=window.open('','_blank');if(!w){alert('팝업을 허용해주세요.');return;}w.document.write(`<html><head><meta charset="UTF-8"><title>AniBridge 신규 병원 문진서</title><style>@page{size:A4;margin:16mm}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#111;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif}main{max-width:178mm;margin:0 auto}h1{font-size:20px;margin:0 0 14px}pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:keep-all;font:13px/1.65 inherit}button,.bottom-nav,.no-print{display:none!important}@media print{html,body{width:auto;height:auto}main{page-break-after:avoid}pre{orphans:3;widows:3}}</style></head><body><main><h1>AniBridge 신규 병원 문진서</h1><pre>${escHtml(t)}</pre></main></body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),150);}
 function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('📋 복사되었습니다! ✓');}catch(e){alert('복사에 실패했습니다.');}document.body.removeChild(ta);}
 function goToSymptom(){closeM(null,'munj-mgr');showPage('care');openCareTab('symptom');}
@@ -5700,7 +5859,8 @@ function renderCurPet(){
   const heroLabel = document.getElementById('heroLabel');
   const heroSub   = document.getElementById('heroSub');
   if(heroLabel) heroLabel.textContent = 'DAILY HEALTH RECORD';
-  if(heroTitle) heroTitle.innerHTML = '오늘의 기록이<br>더 정확한 진료를 만듭니다.';
+  const heroPetName = PETS.length ? (PETS[curPetIdx]?.name || '') : '';
+  if(heroTitle) heroTitle.innerHTML = (heroPetName ? escHtml(heroPetName) + '의 오늘 기록이' : '오늘의 기록이') + '<br>더 정확한 진료를 만듭니다.';
   if(heroSub) heroSub.innerHTML = '우리 아이의 건강과 일상을<br>한곳에 기록해보세요.';
   updWalk();
 
@@ -6183,6 +6343,49 @@ function getRandomTransResult(){
 }
 
 // ── AI 번역 — Claude API 음성 분석 ──
+// ── 🎵 저장된 녹음 파일로 번역 (재미 번역 + AI 번역 공용) ──
+document.addEventListener('change', async function(ev){
+  if(ev.target && ev.target.id === 'transAudioInput'){
+    const file = ev.target.files[0];
+    ev.target.value = '';
+    if(!file) return;
+    if(transMode === 'ai' && getTransAIRemaining() <= 0){ showUpgradeModal('trans'); return; }
+    try{
+      const buf = await file.arrayBuffer();
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const audio = await ctx.decodeAudioData(buf);
+      // 녹음 분석과 동일한 지표 추출: 길이 + 최대 음량
+      const ch = audio.getChannelData(0);
+      let peak = 0;
+      const step = Math.max(1, Math.floor(ch.length / 20000));
+      for(let i = 0; i < ch.length; i += step){ const a = Math.abs(ch[i]); if(a > peak) peak = a; }
+      ctx.close();
+      transSec = Math.max(1, Math.min(60, Math.round(audio.duration)));
+      transMaxVolume = Math.min(255, Math.round(peak * 255));
+      if(transMaxVolume < SILENCE_THRESHOLD){
+        toast('⚠️ 파일에서 소리를 감지하지 못했어요 — 다른 파일을 선택해주세요');
+        return;
+      }
+      const load = document.getElementById('transLoading');
+      if(load) load.style.display = 'block';
+      const resBox = document.getElementById('transResult');
+      if(resBox) resBox.style.display = 'none';
+      document.getElementById('transTimer').textContent = `${transSec}초 파일 분석! 번역 중...`;
+      if(transMode === 'ai'){
+        doTransAI();
+      }else{
+        // 재미 번역 — 파일도 랜덤 문구로
+        setTimeout(()=>{
+          document.getElementById('transLoading').style.display = 'none';
+          showTransResult(getRandomTransResult());
+        }, 1200 + Math.random()*800);
+      }
+    }catch(e){
+      toast('⚠️ 이 파일은 읽을 수 없어요 — 폰 녹음기의 m4a·mp3·wav 파일을 선택해주세요');
+    }
+  }
+});
+
 async function doTransAI(){
   // 녹음 정보 (길이 + 최대 볼륨)
   const recSec = transSec;
