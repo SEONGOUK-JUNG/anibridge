@@ -38,7 +38,7 @@
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4AFFA3">
+<meta name="theme-color" content="#131A2B">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -48,67 +48,88 @@
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800;900&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ── 다크 모드 (수첩 바탕 + 말랑 로즈) ── */
 :root {
-  --bg: #0A0E1A;
-  --bg2: #0F1525;
+  --bg: #131A2B;
+  --bg2: #1B2438;
   --card: rgba(255,255,255,0.05);
-  --card-solid: #131929;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.12);
-  --text: #F0F4FF;
-  --text2: #8B95B0;
-  --text3: #5A6480;
-  --g1: #4AFFA3;
-  --g2: #00C9FF;
-  --g3: #FF6B9D;
-  --g4: #FFB830;
-  --urgent: #FF4D6D;
-  --caution: #FFB830;
-  --safe: #4AFFA3;
+  --card-solid: #1B2438;
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.14);
+  --text: #EFE9DE;
+  --text2: #A6AFC4;
+  --text3: #939CB2;
+  /* 강조색은 코코·나비가 두른 민트 소품 색(#94C0A1 / #9BBE9E)에서 뽑음 */
+  --g1: #8FD9AE;
+  --g2: #B8E8CC;
+  --g3: #E1BA83;
+  --g4: #E1BA83;
+  --urgent: #FF8FA3;
+  --caution: #F0B843;
+  --safe: #8FD9AE;
+  --on-accent: #10281C;
+  --accent-soft: rgba(143,217,174,0.13);
+  --accent-line: rgba(143,217,174,0.30);
+  --logo-a1: #8FD9AE;
+  --logo-a2: #4E9E7A;
+  --logo-b1: #B8E8CC;
+  --logo-b2: #6FBF97;
+  --bar-bg: rgba(19,26,43,0.95);
   --nav-h: 72px;
   --r: 24px;
   --rs: 16px;
 }
 
-/* ── 라이트 모드 ── */
+/* ── 라이트 모드 (말랑) ── */
 body.light {
-  --bg: #F4F6FA;
-  --bg2: #EAEDF5;
-  --card: rgba(0,0,0,0.03);
+  --bg: #FAF6EF;
+  --bg2: #F3EDE2;
+  --card: rgba(46,42,38,0.03);
   --card-solid: #FFFFFF;
-  --border: rgba(0,0,0,0.07);
-  --border2: rgba(0,0,0,0.10);
-  --text: #0D1120;
-  --text2: #5A6480;
-  --text3: #9AA0B8;
-  --g1: #00B870;
-  --g2: #0088CC;
-  --urgent: #E53050;
-  --caution: #D97706;
+  --border: rgba(46,42,38,0.08);
+  --border2: rgba(46,42,38,0.13);
+  --text: #2E2A26;
+  --text2: #5A524A;
+  --text3: #6E6459;
+  --g1: #2E6B4A;
+  --g2: #24593C;
+  --g3: #8A6A2E;
+  --g4: #8A6A2E;
+  --urgent: #B3243C;
+  --caution: #8A5A00;
+  --safe: #2E6B4A;
+  --on-accent: #FFFFFF;
+  --accent-soft: #E8F2EA;
+  --accent-line: #C9E0D2;
+  --logo-a1: #4E9E7A;
+  --logo-a2: #24593C;
+  --logo-b1: #6FBF97;
+  --logo-b2: #2E6B4A;
+  --bar-bg: rgba(250,246,239,0.96);
 }
 body.light .logo {
-  background: linear-gradient(135deg, #00A060 0%, #0077BB 100%);
+  background: linear-gradient(135deg, #2E6B4A 0%, #8A6A2E 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 body.light .logo-slogan {
-  background: linear-gradient(135deg, #00A060, #0077BB);
+  background: linear-gradient(135deg, #2E6B4A, #8A6A2E);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 1;
 }
 body.light .splash-logo {
-  background: linear-gradient(135deg, #00A060 0%, #0077BB 100%);
+  background: linear-gradient(135deg, #2E6B4A 0%, #8A6A2E 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 body.light .header {
-  background: rgba(244,246,250,0.92);
+  background: rgba(255,247,243,0.92);
 }
 body.light .bottom-nav {
-  background: rgba(244,246,250,0.94);
+  background: rgba(255,247,243,0.94);
 }
 body.light .modal {
   background: #FFFFFF;
@@ -117,19 +138,29 @@ body.light .modal-hd {
   background: #FFFFFF;
 }
 body.light .home-hero {
-  background: linear-gradient(160deg, #E8F0FF 0%, #EDF4FF 60%, #F4F6FA 100%);
+  background: linear-gradient(160deg, #EFE7D8 0%, #F5EFE4 60%, #FAF6EF 100%);
 }
 body.light .walk-hero {
-  background: linear-gradient(160deg, #D8EAFF 0%, #E0EEFF 100%);
+  background: linear-gradient(160deg, #DEEDE2 0%, #EAF3EC 100%);
 }
 body.light .splash {
-  background: #F4F6FA;
+  background: #FAF6EF;
 }
 body.light input, body.light select, body.light textarea {
-  background: rgba(0,0,0,0.04);
+  background: rgba(46,42,38,0.04);
   color: var(--text);
 }
 body.light select option { background: #FFFFFF; }
+
+/* 라이트 모드에서 다크 전용으로 남아 있던 AI 카드 */
+body.light .ai-cta {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F3F8F4 100%) !important;
+  border-color: rgba(46,107,74,0.18);
+}
+body.light .ai-cta-title { color: var(--text); }
+body.light .ai-cta-sub { color: var(--text2); }
+body.light .ai-cta-badge { background: var(--g1); color: #FFFFFF; }
+body.light .ai-cta-icon { box-shadow: 0 2px 10px rgba(51,35,43,0.10); }
 
 /* 모드 전환 버튼 */
 .theme-btn {
@@ -169,7 +200,7 @@ body {
   font-family: 'Outfit', sans-serif;
   font-weight: 900; font-size: clamp(48px, 13.5vw, 50px);
   letter-spacing: -1px;
-  background: linear-gradient(135deg, #4AFFA3 0%, #00E5FF 50%, #4AFFA3 100%);
+  background: linear-gradient(135deg, #8FD9AE 0%, #E1BA83 50%, #8FD9AE 100%);
   background-size: 200% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   line-height: 1;
@@ -205,7 +236,7 @@ body {
 .header {
   position: sticky; top: 0; z-index: 100;
   padding: 14px 20px;
-  background: rgba(10,14,26,0.92);
+  background: rgba(19,26,43,0.92);
   backdrop-filter: blur(20px);
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--border);
@@ -219,7 +250,7 @@ body {
   font-family: 'Outfit', sans-serif;
   font-weight: 900; font-size: 22px;
   letter-spacing: -0.3px;
-  background: linear-gradient(135deg, #4AFFA3 0%, #00E5FF 50%, #4AFFA3 100%);
+  background: linear-gradient(135deg, #8FD9AE 0%, #E1BA83 50%, #8FD9AE 100%);
   background-size: 200% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   animation: shimmer 3s linear infinite;
@@ -230,7 +261,7 @@ body.light .wm-ani { -webkit-text-fill-color: #16233D; }
 .logo-slogan {
   font-size: 10px; font-style: italic; font-weight: 500;
   letter-spacing: .03em; line-height: 1;
-  background: linear-gradient(135deg, #4AFFA3, #00C9FF);
+  background: linear-gradient(135deg, #8FD9AE, #B8E8CC);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   opacity: .85;
 }
@@ -309,13 +340,32 @@ body.light .wm-ani { -webkit-text-fill-color: #16233D; }
   position: relative; overflow: hidden;
   min-height: 190px; box-sizing: border-box;
   padding: 8px 20px 34px;
-  background: linear-gradient(160deg, #E8F0FF 0%, #EDF4FF 60%, #F4F6FA 100%); color: #132238;
+  background: linear-gradient(160deg, #EFE7D8 0%, #F5EFE4 60%, #FAF6EF 100%); color: #2E2A26;
 }
 .hero-orb {
   position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.25;
 }
 .hero-orb1 { width: 200px; height: 200px; background: var(--g1); top: -60px; right: -40px; }
 .hero-orb2 { width: 160px; height: 160px; background: var(--g2); bottom: -40px; left: -30px; }
+
+/* ── 홈 히어로: 문구 + 코코·나비 한 쌍 ── */
+.hero-chars {
+  position: absolute; right: 8px; bottom: 26px;
+  display: flex; align-items: flex-end;
+  z-index: 1; pointer-events: none;
+}
+.hero-chars img { width: 68px; height: auto; display: block; }
+.hero-chars img + img { margin-left: -12px; }
+/* 캐릭터 자리만큼 문구를 비켜 준다 */
+.hero-label, .hero-title, .hero-sub { padding-right: 128px; }
+.hero-pet {
+  position: relative; z-index: 2;
+  display: inline-block; margin-top: 11px;
+  font-size: 11.5px; font-weight: 600; color: var(--text2);
+  background: var(--card-solid); border: 1px solid var(--border2);
+  border-radius: 999px; padding: 4px 12px;
+}
+.hero-pet:empty { display: none; }
 .hero-label {
   font-size: 11px; font-weight: 600; letter-spacing: .14em;
   color: var(--g1); text-transform: uppercase; margin-bottom: 3px;
@@ -334,26 +384,29 @@ body.light .wm-ani { -webkit-text-fill-color: #16233D; }
 .hero-cta:active { color:#008A54; }
 .hero-cta:active::before { background:rgba(46,190,135,.17); }
 .hero-cta:focus-visible { outline: 3px solid rgba(16,185,129,.35); outline-offset: 3px; }
-body:not(.light) .home-hero { background: linear-gradient(160deg, #0F1525 0%, #0A1628 60%, #0A0E1A 100%); color: #f5faf8; }
+body:not(.light) .home-hero { background: linear-gradient(160deg, #242C46 0%, #1B2438 60%, #131A2B 100%); color: #EFE9DE; }
 body:not(.light) .hero-title, body:not(.light) .hero-title span { color: #f5faf8; }
 body:not(.light) .hero-sub { color: #aebdb7; }
 
 /* 오늘 요약 카드 */
 .today-float {
-  margin: -28px 16px 0;
-  background: var(--card-solid); border: 1px solid var(--border2);
-  border-radius: var(--r); padding: 12px;
-  display: flex; align-items: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  margin: -22px 16px 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
   position: relative; z-index: 2;
 }
-.today-item { flex: 1; min-width: 0; text-align: center; padding: 2px 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.today-icon { font-size: 20px; margin-bottom: 4px; }
-.today-val { font-weight: 700; font-size: 16px; }
+.today-item {
+  min-width: 0; text-align: left;
+  background: var(--card-solid); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 11px 11px 12px;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 3px;
+}
+.today-div { display: none; }
+.today-icon { display: none; }
+.today-val { font-weight: 750; font-size: 17px; letter-spacing: -.02em; }
 .today-val.green { color: var(--g1); }
 .today-val.amber { color: var(--caution); }
 .today-val.red { color: var(--urgent); }
-.today-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; font-weight: 500; }
+.today-lbl { font-size: 10.5px; color: var(--text2); margin-top: 0; font-weight: 600; }
 .today-div { width: 1px; height: 32px; align-self:center; background: var(--border); flex-shrink: 0; }
 .today-schedule-title { margin-top: 0; line-height: 1.15; font-weight: 600; }
 .today-schedule-list { width: 100%; min-width: 0; min-height: 21px; margin-top: 3px; display: flex; flex-direction: column; gap: 1px; }
@@ -383,8 +436,8 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 /* AI 분석 큰 버튼 */
 .ai-cta {
   position: relative; overflow: hidden; border-radius: var(--r);
-  background: linear-gradient(135deg, #0F3024, #0A2040);
-  border: 1px solid rgba(74,255,163,0.2);
+  background: linear-gradient(135deg, #1F2942, #171F33);
+  border: 1px solid var(--accent-line);
   padding: 20px; cursor: pointer;
   display: flex; align-items: center; gap: 16px;
   transition: transform .15s, box-shadow .15s;
@@ -412,7 +465,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 .ai-cta-sub { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
 .ai-cta-badge {
   position: absolute; top: -6px; right: -6px;
-  background: var(--urgent); color: white;
+  background: var(--urgent); color: var(--on-accent);
   font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
 }
 .ai-cta-arr { position: relative; color: var(--g1); font-size: 20px; font-weight: 700; }
@@ -432,8 +485,8 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 .prog-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); }
 .walk-start {
   width: 100%; margin-top: 14px; padding: 12px;
-  background: rgba(74,255,163,0.1); color: var(--g1);
-  border: 1px solid rgba(74,255,163,0.2); border-radius: var(--rs);
+  background: var(--accent-soft); color: var(--g1);
+  border: 1px solid var(--accent-line); border-radius: 999px;
   font-size: 13px; font-weight: 700; cursor: pointer;
   font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px;
 }
@@ -504,7 +557,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 .cam-btn {
   display: inline-flex; align-items: center; gap: 6px;
   background: linear-gradient(135deg, var(--g1), var(--g2));
-  color: #0A0E1A; border: none; border-radius: 999px;
+  color: var(--on-accent); border: none; border-radius: 999px;
   padding: 10px 22px; font-size: 13px; font-weight: 700;
   cursor: pointer; margin-top: 16px; font-family: inherit;
 }
@@ -518,7 +571,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 .ana-btn {
   width: 100%; margin-top: 14px;
   background: linear-gradient(135deg, var(--g1), var(--g2));
-  color: #0A0E1A; border: none; border-radius: var(--r); padding: 17px;
+  color: var(--on-accent); border: none; border-radius: var(--r); padding: 17px;
   font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: opacity .2s, transform .1s;
@@ -641,7 +694,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: all .2s;
 }
-.wa-start { background: linear-gradient(135deg, var(--g1), var(--g2)); color: #0A0E1A; }
+.wa-start { background: linear-gradient(135deg, var(--g1), var(--g2)); color: var(--on-accent); }
 .wa-stop { background: linear-gradient(135deg, var(--urgent), #FF8FA3); color: white; animation: wpulse 2s infinite; }
 @keyframes wpulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,77,109,0.4)} 50%{box-shadow:0 0 0 12px rgba(255,77,109,0)} }
 
@@ -699,7 +752,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
 }
 .chat-bubble-user {
   background: linear-gradient(135deg, var(--g1), var(--g2));
-  color: #0A0E1A; border-radius: 18px 4px 18px 18px;
+  color: var(--on-accent); border-radius: 18px 4px 18px 18px;
   padding: 12px 14px; font-size: 13px; line-height: 1.7;
   max-width: 80%; margin-left: auto;
 }
@@ -723,19 +776,68 @@ body:not(.light) .hero-sub { color: #aebdb7; }
   white-space: nowrap;
 }
 .quick-q-btn:active { background: rgba(74,255,163,0.2); }
-.care-tab-bar {
-  display: flex; background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto; position: sticky; top: 61px; z-index: 99;
+/* ── 케어수첩: 결과물 두 장 ── */
+.care-output { padding: 14px 16px 4px; display: flex; flex-direction: column; gap: 9px; }
+.out-card {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 14px 15px; cursor: pointer; font-family: inherit; text-align: left;
+  background: var(--card-solid); border: 1px solid var(--accent-line);
+  border-radius: var(--r); color: var(--text);
 }
-.care-tab-bar::-webkit-scrollbar { display: none; }
+.out-card.urgent { border-color: var(--urgent); }
+.out-ic {
+  width: 40px; height: 40px; flex: 0 0 40px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+  background: var(--accent-soft);
+}
+.out-card.urgent .out-ic { background: var(--card); }
+.out-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.out-txt b { font-size: 14.5px; font-weight: 750; letter-spacing: -.01em; }
+.out-txt em { font-style: normal; font-size: 11.5px; color: var(--text2); }
+.out-txt em.out-time { font-size: 10.5px; color: var(--text3); }
+.out-txt em.out-time:empty { display: none; }
+.out-arr { color: var(--text3); font-size: 18px; }
+.care-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 700; color: var(--g1);
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  padding: 0 0 12px;
+}
+/* 항목별 탭 상단: 여기는 보는 곳, 쓰는 곳은 오늘의 기록 */
+.view-hint {
+  width: 100%; padding: 12px 15px; margin-bottom: 12px;
+  background: var(--accent-soft); color: var(--text2);
+  border: 1px dashed var(--accent-line); border-radius: var(--rs);
+  font-size: 12px; font-weight: 600; line-height: 1.6;
+  cursor: pointer; font-family: inherit; text-align: left;
+}
+.view-hint b { color: var(--g1); }
+
+/* ── 케어수첩: 2단 내비 ── */
+.care-nav { position: sticky; top: 61px; z-index: 99; background: var(--bg2); }
+.care-tab-bar {
+  display: flex; border-bottom: 1px solid var(--border);
+}
+.care-sub-bar {
+  display: none; overflow-x: auto;
+  border-bottom: 1px solid var(--border); background: var(--bg);
+}
+.care-sub-bar.on { display: flex; }
+.care-tab-bar::-webkit-scrollbar, .care-sub-bar::-webkit-scrollbar { display: none; }
 .ctab {
-  padding: 14px 18px; font-size: 12px; font-weight: 700;
+  flex: 1; padding: 14px 8px; font-size: 12.5px; font-weight: 700;
   color: var(--text3); border: none; background: none; cursor: pointer;
   white-space: nowrap; border-bottom: 2px solid transparent;
   font-family: inherit; transition: all .15s;
 }
 .ctab.on { color: var(--g1); border-bottom-color: var(--g1); }
+.cstab {
+  padding: 11px 14px; font-size: 11.5px; font-weight: 700;
+  color: var(--text3); border: none; background: none; cursor: pointer;
+  white-space: nowrap; border-bottom: 2px solid transparent;
+  font-family: inherit; transition: all .15s;
+}
+.cstab.on { color: var(--g1); border-bottom-color: var(--g1); }
 .care-pg { display: none; padding: 16px; }
 .care-pg.on { display: block; }
 .munj-btn {
@@ -831,7 +933,7 @@ body:not(.light) .hero-sub { color: #aebdb7; }
   padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 700;
   border: none; cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .15s;
 }
-.place-cat.on { background: linear-gradient(135deg, var(--g1), var(--g2)); color: #0A0E1A; }
+.place-cat.on { background: linear-gradient(135deg, var(--g1), var(--g2)); color: var(--on-accent); }
 .place-cat:not(.on) { background: var(--card-solid); color: var(--text2); border: 1px solid var(--border2); }
 .place-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .pl-card { background: var(--card-solid); border: 1px solid var(--border2); border-radius: var(--r); overflow: hidden; }
@@ -883,7 +985,7 @@ body.light .my-hero,body.light .my-details{background:#fff;color:#16233D;border-
 .bottom-nav {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  background: rgba(10,14,26,0.92); backdrop-filter: blur(20px);
+  background: rgba(19,26,43,0.92); backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   padding: 10px 0 18px;
   display: flex; justify-content: space-around; z-index: 100;
@@ -912,7 +1014,7 @@ body.light .my-hero,body.light .my-details{background:#fff;color:#16233D;border-
 .leaflet-control-attribution { font-size: 9px !important; opacity: .65; }
 #walkMap { position: relative; z-index: 0; isolation: isolate; }
 .modal {
-  background: #131929; border-radius: 28px 28px 0 0;
+  background: var(--card-solid); border-radius: 28px 28px 0 0;
   border-top: 1px solid var(--border2);
   width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; padding-bottom: 24px;
   animation: modalUp .35s cubic-bezier(.34,1.2,.64,1);
@@ -921,7 +1023,7 @@ body.light .my-hero,body.light .my-details{background:#fff;color:#16233D;border-
 .modal-hd {
   display: flex; align-items: center; justify-content: space-between;
   padding: 22px 22px 18px; border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; background: #131929; z-index: 10;
+  position: sticky; top: 0; background: var(--card-solid); z-index: 10;
 }
 .modal-title { font-weight: 700; font-size: 17px; }
 .modal-close {
@@ -946,7 +1048,7 @@ input[type=text],input:not([type]),input[type=date],input[type=number],input[typ
 input:focus,select:focus,textarea:focus { outline: none; border-color: rgba(74,255,163,0.4); background: rgba(74,255,163,0.03); }
 textarea { resize: none; height: 80px; line-height: 1.6; }
 select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B95B0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
-select option { background: #131929; }
+select option { background: var(--card-solid); }
 
 .sym-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
 .sym-btn {
@@ -968,7 +1070,7 @@ select option { background: #131929; }
 .save-btn {
   width: 100%; padding: 15px;
   background: linear-gradient(135deg, var(--g1), var(--g2));
-  color: #0A0E1A; border: none; border-radius: var(--r);
+  color: var(--on-accent); border: none; border-radius: var(--r);
   font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 8px;
 }
 
@@ -1007,7 +1109,7 @@ select option { background: #131929; }
   width: 100%; padding: 11px; border: none; border-radius: var(--rs);
   font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
 }
-.pb-main { background: linear-gradient(135deg, var(--g1), var(--g2)); color: #0A0E1A; }
+.pb-main { background: linear-gradient(135deg, var(--g1), var(--g2)); color: var(--on-accent); }
 .pb-alt { background: rgba(255,255,255,0.07); color: var(--text2); }
 
 /* 알림 토글 */
@@ -1056,8 +1158,8 @@ select option { background: #131929; }
 <div class="splash" id="splash">
   <svg width="88" height="88" viewBox="0 0 120 120" fill="none" aria-hidden="true" style="margin-bottom:16px;animation:logoIn .45s ease both">
     <defs>
-      <linearGradient id="sgA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3FE8B0"/><stop offset="100%" stop-color="#2B5FC7"/></linearGradient>
-      <linearGradient id="sgB" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5FB2F7"/><stop offset="100%" stop-color="#2E6BD6"/></linearGradient>
+      <linearGradient id="sgA" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="var(--logo-a1)"/><stop offset="100%" stop-color="var(--logo-a2)"/></linearGradient>
+      <linearGradient id="sgB" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--logo-b1)"/><stop offset="100%" stop-color="var(--logo-b2)"/></linearGradient>
     </defs>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M60 26 Q49.5 26 45.5 36 L18.5 86 Q13 100 26 100 L94 100 Q107 100 101.5 86 L74.5 36 Q70.5 26 60 26 Z M60 49 Q57 49 55.8 52 L42.2 81 Q38 91 34 100 L86 100 Q82 91 77.8 81 L64.2 52 Q63 49 60 49 Z" fill="url(#sgA)"/>
     <g>
@@ -1090,10 +1192,10 @@ select option { background: #131929; }
     <svg class="logo-icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="hgA" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#3FE8B0"/><stop offset="100%" stop-color="#2B5FC7"/>
+          <stop offset="0%" stop-color="var(--logo-a1)"/><stop offset="100%" stop-color="var(--logo-a2)"/>
         </linearGradient>
         <linearGradient id="hgB" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#5FB2F7"/><stop offset="100%" stop-color="#2E6BD6"/>
+          <stop offset="0%" stop-color="var(--logo-b1)"/><stop offset="100%" stop-color="var(--logo-b2)"/>
         </linearGradient>
       </defs>
       <!-- A 레터폼 (하단 아치 터널) -->
@@ -1136,27 +1238,26 @@ select option { background: #131929; }
 <div id="pg-home" class="page active">
   <div class="home-hero">
     <div class="hero-orb hero-orb1"></div>
-    <div class="hero-orb hero-orb2"></div>
+    <div class="hero-chars" aria-hidden="true">
+      <img src="characters/koko-full.png" alt="">
+      <img src="characters/nabi-full.png" alt="">
+    </div>
     <div class="hero-label" id="heroLabel">DAILY HEALTH RECORD</div>
     <div class="hero-title" id="heroTitle">오늘의 기록이<br>더 정확한 진료를 만듭니다.</div>
     <div class="hero-sub" id="heroSub">우리 아이의 건강과 일상을<br>한곳에 기록해보세요.</div>
+    <div class="hero-pet" id="heroPet"></div>
   </div>
 
   <div class="today-float">
     <div class="today-item">
-      <div class="today-icon" id="hActivityIcon">🚶</div>
-      <div class="today-val amber" id="hWalkPct">0%</div>
       <div class="today-lbl" id="hActivityLabel">오늘 산책</div>
+      <div class="today-val amber" id="hWalkPct">0%</div>
     </div>
-    <div class="today-div"></div>
     <div class="today-item">
-      <div class="today-icon">❤️</div>
-      <div class="today-val green" id="hHealth">양호</div>
       <div class="today-lbl">건강 상태</div>
+      <div class="today-val green" id="hHealth">양호</div>
     </div>
-    <div class="today-div"></div>
     <div class="today-item today-schedule-item">
-      <div class="today-icon">📅</div>
       <div class="today-lbl today-schedule-title">다음 일정</div>
       <div class="today-schedule-list" id="hNextSchedule"><div class="today-schedule-empty">예정 없음</div></div>
     </div>
@@ -1267,7 +1368,7 @@ select option { background: #131929; }
   <div class="section">
     <button class="ai-cta" onclick="if(getChatRemainingCount()<=0){showUpgradeModal('chat');}else{showPage('chat');}" style="background:linear-gradient(135deg,#1A2040,#0F2030);border-color:rgba(255,107,157,0.25)">
       <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(255,107,157,0.3),transparent)"></div>
-      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#00C9FF)">💬</div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF9FB2,#C68CE0)">💬</div>
       <div class="ai-cta-text">
         <div class="ai-cta-title">AI 건강 상담</div>
         <div class="ai-cta-sub">증상·식이·행동 등<br>궁금한 점을 물어보세요</div>
@@ -1281,7 +1382,7 @@ select option { background: #131929; }
     <div class="sec-head"><div class="sec-title">재미로 즐겨요</div></div>
     <button class="ai-cta" onclick="showPage('translator')" style="background:linear-gradient(135deg,#0A2040,#0F2848);border-color:rgba(0,201,255,0.25)">
       <div class="ai-cta-glow" style="background:radial-gradient(circle,rgba(0,201,255,0.3),transparent)"></div>
-      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF6B9D,#FFB830)">🎙️</div>
+      <div class="ai-cta-icon" style="background:linear-gradient(135deg,#FF9FB2,#F0B843)">🎙️</div>
       <div class="ai-cta-text">
         <div class="ai-cta-title">우리 아이 마음 번역</div>
         <div class="ai-cta-sub">소리를 녹음하면 무슨 말인지<br>재미로 번역해드려요 😄</div>
@@ -1355,7 +1456,7 @@ select option { background: #131929; }
         transition:all .2s;
       ">
         <div style="font-size:40px" id="transRecordIcon">🎙️</div>
-        <div style="font-size:12px;font-weight:700;color:#0A0E1A;margin-top:6px" id="transRecordTxt">눌러서 녹음</div>
+        <div style="font-size:12px;font-weight:700;color:var(--on-accent);margin-top:6px" id="transRecordTxt">눌러서 녹음</div>
       </div>
       <div id="transTimer" style="font-size:13px;color:var(--text2);margin-top:14px;height:20px"></div>
     </div>
@@ -1494,8 +1595,8 @@ select option { background: #131929; }
           <circle class="ring-fill-c" id="ringFill" cx="85" cy="85" r="72" stroke-dasharray="452" stroke-dashoffset="452" stroke="url(#rg)"/>
           <defs>
             <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#4AFFA3"/>
-              <stop offset="100%" stop-color="#00C9FF"/>
+              <stop offset="0%" stop-color="var(--g1)"/>
+              <stop offset="100%" stop-color="var(--g2)"/>
             </linearGradient>
           </defs>
         </svg>
@@ -1554,31 +1655,52 @@ select option { background: #131929; }
 
 <!-- ══ 케어 수첩 ══ -->
 <div id="pg-care" class="page">
-  <div class="care-tab-bar">
-    <button class="ctab on" onclick="switchCare(this,'dashboard')">📒 요약</button>
-    <button class="ctab" onclick="switchCare(this,'symptom')">🤒 이상증상</button>
-    <button class="ctab" onclick="switchCare(this,'hospital')">🏥 병원기록</button>
-    <button class="ctab" onclick="switchCare(this,'vaccine')">💉 접종·구충</button>
-    <button class="ctab" onclick="switchCare(this,'feed')">🍚 식단</button>
-    <button class="ctab" onclick="switchCare(this,'weight')">⚖️ 체중</button>
-    <button class="ctab" onclick="switchCare(this,'memo')">📝 메모</button>
-    <button class="ctab" onclick="switchCare(this,'profile')">🏡 기본정보</button>
-    <button class="ctab" onclick="switchCare(this,'medication')">💊 복용약</button>
+  <!-- 병원에 보여주는 양식 3장 — 형식은 그대로, 오늘의 기록으로 자동 업데이트 -->
+  <div class="care-output">
+    <button class="out-card" onclick="openNewIntake()">
+      <span class="out-ic">📋</span>
+      <span class="out-txt"><b>문진서</b><em id="munjStatus">병원 가기 전에 보여주세요</em><em class="out-time" id="munjTime"></em></span>
+      <span class="out-arr">›</span>
+    </button>
+    <button class="out-card urgent" onclick="openEmergencyCard()">
+      <span class="out-ic">🆘</span>
+      <span class="out-txt"><b>응급 카드</b><em>응급실에서 바로 보여주세요</em><em class="out-time" id="emgTime"></em></span>
+      <span class="out-arr">›</span>
+    </button>
+    <button class="out-card" onclick="openProfilePane()">
+      <span class="out-ic">🏡</span>
+      <span class="out-txt"><b>기본정보</b><em id="profileStatus">생활·건강 정보, 병원 양식 그대로 · 최초 1회만 작성</em><em class="out-time" id="profileTime"></em></span>
+      <span class="out-arr">›</span>
+    </button>
+  </div>
+
+  <div class="care-nav">
+    <div class="care-tab-bar">
+      <button class="ctab on" id="careSecSummary" onclick="switchCareSection(this,'summary')">✏️ 오늘의 기록</button>
+      <button class="ctab" id="careSecRecords" onclick="switchCareSection(this,'records')">🗂 항목별 누적 기록</button>
+    </div>
+    <div class="care-sub-bar" id="careSubBar">
+      <button class="cstab on" data-care="symptom" onclick="switchCare(this,'symptom')">🤒 이상증상</button>
+      <button class="cstab" data-care="hospital" onclick="switchCare(this,'hospital')">🏥 병원기록</button>
+      <button class="cstab" data-care="vaccine" onclick="switchCare(this,'vaccine')">💉 접종·구충</button>
+      <button class="cstab" data-care="feed" onclick="switchCare(this,'feed')">🍚 식단</button>
+      <button class="cstab" data-care="weight" onclick="switchCare(this,'weight')">⚖️ 체중</button>
+      <button class="cstab" data-care="medication" onclick="switchCare(this,'medication')">💊 복용약</button>
+      <button class="cstab" data-care="memo" onclick="switchCare(this,'memo')">📝 메모</button>
+    </div>
   </div>
   <div id="cp-dashboard" class="care-pg on"><div id="careDashboard"></div></div>
   <div id="cp-symptom" class="care-pg">
-    <button onclick="openEmergencyCard()" style="width:100%;padding:14px;background:linear-gradient(135deg,rgba(255,77,109,0.15),rgba(255,184,48,0.1));color:var(--urgent);border:1px solid rgba(255,77,109,0.3);border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px">🆘 응급 카드 — 병원에서 바로 보여주세요</button>
-    <button class="munj-btn" onclick="exportMunj()">📋 사전 문진서로 내보내기</button>
     <div onclick="openM('signal')" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);margin-bottom:10px;cursor:pointer">
       <div style="font-size:18px">🚨</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:700">건강 시그널</div><div style="font-size:11px;color:var(--text3)">이런 증상은 즉시 병원으로 — 응급도별 가이드</div></div>
       <div style="color:var(--text3)">›</div>
     </div>
-    <button class="add-btn" onclick="openM('symptom')">＋ 이상증상 기록 추가</button>
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 새 기록은 <b>오늘의 기록</b>에서 — 여기서는 그동안의 증상 흐름을 봐요</button>
     <div id="lst-symptom"></div>
   </div>
   <div id="cp-hospital" class="care-pg">
-    <button class="add-btn" onclick="openM('hospital')">＋ 병원 방문 기록 추가</button>
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 병원에 다녀왔다면 <b>오늘의 기록</b>의 &lsquo;오늘 있었던 일&rsquo;에서 — 여기서는 진료 이력을 봐요</button>
     <div id="lst-hospital"></div>
   </div>
   <div id="cp-vaccine" class="care-pg">
@@ -1588,7 +1710,7 @@ select option { background: #131929; }
       <div style="flex:1"><div style="font-size:13px;font-weight:700">우리 아이 맞춤 건강검진 체크리스트</div><div style="font-size:11px;color:var(--text3)">나이에 맞는 검진 항목을 확인하고 체크하세요</div></div>
       <div style="color:var(--text3)">›</div>
     </div>
-    <button class="add-btn" onclick="openM('vaccine')">＋ 접종·구충 기록 추가</button>
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 접종·구충을 했다면 <b>오늘의 기록</b>의 &lsquo;오늘 있었던 일&rsquo;에서 — 여기서는 일정과 이력을 봐요</button>
     <div onclick="openOnboarding()" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:var(--card-solid);border:1px dashed rgba(74,255,163,0.35);border-radius:var(--r);margin-bottom:10px;cursor:pointer">
       <div style="font-size:18px">🐾</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:700">건강 스케줄 자동 생성</div><div style="font-size:11px;color:var(--text3)">종·최근 접종일만 알려주면 기본 접종·구충 일정을 자동 등록해요</div></div>
@@ -1601,17 +1723,7 @@ select option { background: #131929; }
     <input type="file" id="feedPhotoInput" accept="image/*" style="display:none">
   </div>
   <div id="cp-weight" class="care-pg">
-    <!-- 체중 입력 -->
-    <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:14px">
-      <div style="font-size:13px;font-weight:700;margin-bottom:12px">⚖️ 오늘 체중 기록</div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <input type="number" id="w-input" placeholder="0.0" step="0.1" min="0" max="100"
-          style="flex:1;padding:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:var(--rs);font-size:22px;font-weight:700;color:var(--text);font-family:inherit;text-align:center">
-        <div style="font-size:16px;font-weight:700;color:var(--text2)">kg</div>
-        <button id="w-save-btn" onclick="saveWeight()" style="padding:14px 20px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">저장</button>
-      </div>
-      <div id="w-today-info" style="margin-top:10px;font-size:12px;color:var(--text2);text-align:center"></div>
-    </div>
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 오늘 체중은 <b>오늘의 기록</b>에서 — 여기서는 변화 그래프를 봐요<span id="w-today-info" style="display:block;margin-top:4px;font-weight:500"></span></button>
 
     <!-- 체중 그래프 -->
     <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px 20px;margin-bottom:14px">
@@ -1638,14 +1750,15 @@ select option { background: #131929; }
   </div>
 
   <div id="cp-memo" class="care-pg">
-    <button class="add-btn" onclick="openM('memo')">＋ 메모 추가</button>
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 새 메모는 <b>오늘의 기록</b>에서 — 여기서는 지난 메모를 봐요</button>
     <div id="lst-memo"></div>
   </div>
 
   <div id="cp-profile" class="care-pg">
+    <button class="care-back" onclick="switchCareSection(document.getElementById('careSecSummary'),'summary')">‹ 요약으로 돌아가기</button>
     <div style="padding:4px 2px 14px">
-      <div style="font-size:20px;font-weight:900;margin-bottom:6px">기본 생활·건강 정보</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.6">평소 생활환경과 과거력, 예방의학 정보를 정리해요. 매일 기록하는 이상증상·체중 기록과는 별도로 저장됩니다.</div>
+      <div style="font-size:20px;font-weight:900;margin-bottom:6px">기본정보</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">병원 문진 양식 그대로예요. <b>최초 1회만</b> 작성하면, 이후에는 오늘의 기록을 저장할 때마다 컨디션·체중 등이 자동으로 반영됩니다.</div>
     </div>
 
     <div class="rec-card" style="padding:18px;margin-bottom:14px">
@@ -1699,9 +1812,12 @@ select option { background: #131929; }
       <label class="fl">최근 검사자료 여부 (복수 선택)</label><div id="pf-lab-types" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><button type="button" class="sym-btn" data-v="혈액검사" onclick="toggleSym(this)">혈액검사</button><button type="button" class="sym-btn" data-v="소변검사" onclick="toggleSym(this)">소변검사</button><button type="button" class="sym-btn" data-v="X-ray" onclick="toggleSym(this)">X-ray</button><button type="button" class="sym-btn" data-v="복부초음파" onclick="toggleSym(this)">복부초음파</button><button type="button" class="sym-btn" data-v="심장초음파" onclick="toggleSym(this)">심장초음파</button><button type="button" class="sym-btn" data-v="CT/MRI" onclick="toggleSym(this)">CT/MRI</button><button type="button" class="sym-btn" data-v="기타" onclick="toggleSym(this)">기타</button></div>
       <label class="fl">최근 검사일</label><input id="pf-lab-date" type="date"><label class="fl">검사병원</label><input id="pf-lab-hospital"><label class="fl">검사 메모</label><textarea id="pf-lab-note"></textarea>
     </div>
-    <button class="add-btn" style="position:sticky;bottom:92px;z-index:5;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;box-shadow:0 8px 28px rgba(0,201,255,.25)" onclick="saveCareProfile()">기본 생활·건강 정보 저장</button>
+    <button class="add-btn" style="position:sticky;bottom:92px;z-index:5;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;box-shadow:0 8px 28px rgba(0,201,255,.25)" onclick="saveCareProfile()">기본정보 저장</button>
   </div>
-  <div id="cp-medication" class="care-pg"><button class="add-btn" onclick="openMedicationForm()">＋ 복용약 추가</button><div id="lst-medication"></div></div>
+  <div id="cp-medication" class="care-pg">
+    <button class="view-hint" onclick="openDailyRecord()">✏️ 새 약을 시작했다면 <b>오늘의 기록</b>의 &lsquo;오늘 있었던 일&rsquo;에서 — 여기서는 복용 중인 약을 관리해요</button>
+    <div id="lst-medication"></div>
+  </div>
 </div>
 
 <div class="overlay" id="m-medication" onclick="closeM(event,'medication')"><div class="modal"><div class="modal-hd"><span class="modal-title">💊 복용약</span><button class="modal-close" onclick="closeM(null,'medication')">✕</button></div><div class="modal-body">
@@ -1714,7 +1830,8 @@ select option { background: #131929; }
 <div class="overlay" id="m-daily" onclick="closeM(event,'daily')"><div class="modal">
 <div class="modal-hd"><span class="modal-title">✏️ 오늘의 기록</span><button class="modal-close" onclick="closeM(null,'daily')">✕</button></div>
 <div class="modal-body">
-  <div id="dailyDateLbl" style="font-size:12px;color:var(--text2);margin-bottom:14px"></div>
+  <div id="dailyDateLbl" style="font-size:12px;color:var(--text2);margin-bottom:6px"></div>
+  <div id="dailyAutoHint" style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px"></div>
   <div class="fg"><label class="fl">😊 오늘 컨디션 (복수 선택)</label>
     <div id="daily-conditions" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button type="button" class="sym-btn" data-v="식욕이 평소와 비슷함" onclick="toggleSym(this)">식욕이 평소와 비슷함</button>
@@ -1727,7 +1844,7 @@ select option { background: #131929; }
       <button type="button" class="sym-btn" data-v="배뇨 변화" onclick="toggleSym(this)">배뇨 변화</button>
       <button type="button" class="sym-btn" data-v="기타" onclick="toggleSym(this)">기타</button>
     </div>
-    <div style="font-size:10.5px;color:var(--text3);margin-top:6px">✓ 선택한 컨디션은 기본 생활·건강 정보에 자동 반영됩니다</div>
+    <div style="font-size:10.5px;color:var(--text3);margin-top:6px">✓ 선택한 컨디션은 기본정보에 자동 반영됩니다</div>
   </div>
   <div class="fg"><label class="fl">증상 상세 (이상이 있을 때만)</label><textarea id="daily-detail" placeholder="예) 아침에 노란 액체 구토 1회" style="height:60px"></textarea></div>
   <div class="fg"><label class="fl">⚖️ 오늘 체중 (kg)</label><input type="number" id="daily-weight" step="0.1" min="0" placeholder="예) 3.2"></div>
@@ -1736,6 +1853,29 @@ select option { background: #131929; }
     <div id="daily-feed-hint" style="display:none;font-size:10.5px;color:var(--text3);margin-top:6px">💡 식단 탭에서 사료를 등록하면 칼로리가 자동 계산돼요</div>
   </div>
   <div class="fg"><label class="fl">📝 메모 (선택)</label><textarea id="daily-memo" placeholder="오늘 특이사항을 자유롭게" style="height:60px"></textarea></div>
+  <div class="fg"><label class="fl">🗓 오늘 있었던 일 (선택 — 해당할 때만)</label>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <button type="button" class="sym-btn" id="dev-hospital" onclick="toggleDailyEvent(this,'hospital')">🏥 병원 방문</button>
+      <button type="button" class="sym-btn" id="dev-vaccine" onclick="toggleDailyEvent(this,'vaccine')">💉 접종·구충</button>
+      <button type="button" class="sym-btn" id="dev-med" onclick="toggleDailyEvent(this,'med')">💊 새 약 시작</button>
+    </div>
+    <div id="daily-ev-hospital" style="display:none;margin-top:10px">
+      <input type="text" id="daily-hosp-name" placeholder="병원 이름" style="margin-bottom:8px">
+      <input type="text" id="daily-hosp-diag" placeholder="진료 내용 · 진단 (선택)">
+    </div>
+    <div id="daily-ev-vaccine" style="display:none;margin-top:10px">
+      <select id="daily-vax-name">
+        <option value="">접종·구충 종류 선택</option>
+        <option>종합백신 (DHPPL)</option><option>코로나장염 백신</option><option>켄넬코프 백신</option>
+        <option>인플루엔자 백신</option><option>광견병 백신</option><option>심장사상충 예방약</option>
+        <option>외부기생충 예방약</option><option>구충제</option>
+      </select>
+    </div>
+    <div id="daily-ev-med" style="display:none;margin-top:10px">
+      <input type="text" id="daily-med-name" placeholder="약 이름" style="margin-bottom:8px">
+      <input type="text" id="daily-med-dose" placeholder="용량 · 횟수 (선택)">
+    </div>
+  </div>
   <button class="save-btn" onclick="saveDailyRecord()">오늘의 기록 저장</button>
 </div></div></div>
 
@@ -1777,7 +1917,7 @@ select option { background: #131929; }
   </div>
 
   <!-- 입력창 -->
-  <div style="position:fixed;bottom:var(--nav-h);left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(10,14,26,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px;z-index:99">
+  <div style="position:fixed;bottom:var(--nav-h);left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bar-bg);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px;z-index:99">
     <div style="display:flex;gap:8px;align-items:flex-end">
       <textarea id="chatInput" placeholder="증상이나 궁금한 점을 입력하세요..."
         style="flex:1;padding:12px 14px;background:var(--card-solid);border:1px solid var(--border2);border-radius:20px;font-size:14px;font-family:inherit;color:var(--text);resize:none;height:44px;max-height:120px;overflow-y:auto;line-height:1.4"
@@ -1823,7 +1963,7 @@ select option { background: #131929; }
           <button class="hosp-chip" id="hc-24" onclick="findHospitals('24시 동물병원',this)" style="padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid var(--border2);background:rgba(255,255,255,0.04);color:var(--text2);cursor:pointer;font-family:inherit">🌙 24시</button>
         </div>
       </div>
-      <button id="hospFindBtn" onclick="findHospitals()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">📍 현재 위치로 찾기</button>
+      <button id="hospFindBtn" onclick="findHospitals()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">📍 현재 위치로 찾기</button>
       <div id="hospNearList" style="margin-top:4px"></div>
     </div>
     <!-- 내 주변 동반 장소 -->
@@ -1837,7 +1977,7 @@ select option { background: #131929; }
         <button class="place-cat" onclick="findPlaces('애견미용',this)">💈 미용</button>
         <button class="place-cat" onclick="findPlaces('애견운동장',this)">🐕 운동장</button>
       </div>
-      <button id="placeFindBtn" onclick="findPlaces()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px">📍 현재 위치로 찾기</button>
+      <button id="placeFindBtn" onclick="findPlaces()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:10px">📍 현재 위치로 찾기</button>
       <div id="placeNearList" style="margin-top:4px"></div>
     </div>
   </div>
@@ -1923,7 +2063,7 @@ select option { background: #131929; }
   <div class="nav-item active" id="nav0" onclick="showPage('home')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>홈<div class="nav-dot"></div>
   </div>
-  <div class="nav-item" id="nav1" onclick="showPage('care')" style="color:#FFB830">
+  <div class="nav-item" id="nav1" onclick="showPage('care')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>케어수첩<div class="nav-dot"></div>
   </div>
   <div class="nav-item" id="nav3" onclick="showPage('analyze')">
@@ -2132,7 +2272,7 @@ select option { background: #131929; }
     </div>
 
     <div style="background:rgba(255,184,48,0.07);border:1.5px solid rgba(255,184,48,0.3);border-radius:var(--r);padding:16px;margin-bottom:12px">
-      <div style="font-size:14px;font-weight:800;color:#FFB830;margin-bottom:10px">🟡 24시간 안에 진료 받기</div>
+      <div style="font-size:14px;font-weight:800;color:var(--caution);margin-bottom:10px">🟡 24시간 안에 진료 받기</div>
       <div style="font-size:13px;color:var(--text2);line-height:2">
         · 하루 이상 계속되는 구토·설사<br>
         · 변·소변에 피가 섞임, 검은색 변<br>
@@ -2407,7 +2547,7 @@ select option { background: #131929; }
           <div style="text-align:left"><div style="font-size:13px;font-weight:700">품종별 주의사항 안내</div><div style="font-size:11px;color:var(--text2);margin-top:2px">우리 아이에게 맞는 건강 정보</div></div>
         </div>
       </div>
-      <button onclick="obNext(2)" style="width:calc(100% - 40px);margin-top:32px;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
+      <button onclick="obNext(2)" style="width:calc(100% - 40px);margin-top:32px;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
         시작하기 →
       </button>
     </div>
@@ -2437,7 +2577,7 @@ select option { background: #131929; }
           <div style="font-size:14px;font-weight:700;color:var(--text)">기타</div>
         </button>
       </div>
-      <button onclick="obNext(3)" id="ob-next2" disabled style="width:100%;padding:16px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.3">다음 →</button>
+      <button onclick="obNext(3)" id="ob-next2" disabled style="width:100%;padding:16px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.3">다음 →</button>
     </div>
   </div>
 
@@ -2476,7 +2616,7 @@ select option { background: #131929; }
           </div>
         </div>
       </div>
-      <button onclick="obNext(4)" style="width:100%;margin-top:28px;padding:16px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">다음 →</button>
+      <button onclick="obNext(4)" style="width:100%;margin-top:28px;padding:16px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">다음 →</button>
     </div>
   </div>
 
@@ -2507,7 +2647,7 @@ select option { background: #131929; }
         <b style="color:var(--g1)">다음 접종일이 자동 계산</b>되어 케어수첩에 등록됩니다
       </div>
 
-      <button onclick="completeOnboarding()" style="width:100%;margin-top:20px;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
+      <button onclick="completeOnboarding()" style="width:100%;margin-top:20px;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
         🐾 스케줄 생성하기
       </button>
       <button onclick="completeOnboarding(true)" style="width:100%;margin-top:10px;padding:13px;background:none;color:var(--text3);border:none;font-size:13px;cursor:pointer;font-family:inherit">
@@ -2523,7 +2663,7 @@ select option { background: #131929; }
       <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:24px;margin-bottom:8px" id="ob-done-title">코코의 스케줄이 완성됐어요!</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:32px" id="ob-done-desc">케어수첩에 자동 등록된 내용을 확인해보세요</div>
       <div id="ob-schedule-preview" style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:18px;text-align:left;margin-bottom:24px"></div>
-      <button onclick="finishOnboarding()" style="width:100%;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
+      <button onclick="finishOnboarding()" style="width:100%;padding:17px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">
         AniBridge 시작하기 🐾
       </button>
     </div>
@@ -3430,6 +3570,7 @@ function showPage(k){
   // 산책 페이지 열릴 때 계절 팁 + 인라인 경로 지도 업데이트
   if(k === 'walk'){ updSeasonTip(); renderInlineRouteMap(); }
   if(k === 'home'){ renderRoutine(); updateNextScheduleSummary(); updWalk(); }
+  if(k === 'care') updateMunjStatus();
   if(k === 'my') setMyProfileExpanded(false);
 }
 
@@ -4128,10 +4269,11 @@ function updWeightTodayInfo(){
   const btn = document.getElementById('w-save-btn');
   if(!el) return;
   const todayRec = data.find(d=>d.date===today());
-  // 오늘의 기록에서 저장한 체중을 입력칸에 자동 표시 — 여기서는 수정만
   if(inp) inp.value = todayRec ? todayRec.weight : '';
   if(btn) btn.textContent = todayRec ? '수정' : '저장';
-  el.innerHTML = '✏️ <b style="color:var(--text)">오늘의 기록</b>에서 입력하면 자동으로 저장됩니다' + (todayRec ? ' — 잘못 입력했다면 위에서 고치고 수정을 눌러주세요' : '');
+  el.innerHTML = todayRec
+    ? `오늘 <b>${todayRec.weight}kg</b> 기록됨 ✓ — 잘못 입력했다면 오늘의 기록에서 다시 저장하면 돼요`
+    : '오늘 체중은 아직 없어요';
 }
 
 function selWeightPeriod(btn, days){
@@ -4200,15 +4342,15 @@ function renderWeightGraph(){
   const fillPts = `${firstX},${H-PAD.bottom} ${pts} ${lastX},${H-PAD.bottom}`;
   svg.innerHTML += `<defs>
     <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#4AFFA3" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#4AFFA3" stop-opacity="0"/>
+      <stop offset="0%" stop-color="var(--g1)" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="var(--g1)" stop-opacity="0"/>
     </linearGradient>
   </defs>`;
   svg.innerHTML += `<polygon points="${fillPts}" fill="url(#wg)"/>`;
 
   // 라인
   const linePts = data.map((d,i)=>`${i===0?'M':'L'}${scaleX(i)},${scaleY(d.weight)}`).join(' ');
-  svg.innerHTML += `<path d="${linePts}" fill="none" stroke="#4AFFA3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg.innerHTML += `<path d="${linePts}" fill="none" stroke="var(--g1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
 
   // 점 + X축 날짜
   data.forEach((d,i)=>{
@@ -4216,7 +4358,7 @@ function renderWeightGraph(){
     const isFirst = i===0, isLast = i===data.length-1;
     const showDot = isFirst||isLast||data.length<=10;
     if(showDot){
-      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="#0A0E1A" stroke="#4AFFA3" stroke-width="2"/>`;
+      svg.innerHTML += `<circle cx="${x}" cy="${y}" r="4" fill="var(--bg)" stroke="var(--g1)" stroke-width="2"/>`;
     }
     // X축 날짜 — 첫/마지막/중간만
     if(isFirst||isLast||(data.length>4 && i===Math.floor(data.length/2))){
@@ -4331,11 +4473,29 @@ function updateApiKeyStatus(){
 }
 
 // ── 케어 수첩 ──
-function switchCare(btn,id){
+const CARE_RECORD_TABS = ['symptom','hospital','vaccine','feed','weight','medication','memo'];
+
+// 1단: 요약 / 기본정보 / 오늘의 기록
+function switchCareSection(btn,sec){
   document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  const sub=document.getElementById('careSubBar');
+  if(sec==='records'){
+    if(sub) sub.classList.add('on');
+    const cur=document.querySelector('.cstab.on')||document.querySelector('.cstab');
+    if(cur) switchCare(cur, cur.dataset.care);
+  }else{
+    if(sub) sub.classList.remove('on');
+    switchCare(null, sec==='profile' ? 'profile' : 'dashboard');
+  }
+}
+
+function switchCare(btn,id){
+  document.querySelectorAll('.cstab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.care-pg').forEach(p=>p.classList.remove('on'));
-  btn.classList.add('on');
+  if(btn) btn.classList.add('on');
   document.getElementById('cp-'+id).classList.add('on');
+  updateMunjStatus();
   if(id==='weight'){
     updWeightTodayInfo();
     renderWeightGraph();
@@ -4348,7 +4508,82 @@ function switchCare(btn,id){
   if(id==='vaccine') renderPreventionSchedule();
 }
 
-function openCareTab(id){const b=Array.from(document.querySelectorAll('.ctab')).find(x=>(x.getAttribute('onclick')||'').includes(`'${id}'`));if(b)switchCare(b,id);}
+function openCareTab(id){
+  if(CARE_RECORD_TABS.includes(id)){
+    const primary=document.getElementById('careSecRecords');
+    document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+    if(primary) primary.classList.add('on');
+    const sub=document.getElementById('careSubBar'); if(sub) sub.classList.add('on');
+    switchCare(document.querySelector('.cstab[data-care="'+id+'"]'), id);
+  }else{
+    const isProf = id==='profile';
+    switchCareSection(document.getElementById(isProf?'careSecProfile':'careSecSummary'), isProf?'profile':'summary');
+  }
+}
+// 문진서가 얼마나 채워졌는지 — 비어 있어도 열리되, 뭘 더 채우면 좋은지 알려준다
+function munjReadiness(){
+  const pet=PETS.length?PETS[curPetIdx]:null; if(!pet) return null;
+  const p=DB.careProfile||{};
+  const w=loadWeightData()[0];
+  const checks=[
+    ['기본 프로필', !!(pet.name&&pet.breed&&pet.birth)],
+    ['체중',       !!(w||pet.weight)],
+    ['주거·동거',  !!(p.housing||p.cohabit)],
+    ['식이',       !!(p.diet||p['food-brand']||pet.food)],
+    ['병력',       !!(p['medical-history']||p['surgery-history']||pet.disease)],
+    ['알레르기',   !!(p['drug-allergy']||p['vaccine-allergy']||p['food-allergy']||p['env-allergy']||pet.allergy)],
+    ['예방',       !!(p['primary-vax']||p.heartworm||p.ecto)],
+    ['복용약',     !!(DB.medications.filter(x=>x.active).length||p['med-note']||pet.meds)]
+  ];
+  return {done:checks.filter(c=>c[1]).length, total:checks.length, missing:checks.filter(c=>!c[1]).map(c=>c[0])};
+}
+// 케어 데이터가 마지막으로 바뀐 시각 — 기록 id가 Date.now() 기반인 것을 이용
+function lastCareUpdateTs(){
+  let ts=(DB.careProfile&&DB.careProfile._updatedAt)||0;
+  try{
+    ['symptom','hospital','vaccine','memo','medications'].forEach(k=>(DB[k]||[]).forEach(r=>{if(r.id>ts&&r.id<=Date.now())ts=r.id;}));
+    loadWeightData().forEach(r=>{if(r.ts&&r.ts>ts)ts=r.ts;});
+    getFeedLog().forEach(r=>{if(r.id>ts&&r.id<=Date.now())ts=r.id;});
+  }catch(e){}
+  return ts;
+}
+function fmtUpdateTs(ts){
+  if(!ts) return '';
+  const d=new Date(ts);
+  const dateStr=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+  const hm=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+  return (dateStr===today() ? '오늘 '+hm : dateStr.slice(5).replace('-','/')+' '+hm);
+}
+function updateMunjStatus(){
+  const st=document.getElementById('munjStatus');
+  if(st){
+    const r=munjReadiness();
+    if(!r) st.textContent='반려동물을 등록하면 자동으로 준비됩니다';
+    else st.textContent = r.done>=r.total
+      ? `준비 완료 · ${r.done}/${r.total} 항목 — 병원에 그대로 보여주세요`
+      : `준비됨 · ${r.done}/${r.total} 항목 — 기본정보를 채우면 더 정확해져요`;
+  }
+  const ts=lastCareUpdateTs();
+  const tsTxt=ts?('업데이트 '+fmtUpdateTs(ts)+' · 오늘의 기록 저장 시 자동 반영'):'오늘의 기록을 저장하면 자동으로 채워져요';
+  const mt=document.getElementById('munjTime'); if(mt) mt.textContent=tsTxt;
+  const et=document.getElementById('emgTime'); if(et) et.textContent=tsTxt;
+  const pTs=(DB.careProfile&&DB.careProfile._updatedAt)||0;
+  const pt=document.getElementById('profileTime');
+  if(pt) pt.textContent = pTs ? ('업데이트 '+fmtUpdateTs(pTs)+' · 오늘의 기록 저장 시 자동 업데이트') : '아직 작성 전 — 한 번만 작성하면 이후 자동 업데이트';
+  // 기본정보 카드에 비어 있는 항목 표시
+  const ps=document.getElementById('profileStatus');
+  if(ps){
+    const r2=munjReadiness();
+    ps.textContent = (r2&&r2.missing.length)
+      ? `비어 있는 항목: ${r2.missing.join(' · ')} — 눌러서 채우기`
+      : '생활·건강 정보, 병원 양식 그대로 · 최초 1회만 작성';
+  }
+}
+function openProfilePane(){
+  closeM(null,'daily');
+  showPage('care');
+  switchCareSection(null,'profile');
+}
 function nextMonthlyDate(ds){if(!ds)return'';const d=new Date(ds);d.setDate(d.getDate()+30);return d.toISOString().split('T')[0];}
 function getNextCareSchedule(){const p=DB.careProfile||{};const items=[];DB.vaccine.forEach(v=>{if(v.nextDate)items.push({name:v.name,date:v.nextDate});});if(p['heartworm-date'])items.push({name:'심장사상충',date:nextMonthlyDate(p['heartworm-date'])});if(p['ecto-date'])items.push({name:'외부기생충',date:nextMonthlyDate(p['ecto-date'])});return items.filter(x=>x.date).map(x=>({...x,dd:getDday(x.date)})).sort((a,b)=>a.dd-b.dd)[0]||null;}
 function scheduleBadge(item){if(!item)return'기록 없음';const c=item.dd<0?'var(--urgent)':item.dd<=7?'var(--urgent)':item.dd<=30?'var(--caution)':'var(--g1)';return `<b style="color:${c}">${escHtml(item.name)} ${ddTxt(item.dd)}</b><br><span style="font-size:11px;color:var(--text3)">${escHtml(item.date)}</span>`;}
@@ -4359,33 +4594,42 @@ function renderCareDashboard(){const el=document.getElementById('careDashboard')
   const re=DB.hospital.filter(x=>x.nextDate).map(x=>({...x,dd:getDday(x.nextDate)})).sort((a,b)=>a.dd-b.dd)[0];
   const next=getNextCareSchedule();
   const todayCnt=getTodayCareRecordCount();
-  const cards=[['🤒','이상증상','symptom'],['🏥','병원기록','hospital'],['💉','접종·구충','vaccine'],['🍚','식단','feed'],['⚖️','체중','weight'],['💊','복용약','medication']];
+  const rd=munjReadiness();
   el.innerHTML=`
-  <div style="font-size:20px;font-weight:900;margin-bottom:4px">Care Notebook 2.0</div>
-  <div style="font-size:12px;color:var(--text2);margin-bottom:14px">오늘의 기록이 더 정확한 진료를 만듭니다</div>
-  <button onclick="openDailyRecord()" style="width:100%;padding:17px 18px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;font-family:inherit;text-align:left;cursor:pointer;margin-bottom:8px;box-shadow:0 8px 24px rgba(0,201,255,.22)">
-    <div style="font-size:16px;font-weight:900">✏️ 오늘의 기록${todayCnt>0?`<span style="float:right;font-size:11px;background:rgba(10,14,26,.16);padding:3px 10px;border-radius:999px">오늘 ${todayCnt}건 ✓</span>`:''}</div>
-    <div style="font-size:11.5px;margin-top:4px;opacity:.78;font-weight:600">컨디션 · 체중 · 식사 · 메모를 한 번에 기록해요</div>
+  <button onclick="openDailyRecord()" style="width:100%;padding:18px;border:none;border-radius:var(--r);background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);font-family:inherit;text-align:left;cursor:pointer;margin-bottom:8px">
+    <div style="font-size:16px;font-weight:900">✏️ 오늘의 기록${todayCnt>0?`<span style="float:right;font-size:11px;background:rgba(0,0,0,.16);padding:3px 10px;border-radius:999px">오늘 ${todayCnt}건 ✓</span>`:''}</div>
+    <div style="font-size:11.5px;margin-top:4px;opacity:.8;font-weight:600">컨디션 · 체중 · 식사 · 메모 — 한 화면에서 30초면 끝나요</div>
+    <div style="font-size:10.5px;margin-top:6px;opacity:.7;font-weight:600">저장하면 위의 문진서 · 응급카드 · 기본정보가 자동으로 업데이트됩니다</div>
   </button>
-  <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">기록 보기</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">${cards.map(c=>`<button style="min-height:66px;border:1px solid var(--border2);background:var(--card-solid);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer" onclick="openCareTab('${c[2]}')"><div style="font-size:20px">${c[0]}</div><div style="font-size:11px;margin-top:3px">${c[1]}</div></button>`).join('')}</div>
-  <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.04em">병원 제출용</div>
-  <button onclick="openCareTab('profile')" style="width:100%;padding:14px 18px;border:1px solid rgba(74,255,163,.3);border-radius:var(--rs);background:rgba(74,255,163,.06);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;margin-bottom:8px">
-    <div style="font-size:13.5px;font-weight:800">🏡 기본 생활·건강 정보<span style="float:right;font-size:10px;color:var(--g1);background:rgba(74,255,163,.12);padding:3px 9px;border-radius:999px">최초 1회 입력</span></div>
-    <div style="font-size:11px;margin-top:3px;color:var(--text2)">주거 · 식이 · 병력 · 예방 · 검사자료 — 응급카드·문진서의 기본이 됩니다</div>
-  </button>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
-    <button style="min-height:54px;border:1px solid rgba(255,77,109,.35);background:rgba(255,77,109,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openEmergencyCard()">🆘 응급카드</button>
-    <button style="min-height:54px;border:1px solid rgba(0,201,255,.35);background:rgba(0,201,255,.08);border-radius:var(--rs);color:var(--text);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer" onclick="openNewIntake()">📋 문진서</button>
-  </div>
   <div class="rec-card" style="padding:16px 18px"><div class="rec-title" style="margin-bottom:8px">최근 변경사항</div><div style="font-size:12px;color:var(--text2);line-height:1.9"><div>⚖️ 최근 체중: ${w?escHtml(String(w.weight))+'kg · '+escHtml(w.date):'기록 없음'}</div><div>🏥 최근 병원: ${h?escHtml(h.name)+' · '+escHtml(h.date):'기록 없음'}</div><div>💉 다음 예방: ${scheduleBadge(next)}</div><div>📅 다음 재진: ${re?scheduleBadge({name:re.name||'재진',date:re.nextDate,dd:re.dd}):'기록 없음'}</div></div></div>`;}
 
 // ── 오늘의 기록 — 컨디션·체중·식사·메모를 한 창에서 (기존 저장 구조 재사용) ──
 const DAILY_SYM_CHIPS=['식욕 감소','기력 저하','구토','설사','기침','배뇨 변화','기타'];
+function toggleDailyEvent(btn,key){
+  btn.classList.toggle('on');
+  const box=document.getElementById('daily-ev-'+key);
+  if(box) box.style.display=btn.classList.contains('on')?'block':'none';
+}
+function resetDailyEvents(){
+  ['hospital','vaccine','med'].forEach(k=>{
+    const b=document.getElementById('dev-'+k); if(b) b.classList.remove('on');
+    const box=document.getElementById('daily-ev-'+k); if(box) box.style.display='none';
+  });
+  ['daily-hosp-name','daily-hosp-diag','daily-vax-name','daily-med-name','daily-med-dose'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+}
 function openDailyRecord(){
   if(!PETS.length){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
   const cp=DB.careProfile||{};
   document.getElementById('dailyDateLbl').textContent=`${today()} · ${PETS[curPetIdx].name||''}의 하루를 30초 만에 기록해요`;
+  const hintEl=document.getElementById('dailyAutoHint');
+  if(hintEl){
+    const r=munjReadiness();
+    let h='저장하면 문진서 · 응급카드 · 기본정보에 자동 반영돼요';
+    if(r&&r.missing.length) h+=` · 아직 비어 있는 항목: ${r.missing.join(', ')} — <span onclick="openProfilePane()" style="color:var(--g1);font-weight:700;cursor:pointer;text-decoration:underline">기본정보에서 채우기</span>`;
+    hintEl.innerHTML=h;
+  }
   // 컨디션: 기본 생활·건강 정보의 현재 컨디션으로 프리필
   document.querySelectorAll('#daily-conditions .sym-btn').forEach(b=>b.classList.toggle('on',(cp.conditions||[]).includes(b.dataset.v)));
   document.getElementById('daily-detail').value='';
@@ -4401,6 +4645,7 @@ function openDailyRecord(){
   const cfg=getFeedCfg();
   document.getElementById('daily-feed-g').value='';
   document.getElementById('daily-feed-hint').style.display=cfg?'none':'block';
+  resetDailyEvents();
   openM('daily');
 }
 
@@ -4412,10 +4657,11 @@ function saveDailyRecord(){
   const g=parseFloat(document.getElementById('daily-feed-g').value);
   const memoTxt=document.getElementById('daily-memo').value.trim();
   const saved=[];
-  // DB 저장분(컨디션→기본정보 자동 반영, 증상, 메모)은 한 번에 — 실패 시 원복
+  // DB 저장분(컨디션→기본정보 자동 반영, 증상, 메모, 오늘 있었던 일)은 한 번에 — 실패 시 원복
   const bakSym=DB.symptom.slice(),bakMemo=DB.memo.slice(),bakCp=Object.assign({},DB.careProfile);
+  const bakHosp=DB.hospital.slice(),bakVax=DB.vaccine.slice(),bakMed=DB.medications.slice();
   let dbTouched=false;
-  if(conds.length){ DB.careProfile=Object.assign({},DB.careProfile,{conditions:conds}); dbTouched=true; saved.push('컨디션'); }
+  if(conds.length){ DB.careProfile=Object.assign({},DB.careProfile,{conditions:conds,_updatedAt:Date.now()}); dbTouched=true; saved.push('컨디션'); }
   const syms=conds.filter(c=>DAILY_SYM_CHIPS.includes(c));
   if(syms.length||detail){
     DB.symptom.unshift({id:Date.now(),date:today(),symptoms:syms,detail:detail,since:'',freq:'',testDone:'',testDetail:'',medDone:'',medDetail:'',medChange:'',level:'관찰중'});
@@ -4423,7 +4669,32 @@ function saveDailyRecord(){
     if(!saved.includes('컨디션')) saved.push('증상');
   }
   if(memoTxt){ DB.memo.unshift({id:Date.now()+1,date:today(),title:'오늘의 기록',cat:'기타',cont:memoTxt}); dbTouched=true; saved.push('메모'); }
-  if(dbTouched&&!saveDB()){ DB.symptom=bakSym;DB.memo=bakMemo;DB.careProfile=bakCp; return; }
+  // 오늘 있었던 일 (선택)
+  const evOn=k=>{const b=document.getElementById('dev-'+k);return b&&b.classList.contains('on');};
+  if(evOn('hospital')){
+    const hn=document.getElementById('daily-hosp-name').value.trim();
+    if(hn){
+      const diag=document.getElementById('daily-hosp-diag').value.trim();
+      DB.hospital.unshift({id:Date.now()+2,date:today(),name:hn,vet:'',reason:diag,diag:diag,test:'',med:'',side:'',cost:'',memo:'오늘의 기록에서 저장',nextDate:'',photo:''});
+      dbTouched=true; saved.push('병원');
+    }else{ toast('🏥 병원 이름을 입력해주세요 — 병원 방문은 저장되지 않았어요'); }
+  }
+  if(evOn('vaccine')){
+    const vn=document.getElementById('daily-vax-name').value;
+    if(vn){
+      const vd={id:Date.now()+3,name:vn,round:'',date:today(),nextDate:'',hospital:'',cost:'',memo:'오늘의 기록에서 저장'};
+      DB.vaccine.unshift(vd); syncVaccineToProfile(vd);
+      dbTouched=true; saved.push('접종·구충');
+    }else{ toast('💉 접종·구충 종류를 선택해주세요 — 접종은 저장되지 않았어요'); }
+  }
+  if(evOn('med')){
+    const mn=document.getElementById('daily-med-name').value.trim();
+    if(mn){
+      DB.medications.unshift({id:Date.now()+4,name:mn,dose:document.getElementById('daily-med-dose').value.trim(),frequency:'',purpose:'',start:today(),end:'',memo:'오늘의 기록에서 저장',active:true});
+      dbTouched=true; saved.push('복용약');
+    }else{ toast('💊 약 이름을 입력해주세요 — 복용약은 저장되지 않았어요'); }
+  }
+  if(dbTouched&&!saveDB()){ DB.symptom=bakSym;DB.memo=bakMemo;DB.careProfile=bakCp;DB.hospital=bakHosp;DB.vaccine=bakVax;DB.medications=bakMed; return; }
   // 체중 (saveWeight와 동일한 저장 방식)
   if(wVal>0&&wVal<=200){
     const data=loadWeightData();
@@ -4449,14 +4720,18 @@ function saveDailyRecord(){
   closeM(null,'daily');
   try{
     renderCareDashboard();
-    renderList('symptom'); renderList('memo');
+    renderList('symptom'); renderList('memo'); renderList('hospital'); renderList('vaccine');
+    if(typeof renderMedications==='function') renderMedications();
+    if(typeof renderPreventionSchedule==='function') renderPreventionSchedule();
+    if(typeof updDdayBadge==='function') updDdayBadge();
     if(typeof renderCareProfile==='function') renderCareProfile();
     if(typeof renderFeed==='function') renderFeed();
     if(typeof renderRoutine==='function') renderRoutine();
     if(typeof renderWeightGraph==='function'){ renderWeightGraph(); renderWeightList(); updWeightTodayInfo(); }
     if(typeof renderCurPet==='function') renderCurPet();
+    updateMunjStatus();
   }catch(e){}
-  toast(`✓ ${saved.join(' · ')} 저장 완료`);
+  toast(`✓ ${saved.join(' · ')} 저장 완료 — 문진서·응급카드에 반영됐어요`);
 }
 
 function openMedicationForm(){['med-id','med-name','med-dose','med-frequency','med-purpose','med-start','med-end','med-memo'].forEach(id=>pfSet(id,''));document.getElementById('med-active').checked=true;openM('medication');}
@@ -4492,7 +4767,8 @@ function saveCareProfile(){
   p.labTypes=Array.from(document.querySelectorAll('#pf-lab-types .sym-btn.on')).map(b=>b.dataset.v);
   if(p.cohabit!=='yes'){p.dogs='';p.cats='';p['other-pet']='';}if(p.history!=='yes'){p['medical-history']='';p['surgery-history']='';}
   if(!['med','both'].includes(p['med-status']))p['med-note']='';if(!['sup','both'].includes(p['med-status']))p['sup-note']='';if(p.hyper==='none'){p['drug-allergy']='';p['vaccine-allergy']='';}if(p.waterUnknown)p.water='';
-  DB.careProfile=p;if(!saveDB()){DB.careProfile=before;return;}renderCareProfile();toast('기본 생활·건강 정보를 저장했어요 ✓');
+  p._updatedAt=Date.now();
+  DB.careProfile=p;if(!saveDB()){DB.careProfile=before;return;}renderCareProfile();updateMunjStatus();toast('기본정보를 저장했어요 ✓');
 }
 
 // ── 모달 ──
@@ -4517,6 +4793,24 @@ async function loadPhotoSource(file){if('createImageBitmap'in window){try{return
 async function compressPhoto(file){if(!file)return'';if(!/^image\/(jpeg|png|webp)$/i.test(file.type)){throw new Error('지원하지 않는 사진 형식입니다.');}const src=await loadPhotoSource(file);const ow=src.width||src.naturalWidth,oh=src.height||src.naturalHeight,scale=Math.min(1,1600/Math.max(ow,oh));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(ow*scale));canvas.height=Math.max(1,Math.round(oh*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(src,0,0,canvas.width,canvas.height);if(src.close)src.close();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.78));if(!blob)throw new Error('사진 압축에 실패했습니다.');if(blob.size>MAX_HOSPITAL_PHOTO_BYTES)throw new Error('압축 후에도 사진이 너무 커요. 다른 사진을 선택해주세요.');return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=reject;r.readAsDataURL(blob);});}
 async function previewCompressedPhoto(file){const info=document.getElementById('h-photo-info');pendingHospitalPhoto='';if(!file){if(info)info.textContent='사진은 최대 1600px JPEG로 압축해 이 기기 안에 저장합니다.';return;}if(info)info.textContent='사진을 압축하는 중…';try{pendingHospitalPhoto=await compressPhoto(file);const bytes=Math.round((pendingHospitalPhoto.length*3)/4);if(info){info.textContent=`압축 예상 크기: ${formatBytes(bytes)} · JPEG 품질 78%`;info.style.color='var(--g1)';}}catch(e){if(info){info.textContent=e.message;info.style.color='var(--urgent)';}document.getElementById('h-photo').value='';toast(e.message);}}
 async function readSmallPhoto(file){if(!file)return'';if(pendingHospitalPhoto)return pendingHospitalPhoto;return await compressPhoto(file);}
+// 접종·구충 기록 → 기본정보(병원 양식)의 예방 항목 자동 반영
+function syncVaccineToProfile(d){
+  const nm=d.name||'';
+  if(nm.includes('심장사상충')){
+    const cp=Object.assign({},DB.careProfile);
+    cp['heartworm-date']=d.date; if(!cp.heartworm)cp.heartworm='정기적으로 시행';
+    cp._updatedAt=Date.now(); DB.careProfile=cp;
+  }else if(nm.includes('외부기생충')){
+    const cp=Object.assign({},DB.careProfile);
+    cp['ecto-date']=d.date; if(!cp.ecto)cp.ecto='정기적으로 시행';
+    cp._updatedAt=Date.now(); DB.careProfile=cp;
+  }else if(!DB.careProfile['primary-vax']&&/백신|광견병/.test(nm)){
+    const cp=Object.assign({},DB.careProfile);
+    cp['primary-vax']=(d.round==='연간접종'||d.round==='추가접종')?'완료':'진행 중';
+    cp._updatedAt=Date.now(); DB.careProfile=cp;
+  }
+}
+
 async function saveRec(type){
   clearFieldErrors();
   let d={};
@@ -4524,8 +4818,13 @@ async function saveRec(type){
   else if(type==='hospital'){if(!pfVal('h-date')){showFieldError('h-date','방문일을 선택해주세요.');return;}if(!pfVal('h-name').trim()){showFieldError('h-name','병원명을 입력해주세요.');return;}let photo='';try{photo=await readSmallPhoto(document.getElementById('h-photo').files[0]);}catch(e){showFieldError('h-photo',e.message||'사진을 처리하지 못했어요.');return;}d={id:Date.now(),date:pfVal('h-date'),name:pfVal('h-name'),vet:pfVal('h-vet'),reason:pfVal('h-reason'),diag:pfVal('h-diag'),test:pfVal('h-test'),med:pfVal('h-med'),side:pfVal('h-side'),cost:pfVal('h-cost'),memo:pfVal('h-memo'),nextDate:pfVal('h-next'),photo};}
   else if(type==='vaccine'){const vn=pfVal('v-name')==='직접 입력'?pfVal('v-custom'):pfVal('v-name');if(!vn.trim()){showFieldError('v-name','접종명을 선택하거나 입력해주세요.');return;}if(!pfVal('v-date')){showFieldError('v-date','접종일을 선택해주세요.');return;}d={id:Date.now(),name:vn,round:pfVal('v-round'),date:pfVal('v-date'),nextDate:pfVal('v-next'),hospital:pfVal('v-hosp'),cost:pfVal('v-cost'),memo:pfVal('v-memo')};}
   else if(type==='memo'){if(!document.getElementById('m-title').value){alert('제목을 입력해주세요.');return;}d={id:Date.now(),date:document.getElementById('m-date').value||today(),title:document.getElementById('m-title').value,cat:getRB('rg-mcat')||'기타',cont:document.getElementById('m-cont').value};}
-  const before=DB[type].slice();DB[type].unshift(d);if(!saveDB()){DB[type]=before;return;}renderList(type);closeM(null,type);resetForm(type);if(type==='hospital')pendingHospitalPhoto='';
+  const before=DB[type].slice();const cpBefore=Object.assign({},DB.careProfile);
+  DB[type].unshift(d);
+  if(type==='vaccine') syncVaccineToProfile(d);
+  if(!saveDB()){DB[type]=before;DB.careProfile=cpBefore;return;}
+  renderList(type);closeM(null,type);resetForm(type);if(type==='hospital')pendingHospitalPhoto='';
   updDdayBadge();
+  updateMunjStatus();
   toast('저장되었습니다 ✓');
 }
 function resetForm(type){
@@ -4669,7 +4968,7 @@ function renderVetHome(){
       <div style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px">
         <div style="font-size:22px">💚</div>
         <div style="flex:1;font-size:13px;color:var(--text2)">${nm}${(function(n){const c=n.charCodeAt(n.length-1);return (c-44032)%28>0?'이':''})(p.name||'아이')}가 세상에 온 지 <b style="color:var(--g1);font-size:15px;font-family:'Outfit',sans-serif">${days.toLocaleString()}일</b>째</div>
-        ${dday<=30 ? `<div style="font-size:11px;font-weight:700;color:#FFB830;background:rgba(255,184,48,0.1);border:1px solid rgba(255,184,48,0.3);padding:4px 10px;border-radius:999px;white-space:nowrap">🎂 생일 D-${dday}</div>` : ''}
+        ${dday<=30 ? `<div style="font-size:11px;font-weight:700;color:var(--caution);background:rgba(255,184,48,0.1);border:1px solid rgba(255,184,48,0.3);padding:4px 10px;border-radius:999px;white-space:nowrap">🎂 생일 D-${dday}</div>` : ''}
       </div>
     </div>`;
   }
@@ -5333,7 +5632,7 @@ function openFoodDict(){
 
 function foodLevelBadge(lv){
   if(lv >= 3) return '<span style="background:rgba(255,77,109,0.15);color:var(--urgent);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🔴 위험</span>';
-  if(lv === 2) return '<span style="background:rgba(255,184,48,0.15);color:#FFB830;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🟡 주의</span>';
+  if(lv === 2) return '<span style="background:rgba(255,184,48,0.15);color:var(--caution);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🟡 주의</span>';
   return '<span style="background:rgba(74,255,163,0.12);color:var(--g1);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px">🟢 괜찮음</span>';
 }
 
@@ -5370,8 +5669,7 @@ function renderFoodResults(q){
 // ── 🍚 식단·급여량 관리 ──
 function switchToFeedTab(){
   showPage('care');
-  const t = [...document.querySelectorAll('.ctab')].find(b=>b.textContent.includes('식단'));
-  if(t) switchCare(t,'feed');
+  openCareTab('feed');
 }
 
 function getFeedCfg(){
@@ -5423,7 +5721,7 @@ function renderFeed(){
       <div style="font-size:32px;margin-bottom:10px">⚖️</div>
       <div style="font-size:14px;font-weight:700;margin-bottom:6px">체중을 먼저 등록해주세요</div>
       <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px">체중을 알아야 ${escHtml(p.name)}에게 딱 맞는<br>하루 급여량을 계산할 수 있어요</div>
-      <button onclick="showPage('my')" style="padding:12px 24px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">MY에서 체중 입력하기</button>
+      <button onclick="showPage('my')" style="padding:12px 24px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">MY에서 체중 입력하기</button>
     </div>`;
     return;
   }
@@ -5442,7 +5740,7 @@ function renderFeed(){
       <div class="fg"><label class="fl">대사에너지 (kcal/kg) <span class="req">*</span></label><input type="number" id="fd-kcal" placeholder="예) 3800 — 봉투 뒷면 성분표에 있어요"></div>
       <div class="fg"><label class="fl">하루 급여 횟수</label><div class="radio-group" id="fd-meals"><button class="rb" onclick="selRB(this,'fd-meals')">1회</button><button class="rb on" onclick="selRB(this,'fd-meals')">2회</button><button class="rb" onclick="selRB(this,'fd-meals')">3회</button><button class="rb" onclick="selRB(this,'fd-meals')">4회</button></div></div>
       <div style="font-size:11px;color:var(--text3);margin-top:-6px;margin-bottom:14px;line-height:1.6">💡 어린 강아지·고양이(생후 6개월 미만)는 3~4회로 나눠 주는 게 좋아요</div>
-      <button onclick="saveFeedSetup()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">저장하고 급여량 계산하기</button>
+      <button onclick="saveFeedSetup()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">저장하고 급여량 계산하기</button>
     </div>`;
     return;
   }
@@ -5501,8 +5799,8 @@ function renderFeed(){
       <div style="font-size:13px;color:var(--text2);font-weight:700">g</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button onclick="addFeed('meal')" style="flex:1;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0A0E1A;border:none;border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🍚 식사 기록</button>
-      <button onclick="addFeed('snack')" style="flex:1;padding:13px;background:rgba(255,184,48,0.12);color:#FFB830;border:1px solid rgba(255,184,48,0.3);border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🦴 간식 기록</button>
+      <button onclick="addFeed('meal')" style="flex:1;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on-accent);border:none;border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🍚 식사 기록</button>
+      <button onclick="addFeed('snack')" style="flex:1;padding:13px;background:rgba(255,184,48,0.12);color:var(--caution);border:1px solid rgba(255,184,48,0.3);border-radius:var(--rs);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🦴 간식 기록</button>
     </div>
   </div>
 
@@ -5646,7 +5944,7 @@ function openCheckup(){
   data.items.forEach((item,i)=>{
     const on = checked.includes(i);
     html += `<div onclick="toggleChk('${key}',${i})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:${on?'rgba(74,255,163,0.07)':'var(--card-solid)'};border:1px solid ${on?'rgba(74,255,163,0.3)':'var(--border2)'};border-radius:var(--rs);margin-bottom:8px;cursor:pointer;transition:.15s">
-      <div style="width:22px;height:22px;flex-shrink:0;border-radius:6px;border:1.5px solid ${on?'var(--g1)':'var(--border2)'};background:${on?'var(--g1)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:13px;color:#0A0E1A;font-weight:900">${on?'✓':''}</div>
+      <div style="width:22px;height:22px;flex-shrink:0;border-radius:6px;border:1.5px solid ${on?'var(--g1)':'var(--border2)'};background:${on?'var(--g1)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--on-accent);font-weight:900">${on?'✓':''}</div>
       <div style="font-size:13px;color:${on?'var(--text)':'var(--text2)'};line-height:1.5">${escHtml(item)}</div>
     </div>`;
   });
@@ -5842,7 +6140,7 @@ function renderPetTabs(){
       transition:all .15s;
     ">
       <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;${i===curPetIdx?'box-shadow:0 0 0 2px rgba(74,255,163,0.4)':''}">
-        ${p.photoSrc?`<img src="${p.photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:`<span>${p.emoji||'🐾'}</span>`}
+        ${petAvatarHTML(p)}
       </div>
       <div style="font-size:11px;font-weight:700;color:${i===curPetIdx?'var(--g1)':'var(--text2)'};">${escHtml(p.name||'')}</div>
     </button>
@@ -5852,13 +6150,23 @@ function renderPetTabs(){
 
 function renderCurPet(){
   renderVetHome();
+  const heroPet = PETS.length ? PETS[curPetIdx] : null;
   const heroTitle = document.getElementById('heroTitle');
   const heroLabel = document.getElementById('heroLabel');
   const heroSub   = document.getElementById('heroSub');
+  const heroPetEl = document.getElementById('heroPet');
   if(heroLabel) heroLabel.textContent = 'DAILY HEALTH RECORD';
-  const heroPetName = PETS.length ? (PETS[curPetIdx]?.name || '') : '';
+  const heroPetName = (heroPet && heroPet.name) ? heroPet.name : '';
   if(heroTitle) heroTitle.innerHTML = (heroPetName ? escHtml(heroPetName) + '의 오늘 기록이' : '오늘의 기록이') + '<br>더 정확한 진료를 만듭니다.';
   if(heroSub) heroSub.innerHTML = '우리 아이의 건강과 일상을<br>한곳에 기록해보세요.';
+  // 반려동물 칩: 이름 · 품종 나이 (등록 전이면 비워서 숨김)
+  if(heroPetEl){
+    const bits = [];
+    if(heroPetName) bits.push(heroPetName);
+    const detail = [heroPet && heroPet.breed, heroPet && heroPet.birth ? calcAge(heroPet.birth) : ''].filter(Boolean).join(' ');
+    if(detail) bits.push(detail);
+    heroPetEl.textContent = bits.join(' · ');
+  }
   updWalk();
 
   // 반려동물 미등록 상태
@@ -5871,11 +6179,15 @@ function renderCurPet(){
   // 헤더 아바타
   const hAv = document.getElementById('hdrAv');
   const hNm = document.getElementById('hdrName');
-  if(hAv){ hAv.innerHTML = p.photoSrc?`<img src="${p.photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`:`<span style="font-size:20px">${p.emoji||'🐶'}</span>`; }
+  // 헤더 칩은 변경 전 그대로 (사진 있으면 사진, 없으면 이모지)
+  if(hAv){
+    if(p.photoSrc){ hAv.innerHTML = avatarImgHTML(p.photoSrc); hAv.style.background='transparent'; hAv.style.fontSize=''; }
+    else { hAv.innerHTML = p.emoji||'🐶'; hAv.style.fontSize='20px'; hAv.style.background='linear-gradient(135deg,var(--g1),var(--g2))'; }
+  }
   if(hNm) hNm.textContent = p.name;
   // MY 페이지
   const myAv = document.getElementById('myAv');
-  if(myAv){ myAv.innerHTML = p.photoSrc?`<img src="${p.photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`:`${p.emoji||'🐶'}`; myAv.style.fontSize = p.photoSrc?'':'32px'; }
+  if(myAv){ myAv.innerHTML = petAvatarHTML(p); myAv.style.background='transparent'; myAv.style.fontSize=''; }
   const myName = document.getElementById('myName'); if(myName) myName.textContent = p.name;
   const myBreed = document.getElementById('myBreed'); if(myBreed) myBreed.textContent = (p.breed||'품종 미입력')+' · '+(p.sex||'');
   const myAge = document.getElementById('myAge'); if(myAge) myAge.textContent = calcAge(p.birth);
@@ -5975,7 +6287,34 @@ function selPetType(btn,emoji){
   document.getElementById('prof-av-emoji').textContent=emoji;
   if(!document.getElementById('prof-photo').dataset.src) updateAvatars('',emoji);
 }
-function loadProfPhoto(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const src=ev.target.result;input.dataset.src=src;document.getElementById('prof-av-wrap').innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;updateAvatars(src,'');toast('사진이 등록되었습니다 ✓');};reader.readAsDataURL(file);}
+function loadProfPhoto(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const src=ev.target.result;input.dataset.src=src;setProfPreview(src);updateAvatars(src,'');toast('사진이 등록되었습니다 ✓');};reader.readAsDataURL(file);}
+// ── 기본 캐릭터 (사진이 없을 때만 사용) ──
+// 사진 > 캐릭터(종류별) 순서. 강아지=코코(시바), 고양이=나비(브리티시숏헤어)
+function charSrcFor(emoji){ return (emoji === '🐱') ? 'characters/nabi-head.png' : 'characters/koko-head.png'; }
+function charFullFor(emoji){ return (emoji === '🐱') ? 'characters/nabi-full.png' : 'characters/koko-full.png'; }
+// 받침 있으면 '아', 없으면 '야' (코코야 / 별아)
+function vocative(name){
+  if(!name) return '';
+  const c = name.charCodeAt(name.length-1) - 0xAC00;
+  if(c < 0 || c > 11171) return name + '야';
+  return name + ((c % 28) ? '아' : '야');
+}
+function avatarImgHTML(src){
+  return `<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`;
+}
+// 사진이 있으면 사진, 없으면 종류에 맞는 캐릭터
+function petAvatarHTML(p){
+  return avatarImgHTML((p && p.photoSrc) ? p.photoSrc : charSrcFor(p && p.emoji));
+}
+// 프로필 편집 미리보기. prof-av-emoji 는 종류 값을 담고 있으므로 항상 살려 둔다
+function setProfPreview(src){
+  const wrap=document.getElementById('prof-av-wrap'); if(!wrap) return;
+  const cur=document.getElementById('prof-av-emoji');
+  const em=cur?cur.textContent:'🐶';
+  wrap.innerHTML=avatarImgHTML(src)+`<span id="prof-av-emoji" style="display:none">${em}</span>`;
+  wrap.style.background='transparent';
+}
+
 function updateAvatars(photoSrc,emoji){
   const hAv=document.getElementById('hdrAv');
   const mAv=document.getElementById('myAv');
@@ -5988,20 +6327,25 @@ function updateAvatars(photoSrc,emoji){
     mAv.innerHTML=`<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">`;
     mAv.style.background='transparent';
     // 프로필 편집 미리보기
-    const wrap=document.getElementById('prof-av-wrap');
-    if(wrap) wrap.innerHTML=`<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    setProfPreview(photoSrc);
   } else {
-    // 헤더 아바타 - 이모지
+    // 사진이 없을 때 - 종류에 맞는 기본 캐릭터
+    const cSrc = charSrcFor(emoji);
+    // 헤더 칩은 변경 전 그대로 이모지
     hAv.innerHTML=emoji||'🐶';
     hAv.style.fontSize='20px';
     hAv.style.background='linear-gradient(135deg,var(--g1),var(--g2))';
-    // MY 아바타 - 이모지
-    mAv.innerHTML=emoji||'🐶';
-    mAv.style.fontSize='32px';
-    mAv.style.background='linear-gradient(135deg,var(--g1),var(--g2))';
-    // 프로필 편집 미리보기
+    // MY 아바타
+    mAv.innerHTML=avatarImgHTML(cSrc);
+    mAv.style.fontSize='';
+    mAv.style.background='transparent';
+    // 프로필 편집 미리보기 (prof-av-emoji 는 종류 값을 담고 있으므로 숨겨서 유지)
     const wrap=document.getElementById('prof-av-wrap');
-    if(wrap){wrap.innerHTML=`<span id="prof-av-emoji">${emoji||'🐶'}</span>`;wrap.style.background='linear-gradient(135deg,var(--g1),var(--g2))';}
+    if(wrap){
+      wrap.innerHTML=avatarImgHTML(cSrc)+`<span id="prof-av-emoji" style="display:none">${emoji||'🐶'}</span>`;
+      wrap.style.background='transparent';
+      wrap.style.border='';
+    }
   }
 }
 
