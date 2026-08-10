@@ -1075,6 +1075,25 @@ body:not(.light) .hero-sub { color: #aebdb7; }
   font-family: inherit; font-size: 12px; font-weight: 750;
   background: var(--g1); color: var(--on-accent); border: none;
 }
+.ai-summary-card {
+  padding: 15px 16px; border-radius: 18px; cursor: pointer;
+  background: var(--card-solid); border: 1px solid var(--accent-line);
+}
+.ai-summary-head { display: flex; align-items: center; gap: 12px; }
+.ai-summary-icon {
+  width: 38px; height: 38px; flex: 0 0 38px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; background: var(--accent-soft);
+}
+.ai-summary-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ai-summary-title { font-size: 14.5px; font-weight: 750; letter-spacing: -.02em; }
+.ai-summary-sub { font-size: 11.5px; color: var(--text2); line-height: 1.45; }
+.ai-summary-arrow { color: var(--text3); font-size: 18px; }
+.ai-summary-result {
+  margin-top: 14px; padding: 15px 16px; border-radius: 16px;
+  background: var(--card); border: 1px solid var(--border2);
+  font-size: 13px; line-height: 1.75; white-space: pre-wrap; color: var(--text);
+}
 .sync-note {
   margin-bottom: 16px; padding: 11px 13px;
   background: var(--accent-soft); border: 1px solid var(--accent-line);
@@ -1777,6 +1796,20 @@ select option { background: var(--card-solid); }
   <!-- 오늘의 루틴 -->
   <div id="routineCard"></div>
 
+  <!-- AI 건강 요약 (보호자용) — 오늘 챙기기 바로 아래 -->
+  <div class="section" id="aiSummarySec">
+    <div class="ai-summary-card" id="aiSummaryCard" onclick="openAiSummary()" role="button" tabindex="0">
+      <div class="ai-summary-head">
+        <span class="ai-summary-icon">🧾</span>
+        <span class="ai-summary-copy">
+          <span class="ai-summary-title">AI 건강 요약</span>
+          <span class="ai-summary-sub" id="aiSummarySub">흩어진 기록을 한눈에 정리해드려요</span>
+        </span>
+        <span class="ai-summary-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
   <div class="section">
     <div class="quick-grid">
       <div class="quick-item" onclick="openCareDashboardFromHome(event)">
@@ -2300,6 +2333,28 @@ select option { background: var(--card-solid); }
     <input type="file" id="feedCameraInput" accept="image/*" capture="environment" style="display:none">
   </div>
 </div></div>
+<!-- AI 건강 요약 (보호자용) -->
+<div class="overlay" id="m-ai-summary" onclick="closeM(event,'ai-summary')"><div class="modal">
+  <div class="modal-hd"><span class="modal-title">🧾 AI 건강 요약</span><button class="modal-close" onclick="closeM(null,'ai-summary')">✕</button></div>
+  <div class="modal-body">
+    <div class="sync-note">보호자님이 적은 기록을 <b>읽기 쉽게 정리</b>해드립니다. 진단이나 원인 추정은 하지 않아요 — 판단은 수의사 몫입니다.</div>
+    <div class="fg">
+      <label class="fl">기간</label>
+      <div class="radio-group" id="rg-ai-period">
+        <button type="button" class="rb on" data-v="7" onclick="selRB(this,'rg-ai-period')">최근 7일</button>
+        <button type="button" class="rb" data-v="30" onclick="selRB(this,'rg-ai-period')">30일</button>
+        <button type="button" class="rb" data-v="90" onclick="selRB(this,'rg-ai-period')">90일</button>
+      </div>
+    </div>
+    <button class="save-btn" id="aiSummaryBtn" onclick="runAiSummary()">요약 만들기</button>
+    <div id="aiSummaryResult" class="ai-summary-result" style="display:none"></div>
+    <div id="aiSummaryActions" style="display:none;gap:8px;margin-top:10px">
+      <button class="add-btn" onclick="copyAiSummary()">📋 복사</button>
+      <button class="add-btn" onclick="shareAiSummary()">카톡으로 공유</button>
+    </div>
+  </div>
+</div></div>
+
 <div class="overlay" id="m-daily" onclick="closeM(event,'daily')"><div class="modal">
 <div class="modal-hd"><span class="modal-title" id="dailyModalTitle">일상 기록</span><button class="modal-close" onclick="closeM(null,'daily')">✕</button></div>
 <div class="modal-body">
@@ -7335,6 +7390,149 @@ function getCareStreakInfo(){
   if(gap===0) return {kind:'today',streak:streak,totalDays:totalDays};
   if(gap!==null&&gap<=2) return {kind:'held',gap:gap,totalDays:totalDays};
   return {kind:'stale',gap:gap===null?0:gap,totalDays:totalDays};
+}
+
+let aiSummaryLoading = false;
+let aiSummaryText = '';
+
+function aiSummaryPeriod(){
+  const btn = document.querySelector('#rg-ai-period .rb.on');
+  return Number(btn && btn.dataset.v) || 7;
+}
+
+function buildAiSummarySource(days){
+  const pet = PETS.length ? PETS[curPetIdx] : null;
+  if(!pet) return null;
+  const from = seoulDateBefore(Math.max(0, days-1));
+  const L = [];
+  L.push('[반려동물] ' + [pet.name, getPetSpecies(pet), pet.breed, calcAge(pet.birth)].filter(Boolean).join(' / '));
+
+  const w = loadWeightData().slice().sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+  const wIn = w.filter(function(x){ return x.date >= from; });
+  if(wIn.length >= 2) L.push('[체중] ' + wIn[0].date + ' ' + wIn[0].weight + 'kg → ' + wIn[wIn.length-1].date + ' ' + wIn[wIn.length-1].weight + 'kg');
+  else if(w.length) L.push('[체중] 최근 ' + w[w.length-1].weight + 'kg (' + w[w.length-1].date + ') · 기간 내 변화 기록 없음');
+  else L.push('[체중] 기록 없음');
+
+  L.push('[현재 상태]');
+  currentDailyStateLines().forEach(function(l){ L.push('  ' + l); });
+
+  const ch = dailyChangeLines(days, 12);
+  L.push('[기간 내 변동]');
+  if(ch.length) ch.forEach(function(l){ L.push('  ' + l); });
+  else L.push('  변동 보고 없음');
+
+  const sym = (DB.symptom||[]).filter(function(s){ return String(s.date||'') >= from; });
+  L.push('[이상증상 기록]');
+  if(sym.length) sym.slice(0,8).forEach(function(s){ L.push('  ' + s.date + ' ' + ((s.symptoms||[]).join(', ')||'') + (s.detail ? (' - ' + s.detail) : '')); });
+  else L.push('  없음');
+
+  const hosp = (DB.hospital||[]).filter(function(h){ return String(h.date||'') >= from; });
+  L.push('[병원 방문]');
+  if(hosp.length) hosp.slice(0,5).forEach(function(h){ L.push('  ' + h.date + ' ' + (h.name||'') + (h.diag ? (' - ' + h.diag) : '')); });
+  else L.push('  없음');
+
+  const meds = (DB.medications||[]).filter(function(m){ return m.active; });
+  L.push('[복용 중] ' + (meds.length ? meds.map(function(m){ return medicationInstructionText(m); }).join(', ') : '없음'));
+
+  const vac = (DB.vaccine||[]).filter(function(v){ return String(v.date||'') >= from; });
+  L.push('[접종·구충] ' + (vac.length ? vac.map(function(v){ return v.date + ' ' + (v.name||''); }).join(', ') : '기간 내 없음'));
+
+  return L.join('\n');
+}
+
+function aiSummarySystem(){
+  return [
+    '너는 반려동물 보호자가 직접 적은 건강 기록을 읽기 쉽게 정리해 주는 도우미다.',
+    '',
+    '반드시 지킬 것:',
+    '1. 진단명을 말하지 마라. 병명 추정, 원인 분석을 절대 하지 않는다.',
+    '2. 기록에 있는 사실만 쓴다. 없는 내용을 지어내지 마라.',
+    '3. 기록이 부족하면 "판단하기에 기록이 부족해요"라고 솔직히 적어라.',
+    '4. 판단과 진단은 수의사의 몫임을 분명히 하라.',
+    '5. 보호자가 읽는 글이다. 쉬운 우리말로, 따뜻하지만 담백하게.',
+    '6. 반드시 한국어로만 쓴다. 한자, 중국어, 영어 단어를 섞지 마라.',
+    '',
+    '다음 형식으로만 답하라 (제목 그대로 사용):',
+    '',
+    '이런 기록이 있었어요',
+    '- (기간 동안 무엇을 기록했는지 2~4줄)',
+    '',
+    '눈에 띄는 변화',
+    '- (달라진 점만. 없으면 "특별한 변화는 없었어요")',
+    '',
+    '병원에 가면 이렇게 말씀하세요',
+    '- (수의사에게 전달할 사실을 그대로. 해석 없이)',
+    '',
+    '마지막 줄에 반드시: "※ 기록을 정리한 것이며 진단이 아닙니다. 판단은 병원에서 받으세요."'
+  ].join('\n');
+}
+
+function openAiSummary(){
+  if(!PETS.length){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  const res = document.getElementById('aiSummaryResult');
+  const acts = document.getElementById('aiSummaryActions');
+  if(res){ res.style.display = 'none'; res.textContent = ''; }
+  if(acts) acts.style.display = 'none';
+  aiSummaryText = '';
+  openM('ai-summary');
+}
+
+async function runAiSummary(){
+  if(aiSummaryLoading) return;
+  if(!PETS.length){ toast('먼저 MY에서 반려동물을 등록해주세요'); return; }
+  if(typeof getChatRemainingCount === 'function' && getChatRemainingCount() <= 0){
+    toast('오늘 AI 사용 횟수를 모두 썼어요');
+    return;
+  }
+  const days = aiSummaryPeriod();
+  const source = buildAiSummarySource(days);
+  if(!source){ toast('기록을 불러오지 못했어요'); return; }
+
+  const btn = document.getElementById('aiSummaryBtn');
+  const res = document.getElementById('aiSummaryResult');
+  const acts = document.getElementById('aiSummaryActions');
+  aiSummaryLoading = true;
+  if(btn){ btn.disabled = true; btn.textContent = '정리하는 중...'; }
+  if(res){ res.style.display = 'block'; res.textContent = '기록을 읽고 있어요...'; }
+  if(acts) acts.style.display = 'none';
+
+  try{
+    const r = await fetch('https://anibridge-api.koreagwangju.workers.dev/groq-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        max_tokens: 700,
+        system: aiSummarySystem(),
+        messages: [{ role: 'user', content: '최근 ' + days + '일 기록입니다.\n\n' + source }]
+      })
+    });
+    const data = await r.json();
+    const text = (data.content && data.content[0] && data.content[0].text) || '';
+    if(!text) throw new Error('empty');
+    aiSummaryText = text;
+    if(res) res.textContent = text;
+    if(acts) acts.style.display = 'flex';
+    if(typeof addChatUsedCount === 'function') addChatUsedCount();
+    if(typeof updateChatCountUI === 'function') updateChatCountUI();
+    const sub = document.getElementById('aiSummarySub');
+    if(sub) sub.textContent = '최근 ' + days + '일 요약을 만들었어요';
+  }catch(e){
+    if(res) res.textContent = '요약을 만들지 못했어요. 잠시 후 다시 시도해주세요.';
+  }finally{
+    aiSummaryLoading = false;
+    if(btn){ btn.disabled = false; btn.textContent = '요약 만들기'; }
+  }
+}
+
+function copyAiSummary(){
+  if(!aiSummaryText) return;
+  if(navigator.clipboard) navigator.clipboard.writeText(aiSummaryText).then(function(){ toast('복사되었습니다 ✓'); }).catch(function(){ fallbackCopy(aiSummaryText); });
+  else fallbackCopy(aiSummaryText);
+}
+
+function shareAiSummary(){
+  if(!aiSummaryText){ toast('먼저 요약을 만들어주세요'); return; }
+  shareKakaoMsg(aiSummaryText, 'AniBridge 건강 요약', '우리 아이 건강 기록 요약이에요 🐾');
 }
 
 function buildNewIntakeText(mode='owner'){
