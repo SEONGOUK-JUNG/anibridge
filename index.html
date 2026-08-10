@@ -2341,9 +2341,10 @@ select option { background: var(--card-solid); }
     <div class="fg">
       <label class="fl">기간</label>
       <div class="radio-group" id="rg-ai-period">
-        <button type="button" class="rb on" data-v="7" onclick="selRB(this,'rg-ai-period')">최근 7일</button>
-        <button type="button" class="rb" data-v="30" onclick="selRB(this,'rg-ai-period')">30일</button>
-        <button type="button" class="rb" data-v="90" onclick="selRB(this,'rg-ai-period')">90일</button>
+        <button type="button" class="rb" data-days="3" onclick="selRB(this,'rg-ai-period')">최근 3일</button>
+        <button type="button" class="rb on" data-days="7" onclick="selRB(this,'rg-ai-period')">7일</button>
+        <button type="button" class="rb" data-days="30" onclick="selRB(this,'rg-ai-period')">30일</button>
+        <button type="button" class="rb" data-days="90" onclick="selRB(this,'rg-ai-period')">90일</button>
       </div>
     </div>
     <button class="save-btn" id="aiSummaryBtn" onclick="runAiSummary()">요약 만들기</button>
@@ -7395,9 +7396,10 @@ function getCareStreakInfo(){
 let aiSummaryLoading = false;
 let aiSummaryText = '';
 
+// selRB가 data-v를 버튼 글자로 덮어쓰기 때문에 기간은 data-days에서 읽는다
 function aiSummaryPeriod(){
   const btn = document.querySelector('#rg-ai-period .rb.on');
-  return Number(btn && btn.dataset.v) || 7;
+  return Number(btn && btn.dataset.days) || 7;
 }
 
 function buildAiSummarySource(days){
