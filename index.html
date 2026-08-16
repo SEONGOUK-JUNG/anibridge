@@ -2524,6 +2524,8 @@ select option { background: var(--card-solid); }
   <div class="my-wrap">
 
     <!-- 카카오 로그인 -->
+    <!-- iOS 앱(웹뷰)에서는 카카오 로그인 숨김 — 애플 지침 4/4.8 대응. 웹·안드로이드는 그대로 -->
+    <script>if(/AniBridgeiOS/.test(navigator.userAgent))document.write('<style>#kakaoLoginSection{display:none!important}</style>');</script>
     <div id="kakaoLoginSection" style="margin-bottom:16px">
       <div id="kakaoLoggedOut" style="background:var(--card-solid);border:1px solid var(--border2);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
         <div>
