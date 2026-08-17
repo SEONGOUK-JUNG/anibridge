@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>AniBridge 접속 통계</title>
+<style>
+  :root{ --bg:#131A2B; --card:#1B2438; --line:#2A3651; --text:#EFE9DE; --dim:#A6AFC4; --g1:#8FD9AE; --g3:#E1BA83; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Malgun Gothic',sans-serif;padding:20px 16px 60px}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:20px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .card .lbl{font-size:12px;color:var(--dim);margin-bottom:6px}
+  .card .val{font-size:26px;font-weight:800}
+  .card .val small{font-size:13px;color:var(--dim);font-weight:600}
+  h2{font-size:15px;margin:26px 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  .bar{height:6px;background:var(--g1);border-radius:3px;display:inline-block;min-width:2px;vertical-align:middle}
+  .wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 14px}
+  .zero{color:#5C6780}
+  .err{background:#3A1F26;border:1px solid #6B2E3C;padding:14px;border-radius:12px;color:#FF8FA3}
+  .foot{margin-top:26px;color:var(--dim);font-size:12px;line-height:1.7}
+</style>
+</head>
+<body>
+<h1>🐾 AniBridge 접속 통계</h1>
+<div class="sub" id="sub">불러오는 중…</div>
+<div id="app"></div>
+
+<script>
+const KEY = new URLSearchParams(location.search).get('key') || 'anibridge2026';
+const API = 'https://anibridge-api.koreagwangju.workers.dev/stats?days=30&key=' + encodeURIComponent(KEY);
+const PLAT = { web:'웹', android:'구글 앱', ios:'애플 앱' };
+const FLAG = { KR:'🇰🇷 한국', US:'🇺🇸 미국', JP:'🇯🇵 일본', CN:'🇨🇳 중국', XX:'기타' };
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올바르지 않습니다':'서버 오류 '+r.status); return r.json(); })
+.then(function(d){
+  const days = d.days || [];
+  const today = days[0] || {total:0};
+  const sum = k => days.reduce((a,x)=>a+(x[k]||0),0);
+  const week = days.slice(0,7).reduce((a,x)=>a+(x.total||0),0);
+
+  const platTotal = {}, ctryTotal = {};
+  days.forEach(function(x){
+    Object.entries(x.platform||{}).forEach(([k,v])=>platTotal[k]=(platTotal[k]||0)+v);
+    Object.entries(x.country||{}).forEach(([k,v])=>ctryTotal[k]=(ctryTotal[k]||0)+v);
+  });
+
+  let h = '<div class="cards">'
+    + card('오늘 접속', today.total||0)
+    + card('오늘 신규', today.newUsers||0)
+    + card('최근 7일', week)
+    + card('최근 30일', sum('total'))
+    + '</div>';
+
+  h += '<h2>어디서 들어왔나 <span style="color:var(--dim);font-weight:400;font-size:12px">(30일)</span></h2><div class="wrap"><table>';
+  const platRows = Object.entries(platTotal).sort((a,b)=>b[1]-a[1]);
+  h += platRows.length ? platRows.map(([k,v])=>row(PLAT[k]||k, v, platRows[0][1])).join('') : emptyRow();
+  h += '</table></div>';
+
+  h += '<h2>국가 <span style="color:var(--dim);font-weight:400;font-size:12px">(30일)</span></h2><div class="wrap"><table>';
+  const ctryRows = Object.entries(ctryTotal).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  h += ctryRows.length ? ctryRows.map(([k,v])=>row(FLAG[k]||k, v, ctryRows[0][1])).join('') : emptyRow();
+  h += '</table></div>';
+
+  h += '<h2>날짜별</h2><div class="wrap"><table><tr><th>날짜</th><th>접속</th><th>신규</th><th>웹</th><th>구글</th><th>애플</th></tr>';
+  const max = Math.max(1, ...days.map(x=>x.total||0));
+  h += days.map(function(x){
+    const p = x.platform||{}, z = (x.total||0)===0 ? ' class="zero"' : '';
+    return '<tr'+z+'><td>'+esc(x.date)+'</td>'
+      + '<td><span class="bar" style="width:'+Math.round((x.total||0)/max*46)+'px"></span> '+(x.total||0)+'</td>'
+      + '<td>'+(x.newUsers||0)+'</td><td>'+(p.web||0)+'</td><td>'+(p.android||0)+'</td><td>'+(p.ios||0)+'</td></tr>';
+  }).join('');
+  h += '</table></div>';
+
+  h += '<div class="foot">· 한 사람이 하루에 여러 번 열어도 1회로 셉니다.<br>'
+     + '· 개인을 식별하는 정보는 저장하지 않습니다 (기기·이름·위치 상세 없음).<br>'
+     + '· 기록은 90일 후 자동 삭제됩니다.<br>'
+     + '· 앱에 통계 기능을 심은 날부터 쌓입니다.</div>';
+
+  document.getElementById('app').innerHTML = h;
+  document.getElementById('sub').textContent = '오늘 ' + (days[0]?days[0].date:'') + ' 기준 · 서울 시간';
+})
+.catch(function(e){
+  document.getElementById('sub').textContent = '';
+  document.getElementById('app').innerHTML = '<div class="err">불러오지 못했습니다 — ' + esc(e.message) + '</div>';
+});
+
+function card(l,v){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>명</small></div></div>'; }
+function row(l,v,max){ return '<tr><td>'+esc(l)+'</td><td><span class="bar" style="width:'+Math.round(v/max*60)+'px"></span> '+v+'</td></tr>'; }
+function emptyRow(){ return '<tr><td colspan="2" class="zero">아직 기록이 없습니다</td></tr>'; }
+</script>
+</body>
+</html>
