@@ -3229,6 +3229,21 @@ if(savedVersion !== APP_VERSION){
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
+// ── 접속 집계: 하루 1회만, 개인정보 없이 (플랫폼·국가만 서버가 판단) ──
+(function(){
+  try{
+    const today = new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+    if(localStorage.getItem('anibridge_hit') === today) return;
+    const isNew = !localStorage.getItem('anibridge_hit');
+    localStorage.setItem('anibridge_hit', today);
+    const isAndroidApp = window.matchMedia('(display-mode: standalone)').matches && /Android/.test(navigator.userAgent);
+    fetch('https://anibridge-api.koreagwangju.workers.dev/hit', {
+      method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
+      body: JSON.stringify({ isNew: isNew, platform: isAndroidApp ? 'android' : undefined })
+    }).catch(function(){});
+  }catch(e){}
+})();
+
 // getPetDBKey는 PETS 초기화 후 사용 가능 (함수 호이스팅 활용)
 function getPetDBKey(){
   if(!PETS || !PETS.length) return DB_KEY;
