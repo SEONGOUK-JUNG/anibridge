@@ -62,8 +62,11 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
      + (all.since ? '('+esc(all.since)+' 부터)' : '') + '</span></h2>'
      + '<div class="cards">'
-     + cardBig('총 접속', all.total||0)
-     + cardBig('총 이용자', all.newUsers||0, '앱을 처음 연 사람')
+     + cardBig('총 방문 횟수', all.total||0, '같은 사람이 다시 오면 또 셈')
+     + cardBig('총 이용자 수', all.newUsers||0, '중복 없는 실제 사람 수')
+     + ((all.newUsers||0) > 0
+        ? cardBig2('1인당 평균 방문', ((all.total||0)/all.newUsers).toFixed(1)+'회', '높을수록 다시 찾는 앱')
+        : '')
      + '</div>';
 
   // ── 스토어 다운로드 수 ──
@@ -119,6 +122,11 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
 });
 
 function card(l,v){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>명</small></div></div>'; }
+function cardBig2(l,v,note){
+  return '<div class="card" style="border-color:rgba(225,186,131,0.35)"><div class="lbl">'+l+'</div>'
+    + '<div class="val" style="color:var(--g3);font-size:32px">'+v+'</div>'
+    + '<div class="lbl" style="margin:6px 0 0">'+note+'</div></div>';
+}
 function storeCard(label, s){
   if(!s || s.total == null){
     return '<div class="card"><div class="lbl">'+label+'</div>'
