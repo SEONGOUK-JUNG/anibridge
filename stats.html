@@ -52,22 +52,12 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   const ctryTotal = (d.all && d.all.country) || {};
 
   const all = d.all || {};
-  let h = '<div class="cards">'
-    + card('오늘 접속', today.total||0)
-    + card('오늘 신규', today.newUsers||0)
-    + card('최근 7일', week)
-    + card('최근 30일', sum('total'))
+  const todayPer = (today.users||0) > 0 ? ((today.total||0)/today.users).toFixed(1) : null;
+  let h = '<h2 style="margin-top:0">오늘</h2><div class="cards">'
+    + cardBig('들어온 사람', today.users||0, '명', '오늘 접속한 사람 수')
+    + cardBig('들어온 횟수', today.total||0, '회', '앱을 연 총 횟수')
+    + cardBig2('1인당 방문', (todayPer||'0.0')+'회', '한 사람이 몇 번 열었나')
     + '</div>';
-
-  h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
-     + (all.since ? '('+esc(all.since)+' 부터)' : '') + '</span></h2>'
-     + '<div class="cards">'
-     + cardBig('총 방문 횟수', all.total||0, '같은 사람이 다시 오면 또 셈')
-     + cardBig('총 이용자 수', all.newUsers||0, '중복 없는 실제 사람 수')
-     + ((all.newUsers||0) > 0
-        ? cardBig2('1인당 평균 방문', ((all.total||0)/all.newUsers).toFixed(1)+'회', '높을수록 다시 찾는 앱')
-        : '')
-     + '</div>';
 
   // ── 스토어 다운로드 수 ──
   const st = d.store || {};
@@ -83,6 +73,22 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   }
   h += '</div>';
 
+  h += '<h2>최근</h2><div class="cards">'
+    + card('7일 방문', week, '회')
+    + card('30일 방문', sum('total'), '회')
+    + card('오늘 새로 온 사람', today.newUsers||0, '명')
+    + '</div>';
+
+  h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
+     + (all.since ? '('+esc(all.since)+' 부터)' : '') + '</span></h2>'
+     + '<div class="cards">'
+     + cardBig('총 방문 횟수', all.total||0, '회', '앱을 연 횟수 전부')
+     + cardBig('총 이용자 수', all.newUsers||0, '명', '중복 없는 실제 사람 수')
+     + cardBig2('하루 1인당 방문',
+         ((all.userDays||0) > 0 ? ((all.total||0)/all.userDays).toFixed(1) : '0.0')+'회',
+         '높을수록 다시 찾는 앱')
+     + '</div>';
+
   h += '<h2>어디서 들어왔나 <span style="color:var(--dim);font-weight:400;font-size:12px">(누계)</span></h2><div class="wrap"><table>';
   const platRows = Object.entries(platTotal).sort((a,b)=>b[1]-a[1]);
   h += platRows.length ? platRows.map(([k,v])=>row(PLAT[k]||k, v, platRows[0][1])).join('') : emptyRow();
@@ -93,17 +99,22 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   h += ctryRows.length ? ctryRows.map(([k,v])=>row(FLAG[k]||k, v, ctryRows[0][1])).join('') : emptyRow();
   h += '</table></div>';
 
-  h += '<h2>날짜별</h2><div class="wrap"><table><tr><th>날짜</th><th>접속</th><th>신규</th><th>웹</th><th>구글</th><th>애플</th></tr>';
+  h += '<h2>날짜별</h2><div class="wrap"><table><tr><th>날짜</th><th>이용자</th><th>방문</th><th>1인당</th><th>웹</th><th>구글</th><th>애플</th></tr>';
   const max = Math.max(1, ...days.map(x=>x.total||0));
   h += days.map(function(x){
     const p = x.platform||{}, z = (x.total||0)===0 ? ' class="zero"' : '';
+    const per = (x.users||0) > 0 ? ((x.total||0)/x.users).toFixed(1) : '-';
     return '<tr'+z+'><td>'+esc(x.date)+'</td>'
-      + '<td><span class="bar" style="width:'+Math.round((x.total||0)/max*46)+'px"></span> '+(x.total||0)+'</td>'
+      + '<td>'+(x.users||0)+'</td>'
+      + '<td><span class="bar" style="width:'+Math.round((x.total||0)/max*40)+'px"></span> '+(x.total||0)+'</td>'
+      + '<td>'+per+'</td>'
       + '<td>'+(x.newUsers||0)+'</td><td>'+(p.web||0)+'</td><td>'+(p.android||0)+'</td><td>'+(p.ios||0)+'</td></tr>';
   }).join('');
   h += '</table></div>';
 
-  h += '<div class="foot">· 한 사람이 하루에 여러 번 열어도 1회로 셉니다.<br>'
+  h += '<div class="foot">· <b>방문</b> = 앱을 연 횟수 (1분 안의 중복 신호는 제외) · <b>이용자</b> = 그날 접속한 사람 수<br>'
+     + '· <b>1인당</b> = 방문 ÷ 이용자. 한 사람이 하루에 몇 번 여는지 — 높을수록 습관이 된 앱입니다.<br>'
+     + '· <b>새 이용자</b> = 그날 이용자 중 우리 앱을 처음 써본 사람 (나머지는 다시 온 사람)<br>'
      + '· 개인을 식별하는 정보는 저장하지 않습니다 (기기·이름·위치 상세 없음).<br>'
      + '· 기록은 90일 후 자동 삭제됩니다.<br>'
      + '· 앱에 통계 기능을 심은 날부터 쌓입니다.</div>';
@@ -121,7 +132,7 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   document.getElementById('app').innerHTML = '<div class="err">불러오지 못했습니다 — ' + esc(e.message) + '</div>';
 });
 
-function card(l,v){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>명</small></div></div>'; }
+function card(l,v,unit){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>'+(unit||'명')+'</small></div></div>'; }
 function cardBig2(l,v,note){
   return '<div class="card" style="border-color:rgba(225,186,131,0.35)"><div class="lbl">'+l+'</div>'
     + '<div class="val" style="color:var(--g3);font-size:32px">'+v+'</div>'
@@ -139,9 +150,9 @@ function storeCard(label, s){
     + (recent!=null ? '<div class="lbl" style="margin:6px 0 0">최근 7일 +'+recent+'</div>' : '')
     + '</div>';
 }
-function cardBig(l,v,note){
+function cardBig(l,v,unit,note){
   return '<div class="card" style="border-color:rgba(143,217,174,0.35)"><div class="lbl">'+l+'</div>'
-    + '<div class="val" style="color:var(--g1);font-size:32px">'+v.toLocaleString()+' <small>명</small></div>'
+    + '<div class="val" style="color:var(--g1);font-size:32px">'+v.toLocaleString()+' <small>'+(unit||'명')+'</small></div>'
     + (note?'<div class="lbl" style="margin:6px 0 0">'+note+'</div>':'') + '</div>';
 }
 function row(l,v,max){ return '<tr><td>'+esc(l)+'</td><td><span class="bar" style="width:'+Math.round(v/max*60)+'px"></span> '+v+'</td></tr>'; }
