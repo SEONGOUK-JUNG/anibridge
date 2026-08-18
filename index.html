@@ -3229,20 +3229,31 @@ if(savedVersion !== APP_VERSION){
   localStorage.setItem('anibridge_version', APP_VERSION);
 }
 
-// ── 접속 집계: 하루 1회만, 개인정보 없이 (플랫폼·국가만 서버가 판단) ──
-(function(){
+// ── 접속 집계: 하루 1회만, 개인정보 없이 ──
+// 앱이 백그라운드에서 복귀할 때도 세야 하므로 화면이 보일 때마다 확인한다(날짜로 중복 차단).
+function aniCountVisit(){
   try{
     const today = new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
     if(localStorage.getItem('anibridge_hit') === today) return;
     const isNew = !localStorage.getItem('anibridge_hit');
     localStorage.setItem('anibridge_hit', today);
-    const isAndroidApp = window.matchMedia('(display-mode: standalone)').matches && /Android/.test(navigator.userAgent);
+    const standalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true
+      || document.referrer.startsWith('android-app://');
+    const ua = navigator.userAgent;
+    const platform = /AniBridgeiOS/.test(ua) ? 'ios'
+      : (standalone && /Android/.test(ua)) ? 'android'
+      : standalone ? 'app' : 'web';
     fetch('https://anibridge-api.koreagwangju.workers.dev/hit', {
       method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
-      body: JSON.stringify({ isNew: isNew, platform: isAndroidApp ? 'android' : undefined })
+      body: JSON.stringify({ isNew: isNew, platform: platform })
     }).catch(function(){});
   }catch(e){}
-})();
+}
+aniCountVisit();
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible') aniCountVisit();
+});
 
 // getPetDBKey는 PETS 초기화 후 사용 가능 (함수 호이스팅 활용)
 function getPetDBKey(){
