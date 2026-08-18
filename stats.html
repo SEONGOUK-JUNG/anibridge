@@ -82,8 +82,8 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
      + (all.since ? '('+esc(all.since)+' 부터)' : '') + '</span></h2>'
      + '<div class="cards">'
-     + cardBig('총 방문 횟수', all.total||0, '회', '앱을 연 횟수 전부')
-     + cardBig('총 이용자 수', all.newUsers||0, '명', '중복 없는 실제 사람 수')
+     + cardBig('들어온 사람', all.newUsers||0, '명', '중복 없는 실제 사람 수')
+     + cardBig('들어온 횟수', all.total||0, '회', '앱을 연 횟수 전부')
      + cardBig2('하루 1인당 방문',
          ((all.userDays||0) > 0 ? ((all.total||0)/all.userDays).toFixed(1) : '0.0')+'회',
          '높을수록 다시 찾는 앱')
