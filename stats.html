@@ -66,6 +66,20 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
      + cardBig('총 이용자', all.newUsers||0, '앱을 처음 연 사람')
      + '</div>';
 
+  // ── 스토어 다운로드 수 ──
+  const st = d.store || {};
+  const g = st.google, a = st.apple;
+  h += '<h2>스토어 다운로드 <span style="color:var(--dim);font-weight:400;font-size:12px">'
+     + (st.updated ? '(' + esc(st.updated) + ' 갱신)' : '') + '</span></h2><div class="cards">';
+  h += storeCard('🤖 구글 플레이', g);
+  h += storeCard('🍎 앱 스토어', a);
+  if (g && a && (g.total != null) && (a.total != null)) {
+    h += '<div class="card" style="border-color:rgba(225,186,131,0.4)"><div class="lbl">합계</div>'
+       + '<div class="val" style="color:var(--g3);font-size:32px">' + (g.total + a.total).toLocaleString()
+       + ' <small>건</small></div></div>';
+  }
+  h += '</div>';
+
   h += '<h2>어디서 들어왔나 <span style="color:var(--dim);font-weight:400;font-size:12px">(누계)</span></h2><div class="wrap"><table>';
   const platRows = Object.entries(platTotal).sort((a,b)=>b[1]-a[1]);
   h += platRows.length ? platRows.map(([k,v])=>row(PLAT[k]||k, v, platRows[0][1])).join('') : emptyRow();
@@ -105,6 +119,18 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
 });
 
 function card(l,v){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>명</small></div></div>'; }
+function storeCard(label, s){
+  if(!s || s.total == null){
+    return '<div class="card"><div class="lbl">'+label+'</div>'
+      + '<div class="val zero" style="font-size:19px">준비 중</div>'
+      + '<div class="lbl" style="margin:6px 0 0">스토어 데이터 연결 대기</div></div>';
+  }
+  const recent = s.daily ? Object.keys(s.daily).sort().slice(-7).reduce((a,k)=>a+(s.daily[k]||0),0) : null;
+  return '<div class="card"><div class="lbl">'+label+'</div>'
+    + '<div class="val">'+Number(s.total).toLocaleString()+' <small>건</small></div>'
+    + (recent!=null ? '<div class="lbl" style="margin:6px 0 0">최근 7일 +'+recent+'</div>' : '')
+    + '</div>';
+}
 function cardBig(l,v,note){
   return '<div class="card" style="border-color:rgba(143,217,174,0.35)"><div class="lbl">'+l+'</div>'
     + '<div class="val" style="color:var(--g1);font-size:32px">'+v.toLocaleString()+' <small>명</small></div>'
