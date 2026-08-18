@@ -48,12 +48,10 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   const sum = k => days.reduce((a,x)=>a+(x[k]||0),0);
   const week = days.slice(0,7).reduce((a,x)=>a+(x.total||0),0);
 
-  const platTotal = {}, ctryTotal = {};
-  days.forEach(function(x){
-    Object.entries(x.platform||{}).forEach(([k,v])=>platTotal[k]=(platTotal[k]||0)+v);
-    Object.entries(x.country||{}).forEach(([k,v])=>ctryTotal[k]=(ctryTotal[k]||0)+v);
-  });
+  const platTotal = (d.all && d.all.platform) || {};
+  const ctryTotal = (d.all && d.all.country) || {};
 
+  const all = d.all || {};
   let h = '<div class="cards">'
     + card('오늘 접속', today.total||0)
     + card('오늘 신규', today.newUsers||0)
@@ -61,12 +59,19 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
     + card('최근 30일', sum('total'))
     + '</div>';
 
-  h += '<h2>어디서 들어왔나 <span style="color:var(--dim);font-weight:400;font-size:12px">(30일)</span></h2><div class="wrap"><table>';
+  h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
+     + (all.since ? '('+esc(all.since)+' 부터)' : '') + '</span></h2>'
+     + '<div class="cards">'
+     + cardBig('총 접속', all.total||0)
+     + cardBig('총 이용자', all.newUsers||0, '앱을 처음 연 사람')
+     + '</div>';
+
+  h += '<h2>어디서 들어왔나 <span style="color:var(--dim);font-weight:400;font-size:12px">(누계)</span></h2><div class="wrap"><table>';
   const platRows = Object.entries(platTotal).sort((a,b)=>b[1]-a[1]);
   h += platRows.length ? platRows.map(([k,v])=>row(PLAT[k]||k, v, platRows[0][1])).join('') : emptyRow();
   h += '</table></div>';
 
-  h += '<h2>국가 <span style="color:var(--dim);font-weight:400;font-size:12px">(30일)</span></h2><div class="wrap"><table>';
+  h += '<h2>국가 <span style="color:var(--dim);font-weight:400;font-size:12px">(누계)</span></h2><div class="wrap"><table>';
   const ctryRows = Object.entries(ctryTotal).sort((a,b)=>b[1]-a[1]).slice(0,10);
   h += ctryRows.length ? ctryRows.map(([k,v])=>row(FLAG[k]||k, v, ctryRows[0][1])).join('') : emptyRow();
   h += '</table></div>';
@@ -95,6 +100,11 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
 });
 
 function card(l,v){ return '<div class="card"><div class="lbl">'+l+'</div><div class="val">'+v+' <small>명</small></div></div>'; }
+function cardBig(l,v,note){
+  return '<div class="card" style="border-color:rgba(143,217,174,0.35)"><div class="lbl">'+l+'</div>'
+    + '<div class="val" style="color:var(--g1);font-size:32px">'+v.toLocaleString()+' <small>명</small></div>'
+    + (note?'<div class="lbl" style="margin:6px 0 0">'+note+'</div>':'') + '</div>';
+}
 function row(l,v,max){ return '<tr><td>'+esc(l)+'</td><td><span class="bar" style="width:'+Math.round(v/max*60)+'px"></span> '+v+'</td></tr>'; }
 function emptyRow(){ return '<tr><td colspan="2" class="zero">아직 기록이 없습니다</td></tr>'; }
 </script>
