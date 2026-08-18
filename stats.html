@@ -108,7 +108,7 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
       + '<td>'+(x.users||0)+'</td>'
       + '<td><span class="bar" style="width:'+Math.round((x.total||0)/max*40)+'px"></span> '+(x.total||0)+'</td>'
       + '<td>'+per+'</td>'
-      + '<td>'+(x.newUsers||0)+'</td><td>'+(p.web||0)+'</td><td>'+(p.android||0)+'</td><td>'+(p.ios||0)+'</td></tr>';
+      + '<td>'+(p.web||0)+'</td><td>'+(p.android||0)+'</td><td>'+(p.ios||0)+'</td></tr>';
   }).join('');
   h += '</table></div>';
 
