@@ -92,7 +92,12 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
      + '· 앱에 통계 기능을 심은 날부터 쌓입니다.</div>';
 
   document.getElementById('app').innerHTML = h;
-  document.getElementById('sub').textContent = '오늘 ' + (days[0]?days[0].date:'') + ' 기준 · 서울 시간';
+  const now = new Date(Date.now()+9*3600e3);
+  const hh = String(now.getUTCHours()).padStart(2,'0'), mm = String(now.getUTCMinutes()).padStart(2,'0');
+  const wd = ['일','월','화','수','목','금','토'][now.getUTCDay()];
+  document.getElementById('sub').innerHTML =
+    (days[0]?days[0].date:'') + '(' + wd + ') <b>' + hh + ':' + mm + '</b> 기준 · 서울 시간'
+    + ' <a href="javascript:location.reload()" style="color:var(--g1);text-decoration:none;margin-left:8px">새로고침 ↻</a>';
 })
 .catch(function(e){
   document.getElementById('sub').textContent = '';
