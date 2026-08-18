@@ -3234,8 +3234,13 @@ if(savedVersion !== APP_VERSION){
 function aniCountVisit(){
   try{
     const today = new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
-    if(localStorage.getItem('anibridge_hit') === today) return;
-    const isNew = !localStorage.getItem('anibridge_hit');
+    // 열 때마다 1회로 센다. 단, 60초 안의 중복 신호(로드+복귀 동시 발생)는 제외.
+    const last = Number(localStorage.getItem('anibridge_last')||0);
+    if(Date.now() - last < 60000) return;
+    localStorage.setItem('anibridge_last', String(Date.now()));
+    const isNew = !localStorage.getItem('anibridge_first');   // 생애 첫 방문
+    if(isNew) localStorage.setItem('anibridge_first', today);
+    const isNewToday = localStorage.getItem('anibridge_hit') !== today;  // 오늘 첫 방문
     localStorage.setItem('anibridge_hit', today);
     const standalone = window.matchMedia('(display-mode: standalone)').matches
       || window.navigator.standalone === true
@@ -3246,7 +3251,7 @@ function aniCountVisit(){
       : standalone ? 'app' : 'web';
     fetch('https://anibridge-api.koreagwangju.workers.dev/hit', {
       method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
-      body: JSON.stringify({ isNew: isNew, platform: platform })
+      body: JSON.stringify({ isNew: isNew, isNewToday: isNewToday, platform: platform })
     }).catch(function(){});
   }catch(e){}
 }
