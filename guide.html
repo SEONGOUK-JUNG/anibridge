@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AniBridge 사용설명서</title>
-<meta name="description" content="AniBridge 반려동물 건강수첩 사용설명서 — 응급 카드, 케어수첩, 식단 관리, 산책 기록 사용법">
+<meta name="description" content="AniBridge 반려동물 건강수첩 사용설명서 — 응급 카드, 건강수첩, 식단 관리, 산책 기록 사용법">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -83,7 +83,8 @@
   .faq .a { color:#3D485C; }
 
   /* 푸터 */
-  .footer { background:#0A0E1A; text-align:center; padding:44px 24px 52px; margin-top:44px; position:relative; overflow:hidden; }
+  .footer { background:#0A0E1A; text-align:center; padding:44px 24px 52px; position:relative; overflow:hidden; }
+  .wave-bot { margin-top:44px; }
   .footer::before { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle,rgba(74,255,163,0.1),transparent 65%); top:-100px; right:-80px; }
   .footer svg { width:56px; height:56px; opacity:.95; position:relative; }
   .footer .f1 { color:#E8EDF5; font-size:13px; font-weight:700; margin-top:12px; position:relative; }
@@ -136,7 +137,7 @@
   <a class="toc-chip" href="#home"><span class="ico" style="background:#E4F5FF">🏠</span>홈 화면 한눈에 보기</a>
   <a class="toc-chip" href="#emergency"><span class="ico" style="background:#FFE9EE">🆘</span>응급 카드 — 이 앱의 핵심</a>
   <a class="toc-chip" href="#health"><span class="ico" style="background:#FFF6E0">🩺</span>건강 지키기 도구들</a>
-  <a class="toc-chip" href="#care"><span class="ico" style="background:#F0EDFF">📋</span>케어수첩 — 기록하기</a>
+  <a class="toc-chip" href="#care"><span class="ico" style="background:#F0EDFF">📋</span>건강수첩 — 기록하기</a>
   <a class="toc-chip" href="#feed"><span class="ico" style="background:#FFF0E4">🍚</span>식단·급여량 관리</a>
   <a class="toc-chip" href="#walk"><span class="ico" style="background:#E7FBF1">🐾</span>산책(강아지) · 놀이(고양이)</a>
   <a class="toc-chip" href="#ai"><span class="ico" style="background:#E4F5FF">🤖</span>AI 도우미 (분석·상담·번역)</a>
@@ -155,14 +156,14 @@
 </ol>
 <div class="bubble tip">
   <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
-  <div class="say"><span class="who">아니의 꿀팁</span><b>📋 병원 문진 정보를 꼭 채워주세요!</b> 홈 → <b>응급 카드</b> → <b>✏️ 문진 정보 작성</b>에서 식이·병력·복용 약물·접종·기생충 예방 등을 입력할 수 있어요. 응급 상황에서 수의사 선생님이 가장 먼저 확인하는 정보예요.</div>
+  <div class="say"><span class="who">아니의 꿀팁</span><b>📋 상세 프로필을 꼭 채워주세요!</b> <b>건강수첩 → 병원 제출 준비 → 🏡 상세 프로필</b>에서 주거 형태·병력·알레르기·복용 약물·예방 등을 입력할 수 있어요. 한 번만 작성하면 문진서와 응급카드에 <b>자동으로</b> 들어갑니다 — 응급 상황에서 수의사 선생님이 가장 먼저 확인하는 정보예요.</div>
 </div>
 <p>생년월일을 입력하면 홈에 <b>"코코가 세상에 온 지 1,234일"</b> 카드가 생기고, 생일에는 자동으로 축하 카드가 나타납니다. 🎂</p>
 
 <h3>여러 마리를 키운다면 — 아이 전환하기</h3>
 <ol>
   <li>화면 <b>오른쪽 위의 반려동물 얼굴</b>을 누르면 MY 페이지로 이동합니다</li>
-  <li><b>내 반려동물</b>에서 아이를 탭하면 전환 완료 — 홈·케어수첩·식단·응급 카드가 모두 그 아이의 것으로 바뀝니다</li>
+  <li><b>내 반려동물</b>에서 아이를 탭하면 전환 완료 — 홈·건강수첩·식단·응급 카드가 모두 그 아이의 것으로 바뀝니다</li>
   <li>마지막으로 보던 아이를 앱이 기억하므로, 다시 열어도 그 아이가 그대로 보여요</li>
 </ol>
 <div class="bubble tip">
@@ -184,9 +185,11 @@
   <tr><td>오늘 요약</td><td>오늘 산책(고양이는 놀이) 달성률 · 건강 상태 · 다음 접종 D-day</td></tr>
   <tr><td>💚 함께한 시간</td><td>태어난 지 며칠째 + 생일 카운트다운</td></tr>
   <tr><td>☑️ 오늘 챙기기</td><td>사료·약·산책 체크리스트 (자동 생성 — 6번 참고)</td></tr>
+  <tr><td>🧾 AI 건강 요약</td><td>흩어진 기록을 한눈에 정리 — 병원 가기 전에 뽑아 가세요 (8번 참고)</td></tr>
   <tr><td>🩺 오늘의 케어 팁</td><td>우리 아이의 종·나이·계절에 맞는 건강 팁이 매일 자정 교체</td></tr>
+  <tr><td>📖 케어 가이드</td><td>수의사 선생님이 직접 쓰신 검진·질병 정보</td></tr>
   <tr><td>우리 아이 건강 지키기</td><td>응급 카드 · 건강 시그널 · 검진 체크리스트 · 내 주변 병원 · 먹어도 되나요? · 오늘 식단</td></tr>
-  <tr><td>📊 이번 주 리포트</td><td>한 주 건강 요약 + 카톡 공유</td></tr>
+  <tr><td>📊 우리 아이 리포트</td><td>한 주 건강 요약 + 카톡 공유</td></tr>
   <tr><td>AI 도우미 / 재미</td><td>AI 건강 분석 · AI 상담 · 마음 번역기</td></tr>
 </table>
 </div>
@@ -201,14 +204,16 @@
 </div>
 <h3>사용법</h3>
 <ol>
-  <li>홈 → <b>🆘 응급 카드</b> (또는 케어수첩 맨 위, MY 메뉴)</li>
-  <li>카드 맨 위의 <b>✏️ 문진 정보 작성 · 수정하기</b> 버튼으로 문진 항목을 채워두세요 — 한 번만 작성하면 계속 유지됩니다</li>
+  <li><b>건강수첩</b> 탭 → 아래로 내려 <b>병원 제출 준비</b> → <b>🆘 응급카드</b><br>
+      (또는 MY 메뉴에서도 열 수 있어요)</li>
+  <li><b>따로 작성할 것이 없습니다.</b> 평소 적어둔 기록으로 <b>자동 완성</b>됩니다 —
+      기본 프로필·상세 프로필·접종·복용약·최근 증상이 알아서 채워져요</li>
   <li>병원에서 <b>화면을 그대로 보여주거나</b>, 카카오톡 공유 / 텍스트 복사로 전달</li>
   <li>급할 땐 카드 안의 <b>🌙 지금 문 연 24시 병원 찾기</b> 버튼으로 바로 병원 검색</li>
 </ol>
 <div class="bubble tip">
   <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
-  <div class="say"><span class="who">아니의 꿀팁</span>접종 기록·최근 진료·최근 증상은 케어수첩 기록으로 <b>자동 작성</b>돼요. 평소에 기록만 하면 준비 끝!</div>
+  <div class="say"><span class="who">아니의 꿀팁</span>접종 기록·최근 진료·최근 증상은 건강수첩 기록으로 <b>자동 작성</b>돼요. 평소에 기록만 하면 준비 끝!</div>
 </div>
 </div>
 
@@ -229,22 +234,44 @@
 </div>
 </div>
 
-<!-- ═══ 5. 케어수첩 ═══ -->
+<!-- ═══ 5. 건강수첩 ═══ -->
 <div class="panel">
-<h2 id="care"><span class="num">5</span>📋 케어수첩 — 기록하기</h2>
-<p>하단 <span class="kbd">케어수첩</span> 탭에 6가지 기록장이 있습니다:</p>
+<h2 id="care"><span class="num">5</span>📋 건강수첩 — 기록하기</h2>
+<p><b>쓰는 곳은 딱 두 군데입니다.</b> 나머지는 전부 자동으로 만들어져요.
+   달라진 것만 기록하면 되고, 변동이 없으면 마지막 기록이 그대로 유지됩니다.</p>
+
+<h3>① 일상 기록 — 매일 가볍게</h3>
 <table>
-  <tr><th>탭</th><th>기록 내용</th></tr>
-  <tr><td>🤒 이상증상</td><td>구토·설사·기침 등 증상과 상세 내용 — 응급 카드·문진서에 자동 반영</td></tr>
-  <tr><td>🏥 병원기록</td><td>병원명·진단·비용</td></tr>
-  <tr><td>💉 예방접종</td><td>접종일과 다음 예정일 — 홈에 D-day 표시</td></tr>
-  <tr><td>🍚 식단</td><td>급여량 계산과 오늘 먹은 양 (6번)</td></tr>
-  <tr><td>⚖️ 체중</td><td>체중 입력 → 변화 그래프 (7/30/90일)</td></tr>
+  <tr><th>항목</th><th>기록 내용</th></tr>
+  <tr><td>😊 컨디션</td><td>오늘 전반적인 상태 (매우 좋음 ~ 매우 나쁨)</td></tr>
+  <tr><td>🍚 식사·음수</td><td>식욕·음수 상태와 먹은 양 · 하루 급여량 설정도 여기서</td></tr>
+  <tr><td>🚽 배변·배뇨</td><td>횟수와 상태(묽음·혈변 등)</td></tr>
   <tr><td>📝 메모</td><td>자유 기록</td></tr>
+</table>
+
+<h3>② 건강 기록 — 생길 때만</h3>
+<table>
+  <tr><th>항목</th><th>기록 내용</th></tr>
+  <tr><td>🤒 이상증상</td><td>구토·설사·기침 등 — 문진서·응급카드에 자동 반영</td></tr>
+  <tr><td>⚖️ 체중</td><td>체중 입력 → 변화 그래프</td></tr>
+  <tr><td>💊 영양제·처방약</td><td>복용 중인 약 — 홈 "오늘 챙기기"에 자동 표시</td></tr>
+  <tr><td>🏥 병원기록</td><td>병원명·진단·비용</td></tr>
+  <tr><td>💉 접종·구충</td><td>접종일과 다음 예정일 — 홈에 D-day 표시</td></tr>
+</table>
+
+<h3>③ 병원 제출 준비 — 자동으로 완성됩니다</h3>
+<p>건강수첩 아래쪽 <b>병원 제출 준비</b>에는 위 기록으로 <b>자동 작성</b>되는 서류가 있습니다:</p>
+<table>
+  <tr><th>항목</th><th>내용</th></tr>
+  <tr><td>📋 문진서</td><td>현재 상태 · 변동 이력 · 복용약 · 접종 · 병원 기록을 한 장으로 — <b>보호자 보기용 / 병원 제출용</b> 두 가지</td></tr>
+  <tr><td>🆘 응급카드</td><td>응급 상황에서 바로 보여주는 핵심 정보 (3번 참고)</td></tr>
+  <tr><td>🐾 기본 프로필</td><td>MY에 등록한 정보를 그대로 가져옵니다</td></tr>
+  <tr><td>🏡 상세 프로필</td><td>주거 형태 · 병력 · 알레르기 · 예방 — 한 번 저장하면 유지</td></tr>
+  <tr><td>🍚 현재 식단</td><td>식사·음수에서 설정한 급여량이 자동 반영</td></tr>
 </table>
 <div class="bubble tip">
   <div class="avatar"><svg viewBox="38 36 30 40"><g fill="#FFC15E"><path d="M43 72 Q40 60 50 55.5 Q59 52 61 60 L61 72 Z"/><circle cx="58" cy="49" r="6.2"/><ellipse cx="64" cy="51.5" rx="3.2" ry="2.2"/><ellipse cx="52.5" cy="49.5" rx="2.1" ry="4.2" transform="rotate(18 52.5 49.5)"/><path d="M43 70 Q34 68 33.5 59.5 Q33.4 57.5 35.4 58.1 Q37 58.6 37.5 60.5 Q38.3 65.4 44 66.4 Z"/></g></svg></div>
-  <div class="say"><span class="who">아니의 꿀팁</span><b>📋 사전 문진서</b>: 병원 예약 후 이상증상 탭의 "사전 문진서로 내보내기"를 누르면 진료에 필요한 정보가 정리돼요. 진료 시간이 짧아져요!</div>
+  <div class="say"><span class="who">아니의 꿀팁</span>매일 <b>컨디션 하나만</b> 눌러도 충분해요. 달라진 게 없으면 앞선 기록이 그대로 이어지고, <b>바뀐 내용만</b> 문진서·응급카드에 올라갑니다. 홈의 <b>"오늘 ○○ 챙기기"</b>에서 바로 기록할 수도 있어요.</div>
 </div>
 </div>
 
@@ -252,7 +279,7 @@
 <div class="panel">
 <h2 id="feed"><span class="num">6</span>🍚 식단·급여량 관리</h2>
 <ol>
-  <li>케어수첩 → 식단 탭에서 <b>사료를 등록</b>합니다 — 📷 사료 봉투를 찍으면 AI가 제품명과 칼로리를 자동으로 읽어줘요 (또는 봉투 뒷면의 kcal/kg 직접 입력)</li>
+  <li>건강수첩 → <b>일상 기록 → 🍚 식사·음수</b>에서 <b>하루 급여량을 설정</b>합니다 — 📷 사료 봉투를 찍으면 AI가 제품명과 칼로리를 자동으로 읽어줘요 (또는 봉투 뒷면의 kcal/kg 직접 입력)</li>
   <li>체중·나이·중성화 여부로 <b>하루 권장량이 자동 계산</b>됩니다 (수의 영양학 표준 공식) — 예: "하루 71g, 2회 × 36g씩, 간식은 27kcal 이내"</li>
   <li>먹일 때마다 g 입력 후 <span class="kbd">🍚 식사</span> 또는 <span class="kbd">🦴 간식</span> 버튼</li>
   <li>게이지로 오늘 상태 확인: <b>적정 ✅ / 부족 / 과식 ⚠️</b> — 간식이 하루 칼로리의 10%를 넘으면 경고</li>
@@ -303,17 +330,34 @@
 </div>
 <table>
   <tr><th>기능</th><th>무료 한도</th><th>이렇게 쓰세요</th></tr>
-  <tr><td>📸 AI 건강 분석</td><td>하루 10회</td><td>피부·눈·귀 사진을 올리면 상태를 살펴봐줍니다 — 병원 가기 전 마음의 준비와 기록용</td></tr>
+  <tr><td>🧾 AI 건강 요약</td><td>하루 10회<br>(상담과 공유)</td><td>홈의 <b>"AI 건강 요약"</b>을 누르면 흩어진 기록을 3일·7일·30일·90일 단위로 정리해줍니다 — 병원 가기 전에 뽑아 가세요</td></tr>
   <tr><td>💬 AI 건강 상담</td><td>하루 10회</td><td>증상·식이·행동 질문 — 우리 아이의 나이·알레르기·복용약·최근 증상을 알고 맞춤 답변하며, 응급 신호가 보이면 즉시 병원을 안내합니다</td></tr>
-  <tr><td>🎙️ 마음 번역기</td><td>재미 번역 무제한<br>AI 번역 하루 10회</td><td>소리를 녹음하면 무슨 말인지 번역 — <b>재미로만</b> 즐겨주세요 😄</td></tr>
+  <tr><td>📸 AI 건강 분석</td><td>하루 3회</td><td>피부·눈·귀 사진을 올리면 상태를 살펴봐줍니다 — 병원 가기 전 마음의 준비와 기록용</td></tr>
+  <tr><td>🎙️ 마음 번역기</td><td>재미 번역 무제한<br>AI 번역 하루 3회</td><td>소리를 녹음하면 무슨 말인지 번역 — <b>재미로만</b> 즐겨주세요 😄</td></tr>
 </table>
 <p>무료 한도는 매일 자정에 자동 충전됩니다.</p>
+
+<h3>🧾 AI 건강 요약 — 병원 갈 때 이것만 챙기세요</h3>
+<ol>
+  <li>홈 화면에서 <b>🧾 AI 건강 요약</b>을 누릅니다</li>
+  <li>기간을 고릅니다 — <b>최근 3일 / 7일 / 30일 / 90일</b>
+    <ul><li><b>3일</b>: 어제오늘 갑자기 이상해졌을 때</li>
+        <li><b>7일·30일</b>: 정기 검진이나 평소 상태 설명용</li></ul></li>
+  <li><b>요약 만들기</b>를 누르면 세 부분으로 정리됩니다:
+    <ul><li>📋 이런 기록이 있었어요</li>
+        <li>🔎 눈에 띄는 변화</li>
+        <li>🏥 병원에 가면 이렇게 말씀하세요</li></ul></li>
+  <li><b>복사</b>하거나 <b>카톡으로 공유</b>해서 병원에 보여주세요</li>
+</ol>
+<div class="bubble">
+  <div class="say"><span class="who">아니의 꿀팁</span>AI 요약은 <b>진단을 하지 않습니다.</b> 사장님이 적어둔 기록을 읽기 쉽게 정리만 해줍니다 — 판단은 수의사 선생님 몫이에요. 그래서 요약 끝에는 항상 "진단이 아닙니다"라는 안내가 붙습니다.</div>
+</div>
 </div>
 
 <!-- ═══ 9. 리포트 ═══ -->
 <div class="panel">
 <h2 id="report"><span class="num">9</span>📊 주간 리포트</h2>
-<p>홈의 <b>"이번 주 리포트"</b>를 누르면 최근 7일이 정리됩니다: 산책(지난주와 비교) · 체중 변화 · 식단 · 증상 · 병원/접종 + 한 줄 총평. <b>카카오톡 공유</b>로 가족에게 보내거나, 병원 진료 때 최근 상태를 보여주는 용도로 쓰세요.</p>
+<p>홈의 <b>"우리 아이 리포트"</b>를 누르면 최근 7일이 정리됩니다: 산책(지난주와 비교) · 체중 변화 · 식단 · 증상 · 병원/접종 + 한 줄 총평. <b>카카오톡 공유</b>로 가족에게 보내거나, 병원 진료 때 최근 상태를 보여주는 용도로 쓰세요.</p>
 </div>
 
 <!-- ═══ 10. 백업 ═══ -->
@@ -339,7 +383,7 @@
 <!-- ═══ 11. FAQ ═══ -->
 <div class="panel">
 <h2 id="faq"><span class="num">11</span>❓ 자주 묻는 질문</h2>
-<div class="faq"><div class="q"><span class="qb">Q</span>정말 다 무료인가요?</div><div class="a">네! 광고도 없고 결제도 없습니다. AI 기능만 안정적인 운영을 위해 하루 횟수(각 10회)가 있고, 매일 자정 충전됩니다.</div></div>
+<div class="faq"><div class="q"><span class="qb">Q</span>정말 다 무료인가요?</div><div class="a">네! 광고도 없고 결제도 없습니다. AI 기능만 안정적인 운영을 위해 하루 횟수(상담·요약 10회 / 사진 분석 3회 / AI 번역 3회)가 있고, 매일 자정 충전됩니다.</div></div>
 <div class="faq"><div class="q"><span class="qb">Q</span>내 기록은 어디에 저장되나요?</div><div class="a">모두 휴대폰 안에만 저장되며 서버로 전송되지 않습니다. 그래서 백업이 중요해요! (AI 분석 시 보낸 사진·질문만 AI 처리를 위해 일시적으로 전송됩니다)</div></div>
 <div class="faq"><div class="q"><span class="qb">Q</span>AI 분석이 "괜찮다"고 했는데 병원에 안 가도 되나요?</div><div class="a">아니요. AI는 사진만으로 판단하는 참고 도구라 놓치는 것이 있을 수 있습니다. 아이가 평소와 다르다면 AI 결과와 관계없이 병원에서 확인하세요.</div></div>
 <div class="faq"><div class="q"><span class="qb">Q</span>위치 권한은 왜 필요한가요?</div><div class="a">산책 거리·경로 측정과 내 주변 병원 검색에만 사용됩니다. 위치 정보는 폰에만 저장돼요.</div></div>
