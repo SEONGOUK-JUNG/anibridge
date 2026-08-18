@@ -64,19 +64,25 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   const g = st.google, a = st.apple;
   h += '<h2>스토어 다운로드 <span style="color:var(--dim);font-weight:400;font-size:12px">'
      + (st.updated ? '(' + esc(st.updated) + ' 갱신)' : '') + '</span></h2><div class="cards">';
-  h += storeCard('🤖 구글 플레이', g);
-  h += storeCard('🍎 앱 스토어', a);
+  h += storeCard('🤖 구글 플레이', g, '구글 보고서 권한 승인 대기 중');
+  h += storeCard('🍎 앱 스토어', a, '✅ 출시됨 · 애플 리포트 생성 중(1~2일)');
   if (g && a && (g.total != null) && (a.total != null)) {
     h += '<div class="card" style="border-color:rgba(225,186,131,0.4)"><div class="lbl">합계</div>'
        + '<div class="val" style="color:var(--g3);font-size:32px">' + (g.total + a.total).toLocaleString()
        + ' <small>건</small></div></div>';
   }
   h += '</div>';
+  h += '<div class="foot" style="margin:-6px 0 18px">출시 중 · '
+     + '<a href="https://play.google.com/store/apps/details?id=com.anibridge.app" target="_blank" style="color:var(--g1)">구글 플레이 ↗</a>'
+     + ' · <a href="https://apps.apple.com/kr/app/id6800572424" target="_blank" style="color:var(--g1)">앱 스토어 ↗</a></div>';
 
+  const days7 = days.slice(0,7), days30 = days;
+  const users7 = days7.reduce((a,x)=>a+(x.users||0),0);
+  const actDays = days30.filter(x=>(x.total||0)>0).length;
   h += '<h2>최근</h2><div class="cards">'
     + card('7일 방문', week, '회')
     + card('30일 방문', sum('total'), '회')
-    + card('오늘 새로 온 사람', today.newUsers||0, '명')
+    + card('하루 평균 방문', actDays ? Math.round(sum('total')/actDays*10)/10 : 0, '회')
     + '</div>';
 
   h += '<h2>지금까지 누계 <span style="color:var(--dim);font-weight:400;font-size:12px">'
@@ -138,11 +144,11 @@ function cardBig2(l,v,note){
     + '<div class="val" style="color:var(--g3);font-size:32px">'+v+'</div>'
     + '<div class="lbl" style="margin:6px 0 0">'+note+'</div></div>';
 }
-function storeCard(label, s){
+function storeCard(label, s, note){
   if(!s || s.total == null){
     return '<div class="card"><div class="lbl">'+label+'</div>'
-      + '<div class="val zero" style="font-size:19px">준비 중</div>'
-      + '<div class="lbl" style="margin:6px 0 0">스토어 데이터 연결 대기</div></div>';
+      + '<div class="val zero" style="font-size:19px">집계 준비 중</div>'
+      + '<div class="lbl" style="margin:6px 0 0">'+(note||'스토어 데이터 연결 대기')+'</div></div>';
   }
   const recent = s.daily ? Object.keys(s.daily).sort().slice(-7).reduce((a,k)=>a+(s.daily[k]||0),0) : null;
   return '<div class="card"><div class="lbl">'+label+'</div>'
