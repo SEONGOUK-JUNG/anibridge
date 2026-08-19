@@ -65,7 +65,7 @@ fetch(API).then(r=>{ if(!r.ok) throw new Error(r.status===401?'접속 키가 올
   h += '<h2>스토어 다운로드 <span style="color:var(--dim);font-weight:400;font-size:12px">'
      + (st.updated ? '(' + esc(st.updated) + ' 갱신)' : '') + '</span></h2><div class="cards">';
   h += storeCard('🤖 구글 플레이', g, '구글 보고서 권한 승인 대기 중');
-  h += storeCard('🍎 앱 스토어', a, '✅ 출시됨 · 애플 리포트 생성 중(1~2일)');
+  h += storeCard('🍎 앱 스토어', a, '✅ 출시됨 · 애플 집계 데이터 준비 중');
   if (g && a && (g.total != null) && (a.total != null)) {
     h += '<div class="card" style="border-color:rgba(225,186,131,0.4)"><div class="lbl">합계</div>'
        + '<div class="val" style="color:var(--g3);font-size:32px">' + (g.total + a.total).toLocaleString()
@@ -150,11 +150,11 @@ function storeCard(label, s, note){
       + '<div class="val zero" style="font-size:19px">집계 준비 중</div>'
       + '<div class="lbl" style="margin:6px 0 0">'+(note||'스토어 데이터 연결 대기')+'</div></div>';
   }
-  const recent = s.daily ? Object.keys(s.daily).sort().slice(-7).reduce((a,k)=>a+(s.daily[k]||0),0) : null;
   return '<div class="card"><div class="lbl">'+label+'</div>'
     + '<div class="val">'+Number(s.total).toLocaleString()+' <small>건</small></div>'
-    + (recent!=null ? '<div class="lbl" style="margin:6px 0 0">최근 7일 +'+recent+'</div>' : '')
-    + '</div>';
+    + '<div class="lbl" style="margin:6px 0 0">'
+    +   (s.active!=null ? '지금 쓰는 기기 '+s.active+'대' : '출시 이후 전체 다운로드')
+    + '</div></div>';
 }
 function cardBig(l,v,unit,note){
   return '<div class="card" style="border-color:rgba(143,217,174,0.35)"><div class="lbl">'+l+'</div>'
